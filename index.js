@@ -10,7 +10,7 @@ const Stadium = require("./models/stadiumModel")
 const Match = require("./models/matchModel")
 const Team = require("./models/teamModel")
 const myModule = require('./models/persons');
-const {Coach} = require("./models/persons");
+const {Coach, Commentator} = require("./models/persons");
 const Referee = myModule.Referee
 const Player = myModule.Player
 app.use(express.static("public"));
@@ -42,6 +42,29 @@ app.get("/showAllTeams",async function (req, res) {
     res.send(result)
 });
 
+app.get("/showAllCurrentMatches",async function (req, res) {
+    const result = await Match.find({status:true}).populate({
+        path: 'homeTeam',
+        populate: {
+            path: 'squad',
+            model: 'Player',
+            select: 'name'
+        }
+    })
+        .populate({
+            path: 'awayTeam',
+            populate: {
+                path: 'squad',
+                model: 'Player',
+                select: ['name']
+            }
+        }).populate('referee', 'name')
+        .populate('commentator', 'name');
+    console.log(result)
+    res.send(result)
+});
+
+
 app.post("/addPlayer",async function(req, res){
 
     const player = new Player({
@@ -53,6 +76,13 @@ app.post("/addPlayer",async function(req, res){
         team:req.body.team
     });
     const result = await player.save().catch((err)=>console.log(err));
+    try {
+        const playerTeam = await Team.findById(result['team']);
+        await Team.findByIdAndUpdate(result['team'],{squad:playerTeam['squad'].concat(result['_id'])});
+
+    }catch (e) {
+        console.log(e);
+    }
     console.log(result);
     res.send(result)
 });
@@ -77,6 +107,18 @@ app.post("/addReferee",async function(req, res){
         nationality:req.body.nationality,
     });
     const result = await referee.save().catch((err)=>console.log(err));
+    console.log(result);
+    res.send(result)
+});
+
+app.post("/addCommentator",async function(req, res){
+
+    const commentator = new Commentator({
+        name:req.body.name,
+        age:req.body.age,
+        nationality:req.body.nationality,
+    });
+    const result = await commentator.save().catch((err)=>console.log(err));
     console.log(result);
     res.send(result)
 });
@@ -113,6 +155,21 @@ app.post("/addStadium",async function(req, res){
     console.log(result);
     res.send(result)
 });
+
+app.post("/createMatch",async function(req, res){
+
+    const match = new Match({
+        homeTeam:req.body.homeTeam,
+        awayTeam:req.body.awayTeam,
+        referee:req.body.referee,
+        commentator:req.body.commentator
+    });
+    const result = await match.save().catch((err)=>console.log(err));
+
+    console.log(result);
+    res.send(result)
+});
+
 
 app.listen(3000,function () {
     console.log("Server started");
