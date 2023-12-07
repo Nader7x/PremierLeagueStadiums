@@ -10,7 +10,7 @@ const matchSchema = new mongoose.Schema({
     cards:{type:Map,required:false,default:{}},
     homeGoals:{type:Number,required:false,default:0},
     awayGoals:{type:Number,required:false,default:0},
-    status:{type:Boolean,required:true,default:true},
+    status:{type:Boolean,required:false,default:true},
     //goalScorer
 });
 const Match = mongoose.model("Match",matchSchema);

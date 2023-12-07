@@ -6,7 +6,7 @@ const stadiumSchema = new mongoose.Schema({
     name:{type:String, required:true},
     //fixtures: { type: Map,of:String,required:true},
     capacity:{type:Number,required:true},
-    state:{type:Boolean,required:true}}, { collection: 'stadium' });
+    state:{type:Boolean,required:false,default:false}}, { collection: 'stadium' });
 
 const Stadium = mongoose.model("Stadium",stadiumSchema);
 

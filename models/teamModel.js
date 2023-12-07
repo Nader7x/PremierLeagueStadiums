@@ -5,10 +5,10 @@ const teamSchema = new mongoose.Schema({
     name: {type: String, required: true},
     squad:{type: [mongoose.Schema.Types.ObjectId],ref:'Player' ,required: false},//player
     coach: {type: mongoose.Schema.Types.ObjectId, ref: 'Coach', required: true},//coach
-    wins: {type: Number, required: true},
-    loss: {type: Number, required: true},
-    draw: {type: Number, required: true},
-    points: {type: Number, required: true},
+    wins: {type: Number, required: false,default:0},
+    loss: {type: Number, required: false,default:0},
+    draw: {type: Number, required: false,default:0},
+    points: {type: Number, required: false,default:0},
     stadium: {type: mongoose.Schema.Types.ObjectId, ref: 'Stadium',required:false},
     kit: {type: [String],min:2,max:2, required: true},
 

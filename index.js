@@ -9,13 +9,13 @@ app.use(bodyParser.urlencoded({ extended: false }))
 const Stadium = require("./models/stadiumModel")
 const Match = require("./models/matchModel")
 const Team = require("./models/teamModel")
-const myModule = require('./models/persons');
-const {Coach, Commentator} = require("./models/persons");
-const Referee = myModule.Referee
-const Player = myModule.Player
+const {Referee,Coach,Commentator,User,Admin,Player} = require("./models/persons");
 app.use(express.static("public"));
+/*const ejs = */
+require('ejs');
+app.set('view engine', 'ejs');
 
-const positions = ['gk','cb','lb','rb','cm','cam','cdm','cf','rw','rm','lw','lm','st']
+//const positions = ['gk','cb','lb','rb','cm','cam','cdm','cf','rw','rm','lw','lm','st']
 
 async function connectToMongoDB() {
     try {
@@ -56,7 +56,7 @@ app.get("/showAllCurrentMatches",async function (req, res) {
             populate: {
                 path: 'squad',
                 model: 'Player',
-                select: ['name']
+                select: 'name'
             }
         }).populate('referee', 'name')
         .populate('commentator', 'name');
@@ -64,6 +64,15 @@ app.get("/showAllCurrentMatches",async function (req, res) {
     res.send(result)
 });
 
+app.get("/addPlayer", async function (req, res) {
+    try {
+        const teams = await Team.find({});
+        res.render("addPlayer", { teams }); // Pass the teams data to the EJS template
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
+});
 
 app.post("/addPlayer",async function(req, res){
 
@@ -87,6 +96,16 @@ app.post("/addPlayer",async function(req, res){
     res.send(result)
 });
 
+app.get("/addCoach", async function (req, res) {
+    try {
+
+        res.render("addCoach"); // Pass the teams data to the EJS template
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
 app.post("/addCoach",async function(req, res){
 
     const coach = new Coach({
@@ -99,6 +118,16 @@ app.post("/addCoach",async function(req, res){
     res.send(result)
 });
 
+app.get("/addReferee", async function (req, res) {
+    try {
+
+        res.render("addReferee"); // Pass the teams data to the EJS template
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
 app.post("/addReferee",async function(req, res){
 
     const referee = new Referee({
@@ -109,6 +138,16 @@ app.post("/addReferee",async function(req, res){
     const result = await referee.save().catch((err)=>console.log(err));
     console.log(result);
     res.send(result)
+});
+
+app.get("/addCommentator", async function (req, res) {
+    try {
+
+        res.render("addCommentator"); // Pass the teams data to the EJS template
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
 });
 
 app.post("/addCommentator",async function(req, res){
@@ -141,6 +180,25 @@ app.post("/addTeam",async function(req, res){
     res.send(result)
 });
 
+app.get("/addTeam", async function (req, res) {
+    try {
+        const coaches = await Coach.find({});
+        res.render("addTeam", { coaches }); // Pass the teams data to the EJS template
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+app.get("/addStadium", async function (req, res) {
+    try {
+        const teamsWithoutStadium = await Team.find({ stadium: { $exists: false } });
+        res.render("addStadium", {teamsWithoutStadium}); // Pass the teams data to the EJS template
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
+});
 app.post("/addStadium",async function(req, res){
 
     const stadium = new Stadium({
@@ -150,6 +208,7 @@ app.post("/addStadium",async function(req, res){
         state:req.body.state
     });
     const result = await stadium.save().catch((err)=>console.log(err));
+    console.log(result);
     await Team.findByIdAndUpdate(result['homeTeam'],{stadium:result["_id"]})
 
     console.log(result);
