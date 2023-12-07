@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Stadium</title>
+</head>
+<body>
+    <h1>Add Stadium</h1>
+    <form action="/addStadium" method="POST">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+        <br><br>
+        <label for="capacity">Capacity:</label>
+        <input type="number" id="capacity" name="capacity" required>
+        <br><br>
+        <label for="homeTeam">homeTeam:</label>
+        <select id="homeTeam" name="homeTeam" required>
+            <!-- Use EJS syntax to iterate over teams and dynamically populate options -->
+            <% teamsWithoutStadium.forEach(function(team) { %>
+                <option value="<%= team._id %>"><%= team.name %></option>
+            <% }); %>
+        </select>
+        <br><br>
+        <button type="submit">Add Stadium</button>
+    </form>
+</body>
+</html>

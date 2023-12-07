@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Player</title>
+</head>
+<body>
+    <h1>Add Player</h1>
+    <form action="/addPlayer" method="POST">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+        <br><br>
+        <label for="age">Age:</label>
+        <input type="number" id="age" name="age" required>
+        <br><br>
+        <label for="nationality">Nationality:</label>
+        <input type="text" id="nationality" name="nationality" required>
+        <br><br>
+        <label for="kitNumber">Kit Number:</label>
+        <input type="number" id="kitNumber" name="kitNumber" required>
+        <br><br>
+        <label for="position">Position:</label>
+        <select id="position" name="position" required>
+            <!-- Replace the following options with dynamically fetched team names from your database -->
+            <option value="gk">Gk</option>
+            <option value="cb">Cb</option>
+            <option value="lb">Lb</option>
+            <option value="rb">Rb</option>
+            <option value="cdm">CDM</option>
+            <option value="cm">CM</option>
+            <option value="cam">CAM</option>
+            <option value="lm">LM</option>
+            <option value="rm">RM</option>
+            <option value="lw">LW</option>
+            <option value="rw">RW</option>
+            <option value="cf">CF</option>
+            <option value="st">ST</option>
+
+        </select>
+        <br><br>
+        <label for="team">Team:</label>
+        <select id="team" name="team" required>
+            <!-- Use EJS syntax to iterate over teams and dynamically populate options -->
+            <% teams.forEach(function(team) { %>
+                <option value="<%= team._id %>"><%= team.name %></option>
+            <% }); %>
+        </select>
+        <br><br>
+        <button type="submit">Add Player</button>
+    </form>
+</body>
+</html>
