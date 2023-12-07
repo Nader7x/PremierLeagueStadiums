@@ -11,6 +11,7 @@ const teamSchema = new mongoose.Schema({
     points: {type: Number, required: false,default:0},
     stadium: {type: mongoose.Schema.Types.ObjectId, ref: 'Stadium',required:false},
     kit: {type: [String],min:2,max:2, required: true},
+    logo: {type: String, required: false},
 
 
 });

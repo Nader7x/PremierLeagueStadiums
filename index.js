@@ -129,7 +129,6 @@ app.post("/addSquad",async function(req, res){
 
 app.get("/addCoach", async function (req, res) {
     try {
-
         res.render("addCoach"); // Pass the teams data to the EJS template
     } catch (error) {
         console.error(error);
@@ -204,7 +203,8 @@ app.post("/addTeam",async function(req, res){
         loss:req.body.loss,
         draw:req.body.draw,
         points:req.body.points,
-        kit:req.body.kit
+        kit:req.body.kit,
+        logo:req.body.logo
     });
     const result = await team.save().catch((err)=>console.log(err));
     console.log(result);
