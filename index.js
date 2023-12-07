@@ -64,6 +64,19 @@ app.get("/showAllCurrentMatches",async function (req, res) {
     res.send(result)
 });
 
+app.get("/showPlayers/:teamId",async function (req, res) {
+    const result = await Player.find({team:req.params['teamId']});
+    console.log(result.length)
+    res.send(result)
+});
+
+app.get("/showAllPlayers",async function (req, res) {
+    const result = await Player.find({});
+    console.log(result.length);
+    res.send(result);
+});
+
+
 app.get("/addPlayer", async function (req, res) {
     try {
         const teams = await Team.find({});
@@ -95,6 +108,24 @@ app.post("/addPlayer",async function(req, res){
     console.log(result);
     res.send(result)
 });
+
+app.post("/addSquad",async function(req, res){
+
+    const result = await Player.insertMany(req.body);
+
+    try {
+        for (const player of result) {
+            const playerTeam = await Team.findById(player['team']);
+            await Team.findByIdAndUpdate(player['team'],{squad:playerTeam['squad'].concat(player['_id'])});
+        }
+
+    }catch (e) {
+        console.log(e);
+    }
+    console.log(result);
+    res.send(result)
+});
+
 
 app.get("/addCoach", async function (req, res) {
     try {
@@ -199,6 +230,7 @@ app.get("/addStadium", async function (req, res) {
         res.status(500).send("Internal Server Error");
     }
 });
+
 app.post("/addStadium",async function(req, res){
 
     const stadium = new Stadium({
