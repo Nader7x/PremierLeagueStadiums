@@ -32,6 +32,7 @@ connectToMongoDB().then();
 
 app.get("/",async function (req, res) {
     const result = await Referee.find({})
+    //const result = await Player.deleteMany({team:'6572664798b2d1184219c5f8'})
     console.log(result)
     res.send(result)
 });
