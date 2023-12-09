@@ -1,4 +1,4 @@
-require('dotenv').config();
+//require('dotenv').config();
 const express = require("express");
 const app = express();
 const mongoose = require('mongoose').default;
@@ -37,12 +37,17 @@ app.get("/",async function (req, res) {
     res.send(result)
 });
 
-app.get("/showAllTeams",async function (req, res) {
-    const result = await Team.find({}).populate('coach','name');
+app.get("/showAllTeamsWithPlayers",async function (req, res) {
+    const result = await Team.find({}).populate('coach','name').populate('squad','name');
     console.log(result)
     res.send(result)
 });
 
+app.get("/showAllTeams",async function (req, res) {
+    const result = await Team.find({});
+    console.log(result)
+    res.send(result)
+});
 app.get("/showAllCurrentMatches",async function (req, res) {
     const result = await Match.find({status:true}).populate({
         path: 'homeTeam',
@@ -77,6 +82,29 @@ app.get("/showAllPlayers",async function (req, res) {
     res.send(result);
 });
 
+app.get("/showAllCoaches",async function (req, res) {
+    const result = await Coach.find({});
+    console.log(result);
+    res.send(result);
+});
+
+app.get("/showAllReferees",async function (req, res) {
+    const result = await Referee.find({});
+    console.log(result);
+    res.send(result);
+});
+
+app.get("/showAllCommentators",async function (req, res) {
+    const result = await Commentator.find({});
+    console.log(result);
+    res.send(result);
+});
+
+app.get("/showAllTeamsWithNoStadium",async function (req, res) {
+    const teamsWithoutStadium = await Team.find({ stadium: { $exists: false } });
+    console.log(teamsWithoutStadium);
+    res.send(teamsWithoutStadium);
+});
 
 app.get("/addPlayer", async function (req, res) {
     try {
