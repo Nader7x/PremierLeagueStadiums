@@ -1,0 +1,41 @@
+<form class="add-form">
+    <div class="form-control">
+        <label for="dropdown">{{text}}</label>
+        <!-- Use [(ngModel)] for two-way data binding -->
+        <select id="dropdown" name="dropdown" [(ngModel)]="selectedCategory">
+            <option value="" disabled>Select a category</option>
+            <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+        </select>
+    </div>
+</form>
+<app-button color="{{showForm? 'red': 'green'}}" text="{{showForm ? 'Close': 'Add'}}" (btnClick)="toggleAddTask()"></app-button>
+
+<!-- Use *ngIf with the correct condition -->
+<div *ngIf="selectedCategory === 'Commentator'">
+    <app-commentator [text]="text" (onSubmitCommentator)="submitCommentator($event)"></app-commentator>
+</div>
+
+<div *ngIf="selectedCategory === 'Stadium'">
+    <app-stadium [text]="text"></app-stadium>
+</div>
+
+<div *ngIf="selectedCategory === 'Coach'">
+
+    <app-coach [text]="text"></app-coach>
+</div>
+
+<div *ngIf="selectedCategory === 'Player'">
+    <app-player [text]="text"></app-player>
+</div>
+
+<div *ngIf="selectedCategory === 'Team'">
+    <app-team [text]="text"></app-team>
+</div>
+
+<div *ngIf="selectedCategory === 'Refree'">
+    <app-refree [text]="text"></app-refree>
+</div>
+
+
+
+

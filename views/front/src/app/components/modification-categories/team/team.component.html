@@ -1,0 +1,19 @@
+<form *ngIf="showModifyComponent">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required>
+    <br><br>
+    <div *ngIf="text!=='Delete'">
+        <label for="kit">Home kit:</label>
+        <input type="text" id="kit" name="kit" required>
+        <br><br>
+        <label for="kit">Away kit:</label>
+        <input type="text" id="kit" name="kit" required>
+        <br><br>
+        <label for="logo">logo:</label>
+        <input type="text" id="logo" name="logo" required>
+        <br><br>
+        <label for="coach">Coach:</label>
+    </div>
+
+    <button type="submit">Add Team</button>
+</form>

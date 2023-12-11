@@ -1,0 +1,15 @@
+<form *ngIf="showModifyComponent">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required>
+    <br><br>
+    <div *ngIf="text!=='Delete'">
+        <label for="capacity">Capacity:</label>
+        <input type="number" id="capacity" name="capacity" required>
+        <br><br>
+        <label for="homeTeam">homeTeam:</label>
+        <input type="text" id="name" name="name" required>
+        <br>
+    </div>
+
+    <button type="submit">Add Stadium</button>
+</form>
