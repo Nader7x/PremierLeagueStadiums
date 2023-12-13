@@ -10,10 +10,13 @@ const Stadium = require("./models/stadiumModel")
 const Match = require("./models/matchModel")
 const Team = require("./models/teamModel")
 const {Referee,Coach,Commentator,User,Admin,Player} = require("./models/persons");
+const cors = require('cors');
 app.use(express.static("public"));
 /*const ejs = */
 require('ejs');
 app.set('view engine', 'ejs');
+
+app.use(cors());
 
 //const positions = ['gk','cb','lb','rb','cm','cam','cdm','cf','rw','rm','lw','lm','st']
 
@@ -117,7 +120,6 @@ app.get("/addPlayer", async function (req, res) {
 });
 
 app.post("/addPlayer",async function(req, res){
-
     const player = new Player({
         name:req.body.name,
         age:req.body.age,
@@ -221,8 +223,21 @@ app.post("/addCommentator",async function(req, res){
     res.send(result)
 });
 
+app.delete('/deleteCommentator/:id', (req, res) => {
+    console.log(req.params.id);
+});
+
+app.delete('/deleteReferee/:id', (req, res) => {
+    console.log(req.params.id);
+});
+
+app.delete('/deleteCoach/:id', (req, res) => {
+    console.log(req.params.id);
+});
+
 //adding team without a stadium and when adding the stadium a new field in the team stadium is added automatically
 app.post("/addTeam",async function(req, res){
+    console.log(req.body);
 
     const team = new Team({
         name:req.body.name,
@@ -235,6 +250,8 @@ app.post("/addTeam",async function(req, res){
         kit:req.body.kit,
         logo:req.body.logo
     });
+
+
     const result = await team.save().catch((err)=>console.log(err));
     console.log(result);
     res.send(result)

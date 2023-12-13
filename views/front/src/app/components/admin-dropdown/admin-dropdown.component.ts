@@ -2,6 +2,12 @@ import { Component, Input, OnInit } from '@angular/core';
 import { UiService } from 'src/app/services/ui.service';
 import { Subscription } from 'rxjs';
 import { CommentatorService } from 'src/app/services/objects/commentator.service';
+import { RefreeService } from 'src/app/services/objects/refree.service';
+import { CoachService } from 'src/app/services/objects/coach.service';
+import { TeamService } from 'src/app/services/objects/team.service';
+import { PlayerService } from 'src/app/services/objects/player.service';
+import { StadiumService } from 'src/app/services/objects/stadium.service';
+import { AnyExpression, ObjectId } from 'mongoose';
 
 @Component({
   selector: 'app-admin-dropdown',
@@ -14,7 +20,7 @@ export class AdminDropdownComponent {
   showForm: boolean = false;
   selectedCategory: string = '';
 
-  constructor(private uiService: UiService, private commentatorService: CommentatorService){
+  constructor(private uiService: UiService, private commentatorService: CommentatorService, private refereeService: RefreeService, private coachService: CoachService, private teamService: TeamService, private playerService: PlayerService, private stadiumService: StadiumService){
     console.log(this.text);
   }
 
@@ -56,13 +62,53 @@ export class AdminDropdownComponent {
     }
   }
 
-  submitCommentator(commentator: any){
-    console.log('addd');
+  submitCommentator(commentator: ObjectId | any){
+    
     if(this.text === 'Add'){
       console.log("Going to the service to post");
       this.commentatorService.addCommentator(commentator).subscribe();
+    }else if(this.text === 'Update'){
+
+    }else{
+      console.log('deletingggg');
+      // console.log(`the type is ${commentator}`);
+      this.commentatorService.deleteCommentator(commentator).subscribe();
     }
-      
   }
-  
+
+  submitReferee(referee: any | ObjectId){
+    if(this.text === 'Add')
+      this.refereeService.addReferee(referee).subscribe();
+    else
+      this.refereeService.deleteReferee(referee).subscribe();
+    
+  }
+
+  submitCoach(coach: any | ObjectId){
+    if(this.text === 'Add')
+      this.coachService.addCoach(coach).subscribe();
+    else
+      this.coachService.deleteCoach(coach).subscribe();
+    
+  }
+
+  submitTeam(team: any){
+    if(this.text === 'Add'){
+      console.log(`from submit team the team is ${team.homeKit}`);
+      console.log(`from submit team the team is ${team.awayKit}`);
+      this.teamService.addTeam(team).subscribe();
+    }
+  }
+
+  submitPlayer(player: any){
+    if(this.text === 'Add'){
+      this.playerService.addPlayer(player).subscribe();
+    }
+  }
+
+  submitStadium(stadium: any){
+    if(this.text === 'Add'){
+      this.stadiumService.addStadium(stadium).subscribe();
+    }
+  }
 }

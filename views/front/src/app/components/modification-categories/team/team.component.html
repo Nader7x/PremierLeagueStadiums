@@ -1,19 +1,27 @@
-<form *ngIf="showModifyComponent">
+<form *ngIf="showModifyComponent" (ngSubmit)="onSubmit()">
     <label for="name">Name:</label>
-    <input type="text" id="name" name="name" required>
+    <input type="text" id="name" name="name" [(ngModel)]="name" required>
     <br><br>
     <div *ngIf="text!=='Delete'">
-        <label for="kit">Home kit:</label>
-        <input type="text" id="kit" name="kit" required>
+        <label for="homeKit">Home kit:</label>
+        <input type="color" id="homeKit" name="homeKit" value="#ff0000" [(ngModel)]="homeKit" required>
         <br><br>
-        <label for="kit">Away kit:</label>
-        <input type="text" id="kit" name="kit" required>
+        <label for="awayKit">Away kit:</label>
+        <input type="color" id="awayKit" name="awayKit" value="#ff0000" [(ngModel)]="awayKit"  required>
         <br><br>
         <label for="logo">logo:</label>
-        <input type="text" id="logo" name="logo" required>
+        <input type="text" id="logo" name="logo" [(ngModel)]="logo" required>
         <br><br>
         <label for="coach">Coach:</label>
+        <div class="form-control">
+            <!-- Use [(ngModel)] for two-way data binding -->
+            <select id="dropdown" name="dropdown" [(ngModel)]="selectedCoach">
+                <option value="" disabled>Select a Coach</option>
+                <option *ngFor="let coach of coaches" [value]="coach.name">{{ coach.name }}</option>
+            </select>
+        </div>
+        <button type="submit">Add Team</button>
     </div>
 
-    <button type="submit">Add Team</button>
+    
 </form>

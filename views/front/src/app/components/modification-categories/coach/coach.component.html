@@ -1,18 +1,25 @@
 
-<form *ngIf="showModifyComponent">
-    <label for="name">Name:</label>
-    <input type="text" id="name" name="name" required>
-    <br><br>
+<form *ngIf="showModifyComponent" (ngSubmit)="onSubmit()">
+    <div *ngIf="text === 'Delete'">
+        <label for="coach">Coach:</label>
+        <div class="form-control">
+            <!-- Use [(ngModel)] for two-way data binding -->
+            <select id="dropdown" name="dropdown" [(ngModel)]="selectedCoach">
+                <option value="" disabled>Select a Coach</option>
+                <option *ngFor="let coach of coaches" [value]="coach.name">{{ coach.name }}</option>
+            </select>
+        </div> 
+    </div>
     
     <div *ngIf="text!=='Delete'">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" [(ngModel)]="name" required>
+        <br><br>
         <label for="age">Age:</label>
-        <input type="number" id="age" name="age" required>
+        <input type="number" id="age" name="age" [(ngModel)]="age" required>
         <br><br>
         <label for="nationality">Nationality:</label>
-        <input type="text" id="nationality" name="nationality" required>
-        <br><br>
-        <label for="name">Team:</label>
-        <input type="text" id="name" name="name" required>
+        <input type="text" id="nationality" name="nationality" [(ngModel)]="nationality" required>
         <br><br>
     </div>
     <button type="submit">Add Coach</button>
