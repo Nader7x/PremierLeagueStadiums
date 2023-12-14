@@ -21,4 +21,4 @@ URL = "http://localhost:3000"
 client.loop_start()
 client.subscribe("EVENT")
 client.on_message = on_message
-time.sleep(35)
+time.sleep(120)

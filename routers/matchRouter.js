@@ -1,4 +1,4 @@
-const {addMatch,getAllMatches,getAllMatchesWithNames,getMatchWithNames,deleteMatch,getMatch,getLiveMatches,getHistoryMatches,goal} = require('../controllers/matchController')
+const {addMatch,getAllMatches,getAllMatchesWithNames,getMatchWithNames,deleteMatch,getMatch,getLiveMatches,getHistoryMatches,goal,endMatch} = require('../controllers/matchController')
 const express = require('express');
 const router = express.Router();
 
@@ -21,5 +21,7 @@ router.get("/match/:id",getMatch);
 router.delete("/match/:id",deleteMatch);
 
 //router.patch("/match/:id",updateMatch);
+
+router.get("/endMatch/:id", endMatch);
 
 module.exports = router;

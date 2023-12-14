@@ -1,8 +1,10 @@
 <form *ngIf="showModifyComponent" (ngSubmit)="onSubmit()">
-    <label for="name">Name:</label>
-    <input type="text" id="name" name="name" [(ngModel)]="name" required>
-    <br><br>
-    <div *ngIf="text!=='Delete'">
+    
+
+    <div *ngIf="text==='Add'">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" [(ngModel)]="name" required>
+        <br><br>
         <label for="homeKit">Home kit:</label>
         <input type="color" id="homeKit" name="homeKit" value="#ff0000" [(ngModel)]="homeKit" required>
         <br><br>
@@ -20,8 +22,59 @@
                 <option *ngFor="let coach of coaches" [value]="coach.name">{{ coach.name }}</option>
             </select>
         </div>
-        <button type="submit">Add Team</button>
+        
     </div>
 
+
+
+    <div *ngIf="text==='Update'">
+        <label for="team">Team:</label>
+        <div class="form-control">
+            <!-- Use [(ngModel)] for two-way data binding -->
+            <select id="dropdown" name="dropdown" [(ngModel)]="selectedTeam" (change)="showSelectedTeamAttributes()">
+                <option value="" disabled>Select a Team</option>
+                <option *ngFor="let team of teamsAllAttributes" [value]="team.name">{{ team.name }}</option>
+            </select>
+        </div>
+
+
+        <div *ngIf="chosenTeamToUpdate">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name"  [(ngModel)]="selectedTeamAttributes.name" required>
+            <br><br>
+            <label for="homeKit">Home kit:</label>
+            <input type="color" id="homeKit" name="homeKit"  [(ngModel)]="selectedTeamAttributes.homeKit" required>
+            <br><br>
+            <label for="awayKit">Away kit:</label>
+            <input type="color" id="awayKit" name="awayKit"  [(ngModel)]="selectedTeamAttributes.awayKit"  required>
+            <br><br>
+            <label for="logo">logo:</label>
+            <input type="text" id="logo" name="logo" [(ngModel)]="selectedTeamAttributes.logo" required>
+            <br><br>
+            <!-- <label for="coach">Coach:</label>
+            <div class="form-control">
+               
+                <select id="dropdown" name="dropdown" [(ngModel)]="selectedCoach">
+                    <option value="" disabled>Select a Coach</option>
+                    <option *ngFor="let coach of coaches" [value]="coach.name">{{ coach.name }}</option>
+                </select>
+            </div> -->
+        </div>
+        
+    </div>
+
+
+    <div *ngIf="text === 'Delete'">
+        <label for="team">Team:</label>
+        <div class="form-control">
+            <!-- Use [(ngModel)] for two-way data binding -->
+            <select id="dropdown" name="dropdown" [(ngModel)]="selectedTeam">
+                <option value="" disabled>Select a Team</option>
+                <option *ngFor="let team of teams" [value]="team.name">{{ team.name }}</option>
+            </select>
+        </div> 
+    </div>
+
+    <button type="submit">Submit</button>
     
 </form>

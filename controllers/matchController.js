@@ -105,5 +105,9 @@ const goal = async (req,res)=>{
     console.log(result);
     res.send(result);
 };
-
-module.exports = {addMatch,getAllMatches,getAllMatchesWithNames,getMatchWithNames,deleteMatch,getMatch,getLiveMatches,getHistoryMatches,goal};
+const endMatch = async (req , res) => {
+    const  result = await Match.findByIdAndUpdate(req.params['id'],{status : false});
+    console.log(result);
+    res.send(result)
+}
+module.exports = {addMatch,getAllMatches,getAllMatchesWithNames,getMatchWithNames,deleteMatch,getMatch,getLiveMatches,getHistoryMatches,goal,endMatch};

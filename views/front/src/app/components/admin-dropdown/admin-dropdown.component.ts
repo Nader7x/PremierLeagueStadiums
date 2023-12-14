@@ -97,12 +97,33 @@ export class AdminDropdownComponent {
       console.log(`from submit team the team is ${team.homeKit}`);
       console.log(`from submit team the team is ${team.awayKit}`);
       this.teamService.addTeam(team).subscribe();
-    }
+    }else if (this.text === 'Update'){
+      let newMap: {
+        name: string,
+        kit: string[],
+        logo: string
+      } = {
+        name: '',
+        kit: [],
+        logo: ''
+      };
+      newMap.name = team.name;
+      newMap.kit[0] = team.homeKit;
+      newMap.kit[1] = team.awayKit;
+      newMap.logo = team.logo;
+      this.teamService.updateTeam(team._id, newMap).subscribe();
+    }else
+      this.teamService.deleteTeam(team).subscribe();
+    
   }
 
   submitPlayer(player: any){
     if(this.text === 'Add'){
       this.playerService.addPlayer(player).subscribe();
+    }else if(this.text === 'Update'){
+      this.playerService.updatePlayer(player._id, player).subscribe();
+    }else{
+      this.playerService.deletePlayer(player).subscribe();
     }
   }
 

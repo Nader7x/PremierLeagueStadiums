@@ -14,7 +14,7 @@ while True:
         awayTeam = response.json()[i]["awayTeam"]
 
 #       choose random player from random team
-        random_operation = random.choice(["card", "goal"])
+        random_operation = random.choice(["goal"])
         random_team = random.choice([homeTeam, awayTeam])
         random_player = random.choice(random_team["squad"])
 #       Publish the data to the MQTT topic

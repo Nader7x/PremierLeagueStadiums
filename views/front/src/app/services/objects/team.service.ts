@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders} from '@angular/common/http';
 import { Observable} from 'rxjs';
+import { ObjectId } from 'mongoose';
 
 const httpOptions = {
   headers: new HttpHeaders(
@@ -23,6 +24,11 @@ export class TeamService {
     return this.http.get<any[]>(url);
   }
 
+  getAllTeamsWithPlayers(): Observable<any[]>{
+    const url = `${this.apiUrl}showAllTeamsWithPlayers`;
+    return this.http.get<any[]>(url);
+  }
+
   addTeam(team: any): Observable<any>{
     console.log(`${team.homeKit}  ${team.name}  ${team.awayKit}  ${team.coach}`);
     console.log(team);
@@ -30,6 +36,21 @@ export class TeamService {
     console.log(`Trying to post now to ${url}`);
     console.log(typeof(team));
     return this.http.post<any>(url, team, httpOptions);
+  }
+
+  deleteTeam(teamId: ObjectId): Observable<any> {
+    const url = `${this.apiUrl}deleteTeam/${teamId}`;
+    
+    // Send DELETE request
+    return this.http.delete<any>(url, httpOptions);
+  }
+
+  updateTeam(teamId: ObjectId, newData: any): Observable<any> {
+    console.log(`Team Id -> ${teamId}`);
+    console.log(`data --> ${newData.name}`);
+    const url = `${this.apiUrl}updateTeam/${teamId}`;
+
+    return this.http.patch<any>(url, newData, httpOptions);
   }
 
 }

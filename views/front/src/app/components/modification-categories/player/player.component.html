@@ -1,8 +1,29 @@
 <form *ngIf="showModifyComponent" (ngSubmit)="onSubmit()">
-    <label for="name">Name:</label>
-    <input type="text" id="name" name="name" [(ngModel)]="name" required>
-    <br><br>
-    <div *ngIf="text!=='Delete'">
+    <div *ngIf="text==='Delete'">
+        <div class="form-control">
+            <label for="team">Team:</label>
+            <!-- Use [(ngModel)] for two-way data binding -->
+            <select id="dropdown" name="dropdown" [(ngModel)]="selectedTeam2" (change)="onTeamSelected()">
+                <option value="" disabled>Select a Team</option>
+                <option *ngFor="let team of teams2" [value]="team.name">{{ team.name }}</option>
+            </select>
+        </div>
+        
+        <div *ngIf="chosenATeam">
+                <label for="player">Player:</label>
+                <!-- Use [(ngModel)] for two-way data binding -->
+                <select id="dropdown" name="dropdown" [(ngModel)]="selectedPlayer">
+                    <option value="" disabled>Select a Player</option>
+                    <option *ngFor="let player of selectedSquad" [value]="player.name">{{ player.name }}</option>
+                </select>
+        </div> 
+
+    </div>
+
+    <div *ngIf="text==='Add'">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" [(ngModel)]="name" required>
+        <br><br>
         <label for="age">Age:</label>
         <input type="number" id="age" name="age" [(ngModel)]="age" required>
         <br><br>
@@ -40,6 +61,60 @@
                 <option *ngFor="let team of teams" [value]="team.name">{{ team.name }}</option>
             </select>
         </div>
+    </div>
+
+
+    <div *ngIf="text==='Update'">
+        <div class="form-control">
+            <label for="team">Team:</label>
+            <!-- Use [(ngModel)] for two-way data binding -->
+            <select id="dropdown" name="dropdown" [(ngModel)]="selectedTeam2" (change)="onTeamSelected()">
+                <option value="" disabled>Select a Team</option>
+                <option *ngFor="let team of listOfTeamsWithPlayers" [value]="team.name">{{ team.name }}</option>
+            </select>
+        </div>
+        
+        <div *ngIf="chosenATeam">
+                <label for="player">Player:</label>
+                <!-- Use [(ngModel)] for two-way data binding -->
+                <select id="dropdown" name="dropdown" [(ngModel)]="selectedPlayer" (change)="showSelectedPlayerAttributes()">
+                    <option value="" disabled>Select a Player</option>
+                    <option *ngFor="let player of selectedSquad" [value]="player.name">{{ player.name }}</option>
+                </select>
+        </div>
+        
+        <div *ngIf="chosenPlayerToUpdate">
+
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" [(ngModel)]="selectedPlayerAttributes.name" required>
+            <br><br>
+            <label for="nationality">Nationality:</label>
+            <input type="text" id="nationality" name="nationality" [(ngModel)]="selectedPlayerAttributes.nationality" required>
+            <br><br>
+            <label for="kitNumber">Kit Number:</label>
+            <input type="number" id="kitNumber" name="kitNumber" [(ngModel)]="selectedPlayerAttributes.kitNumber" required>
+            <br><br>
+            <label for="position">Position:</label>
+            <select id="position" name="position" [(ngModel)] ="selectedPlayerAttributes.position" required>
+                <!-- Replace the following options with dynamically fetched team names from your database -->
+                <option value="" disabled>Select a Position</option>
+                <option value="gk">Gk</option>
+                <option value="cb">Cb</option>
+                <option value="lb">Lb</option>
+                <option value="rb">Rb</option>
+                <option value="cdm">CDM</option>
+                <option value="cm">CM</option>
+                <option value="cam">CAM</option>
+                <option value="lm">LM</option>
+                <option value="rm">RM</option>
+                <option value="lw">LW</option>
+                <option value="rw">RW</option>
+                <option value="cf">CF</option>
+                <option value="st">ST</option>
+
+            </select>
+            </div>
+
     </div>
     
     <button type="submit">Add Player</button>
