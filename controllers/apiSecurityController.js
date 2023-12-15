@@ -12,9 +12,7 @@ const authenticateToken = (requiredRole) => (req, res, next) => {
     // If the token is not in the header, check the cookies
     if (!token) {
         token = req.cookies.token;
-        console.log(token)
     }
-
     if (!token) {
         return res.status(401).json({ message: 'Unauthorized: Missing token' });
     }
