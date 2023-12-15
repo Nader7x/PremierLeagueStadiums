@@ -1,20 +1,23 @@
 const {addStadium,getAllStadiums,getAllStadiumsWithTeam,getStadiumWithTeam,deleteStadium,getStadium,updateStadium,stadiumMatches} = require('../controllers/stadiumController')
 const express = require('express');
+const authenticateToken= require('../controllers/apiSecurityController')
+const isAdmin = authenticateToken('admin');
+const isUser = authenticateToken('user');
 const router = express.Router();
 
-router.get("/stadiums",getAllStadiums);
+router.get("/stadiums",isAdmin,getAllStadiums);
 
-router.post("/stadium",addStadium);
+router.post("/stadium",isAdmin,addStadium);
 
-router.get("/stadiumsWithTeam",getAllStadiumsWithTeam);
+router.get("/stadiumsWithTeam",isAdmin,getAllStadiumsWithTeam);
 
-router.get("/stadiumWithTeam/:id",getStadiumWithTeam);
+router.get("/stadiumWithTeam/:id",isAdmin,getStadiumWithTeam);
 
-router.get("/stadium/:id",getStadium);
+router.get("/stadium/:id",isAdmin || isUser,getStadium);
 //can't update team
-router.patch("/stadium/:id",updateStadium);
+router.patch("/stadium/:id",isAdmin,updateStadium);
 
-router.delete("/stadium/:id",deleteStadium);
-router.get("/stadiumMatches/:id", stadiumMatches)
+router.delete("/stadium/:id",isAdmin,deleteStadium);
+router.get("/stadiumMatches/:id",isAdmin || isUser, stadiumMatches)
 
 module.exports = router;

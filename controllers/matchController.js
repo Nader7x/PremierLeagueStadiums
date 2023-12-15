@@ -70,13 +70,13 @@ const getLiveMatches = async (req, res)=> {
                 select: 'name'
             }
         }).populate('referee', 'name')
-        .populate('commentator', 'name');
+        .populate('commentator', 'name').populate('stadium', 'name');
     console.log(result)
     res.send(result)
 };
 
 const getHistoryMatches = async (req, res)=> {
-    const result = await Match.find({status:false}).populate({
+    const result = await Match.find({status : false}).populate({
         path: 'homeTeam',
         populate: {
             path: 'squad',
@@ -199,8 +199,6 @@ const giveCard = async (req , res) => {
             console.log(e);
             res.send(e);
         }
-
-
 }
 const matchWithAllData = async (req,res)=>
 {
