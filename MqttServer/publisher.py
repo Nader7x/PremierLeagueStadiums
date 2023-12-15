@@ -3,12 +3,17 @@ import time
 import random
 import requests
 
+token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTdjOGZiYWYyOTE4MTU3ZGM5NWNjYjAiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MDI2NjUzNDQsImV4cCI6MzE3Mjc4NjY1MzQ0fQ.KciTmNIVrYcfo0DaNu3Mi06DHf5ns0YiMgDVNXrxwVo"
+
 URL = "http://localhost:3000"
 mqttBroker = "mqtt.eclipseprojects.io"
 client = mqtt.Client("event")
 client.connect(mqttBroker)
+headers = {
+    'Authorization': f'Bearer {token}',
+}
 while True:
-    response = requests.get(f"{URL}/matchesLive")
+    response = requests.get(f"{URL}/matchesLive", headers=headers)
     for i in range(len(response.json())):
         homeTeam = response.json()[i]["homeTeam"]
         awayTeam = response.json()[i]["awayTeam"]

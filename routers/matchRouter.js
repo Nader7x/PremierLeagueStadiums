@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.get("/matches",isAdmin,getAllMatches);
 
-router.get("/matchesLive",isAdmin ,getLiveMatches)
+router.get("/matchesLive",isAdmin,getLiveMatches)
 
 router.get("/matchesHistory",isAdmin,getHistoryMatches)
 

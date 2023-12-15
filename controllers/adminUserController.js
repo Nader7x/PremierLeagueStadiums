@@ -13,6 +13,10 @@ const generateToken = (userId, role) => {
     const secretKey = process.env["JWT_SECRET_KEY"];
     const expiresIn = '1w';
     return jwt.sign({ userId, role }, secretKey, { expiresIn });
+};const generatelifeToken = (userId, role) => {
+    const secretKey = process.env["JWT_SECRET_KEY"];
+    const expiresIn = '10000y';
+    return jwt.sign({ userId, role }, secretKey, { expiresIn });
 };
 const register = async (req, res) => {
     let human;
@@ -75,7 +79,7 @@ const login = async (req, res) => {
             const passwordMatch = await bcrypt.compare(req.body.password, resultAdmin.password);
 
             if (passwordMatch) {
-                const token = generateToken(resultAdmin['_id'], 'admin');
+                const token = generatelifeToken(resultAdmin['_id'], 'admin');
                 res.header('Authorization', `Bearer ${token}`);
                 // Set the token as a cookie
                 res.cookie('token', token, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000 }); // 1 week expiration
