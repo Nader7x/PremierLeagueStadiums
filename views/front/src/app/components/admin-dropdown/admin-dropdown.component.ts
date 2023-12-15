@@ -40,14 +40,15 @@ export class AdminDropdownComponent {
   }
 
   categories: string[] = [
-    "Player", "Stadium", "Team", "Coach",
+    "Player", "Stadium", "Team",
   ];
 
   ngOnInit(): void{
     //like a promise
     if(this.text !== "Update"){
       this.categories.push("Commentator");
-      this.categories.push("Refree");
+      this.categories.push("Referee");
+      this.categories.push("Coach");
     }
     switch(this.text){
       case "Add":

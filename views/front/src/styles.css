@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 /* You can add global styles to this file, and also import other style files */
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap");
+@import "~bootstrap/dist/css/bootstrap.min.css" ;
 
 * {
   box-sizing: border-box;
@@ -8,10 +9,11 @@
   padding: 0;
 }
 
-body {
+ body {
   font-family: "Poppins", sans-serif;
 }
 
+/*
 .container {
   max-width: 500px;
   margin: 30px auto;
@@ -21,7 +23,11 @@ body {
   padding: 30px;
   border-radius: 5px;
 }
-.btn {
+/* 
+
+.btn-block {
+  display: block;
+  width: 100%;.btn {
   display: inline-block;
   background: #000;
   color: #fff;
@@ -40,10 +46,6 @@ body {
 .btn:active {
   transform: scale(0.98);
 }
-
-.btn-block {
-  display: block;
-  width: 100%;
 }
 
 .form-control {
@@ -75,4 +77,6 @@ body {
 .form-control-check input {
   flex: 2;
   height: 20px;
-}
+
+
+  */

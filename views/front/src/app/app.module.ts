@@ -14,6 +14,7 @@ import { StadiumComponent } from './components/modification-categories/stadium/s
 import { CoachComponent } from './components/modification-categories/coach/coach.component';
 import { RefreeComponent } from './components/modification-categories/refree/refree.component';
 import { CommentatorComponent } from './components/modification-categories/commentator/commentator.component';
+import { LiveViewComponent } from './pages/live-view/live-view.component';
 
 
 @NgModule({
@@ -28,6 +29,7 @@ import { CommentatorComponent } from './components/modification-categories/comme
     CoachComponent,
     RefreeComponent,
     CommentatorComponent,
+    LiveViewComponent,
   ],
   imports: [
     BrowserModule,

@@ -2,6 +2,7 @@ import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { UiService } from 'src/app/services/ui.service';
 import { PlayerService } from 'src/app/services/objects/player.service';
+import { TeamService } from 'src/app/services/objects/team.service';
 import { ObjectId } from 'mongoose';
 
 @Component({
@@ -22,7 +23,7 @@ export class StadiumComponent {
   name!:string;
   capacity!:number;
 
-  constructor(private uiService: UiService, private playerService: PlayerService){}
+  constructor(private uiService: UiService, private playerService: PlayerService, private teamService: TeamService ){}
 
   ngOnInit(){
     if(this.text === "Add")
@@ -32,7 +33,7 @@ export class StadiumComponent {
     else
       this.subscription = this.uiService.onUpdateToggle().subscribe((value) => this.showModifyComponent = value);
 
-      this.playerService.getAllTeams().subscribe((data)=>{
+      this.teamService.getAllTeams().subscribe((data)=>{
         // console.log(typeof(data[1]['name']));
         console.log(`size of data is ${data.length}`);
         for(let i=0; i<data.length; i++){

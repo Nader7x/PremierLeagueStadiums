@@ -20,18 +20,18 @@ export class CoachService {
   }
 
   getAllCoaches(): Observable<any[]>{
-    const url = `${this.apiUrl}showAllCoaches`;
+    const url = `${this.apiUrl}coaches`;
     return this.http.get<any[]>(url);
   }
 
   addCoach(coach: any): Observable<any>{
-    const url = `${this.apiUrl}addCoach`;
+    const url = `${this.apiUrl}coach`;
     console.log("Trying to post now");
     return this.http.post<any>(url, coach, httpOptions);
   }
 
   deleteCoach(coachId: string): Observable<any> {
-    const url = `${this.apiUrl}deleteCoach/${coachId}`;
+    const url = `${this.apiUrl}coach/${coachId}`;
     
     // Send DELETE request
     return this.http.delete<any>(url, httpOptions);

@@ -19,36 +19,29 @@ export class TeamService {
 
   constructor(private http: HttpClient) { }
 
-  getAllCoaches(): Observable<any[]>{
-    const url = `${this.apiUrl}showAllCoaches`;
+  getAllTeams(): Observable<any[]>{
+    const url = `${this.apiUrl}teams`;
     return this.http.get<any[]>(url);
   }
 
   getAllTeamsWithPlayers(): Observable<any[]>{
-    const url = `${this.apiUrl}showAllTeamsWithPlayers`;
+    const url = `${this.apiUrl}teamsWithPlayers`;
     return this.http.get<any[]>(url);
   }
 
   addTeam(team: any): Observable<any>{
-    console.log(`${team.homeKit}  ${team.name}  ${team.awayKit}  ${team.coach}`);
-    console.log(team);
-    const url = `${this.apiUrl}addTeam`;
-    console.log(`Trying to post now to ${url}`);
-    console.log(typeof(team));
+    const url = `${this.apiUrl}team`;
     return this.http.post<any>(url, team, httpOptions);
   }
 
   deleteTeam(teamId: ObjectId): Observable<any> {
-    const url = `${this.apiUrl}deleteTeam/${teamId}`;
-    
+    const url = `${this.apiUrl}team/${teamId}`;
     // Send DELETE request
     return this.http.delete<any>(url, httpOptions);
   }
 
   updateTeam(teamId: ObjectId, newData: any): Observable<any> {
-    console.log(`Team Id -> ${teamId}`);
-    console.log(`data --> ${newData.name}`);
-    const url = `${this.apiUrl}updateTeam/${teamId}`;
+    const url = `${this.apiUrl}team/${teamId}`;
 
     return this.http.patch<any>(url, newData, httpOptions);
   }

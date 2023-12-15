@@ -19,21 +19,18 @@ export class CommentatorService {
   constructor(private http: HttpClient) {}
 
   getAllCommentators(): Observable<any[]>{
-    const url = `${this.apiUrl}showAllCommentators`;
+    const url = `${this.apiUrl}commentators`;
     return this.http.get<any[]>(url);
   }
 
   addCommentator(commentator: any): Observable<any>{
-    const url = `${this.apiUrl}addCommentator`;
-    console.log("Trying to post now");
+    const url = `${this.apiUrl}commentator`;
     return this.http.post<any>(url, commentator, httpOptions);
   }
 
 
   deleteCommentator(commentatorId: ObjectId): Observable<any> {
-    console.log(`from deleteCommentator the commentator id is ${commentatorId}`);
-    const url = `${this.apiUrl}deleteCommentator/${commentatorId}`;
-    
+    const url = `${this.apiUrl}commentator/${commentatorId}`;
     // Send DELETE request
     return this.http.delete<any>(url, httpOptions);
   }

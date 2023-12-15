@@ -2,6 +2,7 @@ import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { UiService } from 'src/app/services/ui.service';
 import { TeamService } from 'src/app/services/objects/team.service';
 import { PlayerService } from 'src/app/services/objects/player.service';
+import { CoachService } from 'src/app/services/objects/coach.service';
 import { Subscription } from 'rxjs';
 import { ObjectId } from 'mongoose';
 
@@ -63,7 +64,7 @@ export class TeamComponent {
   chosenTeamToUpdate: boolean = false;
 
 
-  constructor(private uiService: UiService, private teamService: TeamService, private playerService: PlayerService){}
+  constructor(private uiService: UiService, private teamService: TeamService, private playerService: PlayerService, private coachService: CoachService){}
 
 
   ngOnInit(){
@@ -71,51 +72,33 @@ export class TeamComponent {
     this.awayKit = '#ff0000';
     if(this.text === "Add"){
       this.subscription = this.uiService.onAddToggle().subscribe((value) => this.showModifyComponent = value);
-      this.teamService.getAllCoaches().subscribe((data)=>{
-        console.log(typeof(data[1]['name']));
-        console.log(`size of data is ${data.length}`);
+      this.coachService.getAllCoaches().subscribe((data)=>{
         for(let i=0; i<data.length; i++){
-          // this.coaches.push(data[i]['name']);
           this.coaches.push({name: data[i]['name'], id: data[i]['_id']});
-          console.log('pushed');
-          console.log(this.coaches[i].id);
         }
       });
     }
     else if(this.text === "Delete"){
       this.subscription = this.uiService.onDeleteToggle().subscribe((value) => this.showModifyComponent = value);
-      this.playerService.getAllTeams().subscribe((data)=>{
+      this.teamService.getAllTeams().subscribe((data)=>{
         for(let i=0; i<data.length; i++){
-          // this.coaches.push(data[i]['name']);
           this.teams.push({name: data[i]['name'], id: data[i]['_id']});
-          // console.log('pushed');
-          // console.log(this.commentator[i].id);
         }
       });
     }
     else{
       this.subscription = this.uiService.onUpdateToggle().subscribe((value) => this.showModifyComponent = value);
-      this.playerService.getAllTeams().subscribe((data)=>{
-          
-          // this.coaches.push(data[i]['name']);
+      this.teamService.getAllTeams().subscribe((data)=>{
           this.teamsAllAttributes = data;
-          // console.log('pushed');
-          // console.log(this.commentator[i].id);
-        
-        console.log(`Teams all attributes -> ${this.teamsAllAttributes}`);
       });
 
     }
-
-
-   
   }
 
 
   showSelectedTeamAttributes(){
     this.chosenTeamToUpdate = true;
 
-    
     for(let i=0; i< this.teamsAllAttributes.length; i++)
       if(this.teamsAllAttributes[i].name === this.selectedTeam){
         this.selectedTeamAttributes.name = this.teamsAllAttributes[i].name;
@@ -123,24 +106,19 @@ export class TeamComponent {
         this.selectedTeamAttributes.awayKit = this.teamsAllAttributes[i].kit[1];
         this.selectedTeamAttributes.logo = this.teamsAllAttributes[i].logo;
         this.selectedTeamAttributes._id = this.teamsAllAttributes[i]._id;
-        console.log(`omar id ----> ${this.teamsAllAttributes[i]._id}`);
         break;
       }
   }
 
   onSubmit(): void{
-    // console.log(this.age,this.name,this.nationality);
-    
+
     if(this.text === "Add"){
-      if(!this.name || !this.homeKit || !this.awayKit || !this.logo ){
+      if(!this.name || !this.logo ){
         alert('Please Enter all fields!!!');
         return;
       }
       let index = 0;
-      console.log(`Selected Coach is ${this.selectedCoach}` );
-      for(let i=0; i<this.coaches.length; i++){
-        console.log(`${this.coaches[i].name} --> ${this.coaches[i].id}`);
-      }
+
       for(let i=0; i<this.coaches.length; i++){
         if(this.coaches[i].name === this.selectedCoach){
           index = i;
@@ -149,12 +127,10 @@ export class TeamComponent {
       }
       const newTeam = {
         name: this.name,
-        homeKit : this.homeKit,
-        awayKit: this.awayKit,
+        kit: [this.homeKit, this.awayKit],
         logo: this.logo,
         coach: this.coaches[index].id
       }
-      console.log(`Data that will be posted is ${newTeam.coach}`);
       this.onSubmitTeam.emit(newTeam);
       this.name = '';
       this.homeKit = '#ff0000';
@@ -180,7 +156,6 @@ export class TeamComponent {
       }
       this.onSubmitTeam.emit(this.teams[index].id);
     }
-
     this.teams = [];
 
   }

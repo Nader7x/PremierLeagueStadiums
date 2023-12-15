@@ -19,21 +19,15 @@ export class PlayerService {
 
   constructor(private http: HttpClient) { }
 
-  getAllTeams(): Observable<any[]>{
-    const url = `${this.apiUrl}teams`;
-    return this.http.get<any[]>(url);
-  }
+  
 
   getAllPlayersOfSpecificTeam(teamId: ObjectId): Observable<any[]>{
-    const url = `${this.apiUrl}players/${teamId}`;
+    const url = `${this.apiUrl}players`;
     return this.http.get<any[]>(url);
   }
 
   addPlayer(player: any): Observable<any>{
-    // console.log(player);
     const url = `${this.apiUrl}player`;
-    // console.log(`Trying to post now to ${url}`);
-    // console.log(typeof(player));
     return this.http.post<any>(url, player, httpOptions);
   }
 
@@ -45,9 +39,7 @@ export class PlayerService {
   }
 
   updatePlayer(playerId: ObjectId, newData: any): Observable<any> {
-    console.log(`Team Id -> ${playerId}`);
-    console.log(`data --> ${newData.name}`);
-    const url = `${this.apiUrl}team/${playerId}`;
+    const url = `${this.apiUrl}player/${playerId}`;
 
     return this.http.patch<any>(url, newData, httpOptions);
   }

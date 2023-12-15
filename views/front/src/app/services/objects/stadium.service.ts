@@ -20,7 +20,7 @@ export class StadiumService {
 
   addStadium(stadium: any): Observable<any>{
     // console.log(player);
-    const url = `${this.apiUrl}addStadium`;
+    const url = `${this.apiUrl}stadium`;
     // console.log(`Trying to post now to ${url}`);
     // console.log(typeof(player));
     return this.http.post<any>(url, stadium, httpOptions);

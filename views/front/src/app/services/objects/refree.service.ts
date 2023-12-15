@@ -21,18 +21,17 @@ export class RefreeService {
   }
 
   getAllReferees(): Observable<any[]>{
-    const url = `${this.apiUrl}showAllReferees`;
+    const url = `${this.apiUrl}referees`;
     return this.http.get<any[]>(url);
   }
 
   addReferee(referee: any): Observable<any>{
-    const url = `${this.apiUrl}addReferee`;
-    console.log("Trying to post now");
+    const url = `${this.apiUrl}referee`;
     return this.http.post<any>(url, referee, httpOptions);
   }
 
   deleteReferee(refereeId: string): Observable<any> {
-    const url = `${this.apiUrl}deleteReferee/${refereeId}`;
+    const url = `${this.apiUrl}referee/${refereeId}`;
     
     // Send DELETE request
     return this.http.delete<any>(url, httpOptions);

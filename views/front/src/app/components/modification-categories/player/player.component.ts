@@ -85,7 +85,7 @@ export class PlayerComponent {
   ngOnInit(): void{
     if(this.text === "Add"){
       this.subscription = this.uiService.onAddToggle().subscribe((value) => this.showModifyComponent = value);
-      this.playerService.getAllTeams().subscribe((data)=>{
+      this.teamService.getAllTeams().subscribe((data)=>{
         console.log(`size of data is ${data.length}`);
         for(let i=0; i<data.length; i++){
           this.teams.push({name: data[i]['name'], id: data[i]['_id']});
@@ -143,12 +143,12 @@ export class PlayerComponent {
     console.log('hi from showseledted attributes');
     this.chosenPlayerToUpdate = true;
 
-    // for(let i=0; i<this.selectedSquad.length; i++){
-    //   console.log(this.selectedSquad[i]._id);
-    //   console.log(this.selectedSquad[i].name);
-    //   console.log(this.selectedSquad[i].type);
-    //   console.log(this.selectedSquad[i].position);
-    // }
+    for(let i=0; i<this.selectedSquad.length; i++){
+      console.log(this.selectedSquad[i]._id);
+      console.log(this.selectedSquad[i].name);
+      console.log(this.selectedSquad[i].type);
+      console.log(this.selectedSquad[i].position);
+    }
     
     for(let i=0; i< this.selectedSquad.length; i++)
       if(this.selectedSquad[i].name === this.selectedPlayer){
