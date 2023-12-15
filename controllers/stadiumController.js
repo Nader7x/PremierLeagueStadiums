@@ -1,5 +1,6 @@
 const Stadium = require("../models/stadiumModel");
 const Team = require("../models/teamModel");
+const Match = require("../models/matchModel");
 
 
 const addStadium = async (req, res)=>{
@@ -65,5 +66,9 @@ const updateStadium = async (req,res)=>{
     console.log(result);
     res.send(result);
 }
-
-module.exports = {addStadium,getAllStadiums,getAllStadiumsWithTeam,getStadiumWithTeam,deleteStadium,getStadium,updateStadium};
+const stadiumMatches = async (req,res) =>{
+    const result = await Match.find({stadium : req.params['id']}).populate('homeTeam', 'name').populate('awayTeam', 'name');
+    console.log(result)
+    res.send(result)
+}
+module.exports = {addStadium,getAllStadiums,getAllStadiumsWithTeam,getStadiumWithTeam,deleteStadium,getStadium,updateStadium,stadiumMatches};

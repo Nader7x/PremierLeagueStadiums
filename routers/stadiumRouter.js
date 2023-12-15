@@ -1,4 +1,4 @@
-const {addStadium,getAllStadiums,getAllStadiumsWithTeam,getStadiumWithTeam,deleteStadium,getStadium,updateStadium} = require('../controllers/stadiumController')
+const {addStadium,getAllStadiums,getAllStadiumsWithTeam,getStadiumWithTeam,deleteStadium,getStadium,updateStadium,stadiumMatches} = require('../controllers/stadiumController')
 const express = require('express');
 const router = express.Router();
 
@@ -15,5 +15,6 @@ router.get("/stadium/:id",getStadium);
 router.patch("/stadium/:id",updateStadium);
 
 router.delete("/stadium/:id",deleteStadium);
+router.get("/stadiumMatches/:id", stadiumMatches)
 
 module.exports = router;

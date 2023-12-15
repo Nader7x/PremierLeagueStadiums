@@ -1,4 +1,5 @@
-const {addMatch,getAllMatches,getAllMatchesWithNames,getMatchWithNames,deleteMatch,getMatch,getLiveMatches,getHistoryMatches,goal,endMatch} = require('../controllers/matchController')
+const {addMatch,getAllMatches,getAllMatchesWithNames,getMatchWithNames,deleteMatch,getMatch,getLiveMatches,
+    getHistoryMatches,goal,endMatch,giveCard,matchWithAllData, startMatch} = require('../controllers/matchController')
 const express = require('express');
 const router = express.Router();
 
@@ -12,7 +13,11 @@ router.get("/matchesWithNames",getAllMatchesWithNames);
 
 router.post("/match",addMatch);
 
+//take match,team and player all  id's
 router.post("/goal",goal)
+
+//takes match and player both id's
+router.post("/card",giveCard)
 
 router.get("/matchWithNames/:id",getMatchWithNames);
 
@@ -20,8 +25,12 @@ router.get("/match/:id",getMatch);
 
 router.delete("/match/:id",deleteMatch);
 
-//router.patch("/match/:id",updateMatch);
-
 router.get("/endMatch/:id", endMatch);
+
+router.get("/matchWithAllData/:id",matchWithAllData)
+
+router.get("/matchStart/:id",startMatch)
+
+
 
 module.exports = router;

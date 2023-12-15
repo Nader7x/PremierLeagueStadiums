@@ -8,6 +8,7 @@ const teamRoute = require('./routers/teamRouter')
 const mongoose = require('mongoose').default;
 const {Coach} = require("./models/persons");
 const Team = require("./models/teamModel")
+const StartMatchService = require('./Services/StartMatchService')
 const bodyParser = require('body-parser')
 const express = require("express");
 const cors = require('cors');
@@ -98,6 +99,7 @@ app.use('/',stadiumRoute);
 
 app.use('/',matchRoute);
 
+StartMatchService.start().then();
 app.listen(3000,function () {
     console.log("Server started");
 });
