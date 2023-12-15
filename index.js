@@ -5,8 +5,9 @@ const playerRoute = require('./routers/playerRouter')
 const matchRoute = require('./routers/matchRouter')
 const coachRoute = require('./routers/coachRouter')
 const teamRoute = require('./routers/teamRouter')
+const adminUserRoute = require('./routers/adminUserRouter')
 const mongoose = require('mongoose').default;
-const {Coach} = require("./models/persons");
+const {Coach, Referee, Commentator} = require("./models/persons");
 const Team = require("./models/teamModel")
 const StartMatchService = require('./Services/StartMatchService')
 const bodyParser = require('body-parser')
@@ -85,19 +86,37 @@ app.get("/addStadium", async function (req, res) {
     }
 });
 
-app.use('/',playerRoute);
+app.get('/addMatch', async (req, res) => {
+    try {
+        // Fetch teams, referees, and commentators from the database
+        const teams = await Team.find({});
+        const referees = await Referee.find({});
+        const commentators = await Commentator.find({});
+
+        // Render the addMatch view and pass the fetched data to the template
+        res.render('addMatch', { teams, referees, commentators });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+});
 
 app.use('/',commentatorRoute);
 
-app.use('/',coachRoute);
-
-app.use('/',refereeRoute);
-
-app.use('/',teamRoute);
+app.use('/',adminUserRoute);
 
 app.use('/',stadiumRoute);
 
+app.use('/',refereeRoute);
+
+app.use('/',playerRoute);
+
+app.use('/',coachRoute);
+
 app.use('/',matchRoute);
+
+app.use('/',teamRoute);
+
 
 StartMatchService.start().then();
 app.listen(3000,function () {

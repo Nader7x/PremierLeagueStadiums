@@ -1,0 +1,59 @@
+<!-- views/addMatch.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Match</title>
+</head>
+<body>
+<h1>Add Match</h1>
+
+<form method="POST" action="/match">
+    <!-- Home Team -->
+    <label for="homeTeam">Home Team:</label>
+    <select name="homeTeam" required>
+        <!-- Populate the options dynamically with team names and IDs -->
+        <% teams.forEach(team => { %>
+        <option value="<%= team._id %>"><%= team.name %></option>
+        <% }); %>
+    </select>
+    <br><br>
+    <!-- Away Team -->
+    <label for="awayTeam">Away Team:</label>
+    <select name="awayTeam" required>
+        <!-- Populate the options dynamically with team names and IDs -->
+        <% teams.forEach(team => { %>
+        <option value="<%= team._id %>"><%= team.name %></option>
+        <% }); %>
+    </select>
+    <br><br>
+    <!-- Referee -->
+    <label for="referee">Referee:</label>
+    <select name="referee" required>
+        <!-- Populate the options dynamically with referee names and IDs -->
+        <% referees.forEach(referee => { %>
+        <option value="<%= referee._id %>"><%= referee.name %></option>
+        <% }); %>
+    </select>
+    <br><br>
+    <!-- Commentator -->
+    <label for="commentator">Commentator:</label>
+    <select name="commentator" required>
+        <!-- Populate the options dynamically with commentator names and IDs -->
+        <% commentators.forEach(commentator => { %>
+        <option value="<%= commentator._id %>"><%= commentator.name %></option>
+        <% }); %>
+    </select>
+    <br><br>
+    <!-- Date -->
+    <label for="date">Date:</label>
+    <input type="datetime-local" name="date" required>
+    <br><br>
+        <!-- Other form fields (e.g., stadium, additional details) can be added here -->
+
+        <button type="submit">Add Match</button>
+</form>
+</body>
+</html>

@@ -11,7 +11,7 @@ const addMatch = async (req, res)=>{
         referee:req.body.referee,
         commentator:req.body.commentator,
         stadium:team['stadium'],
-        date:new Date()
+        date:req.body.date
     });
     const result = await match.save().catch((err)=>console.log(err));
     console.log(result);
@@ -185,7 +185,6 @@ const giveCard = async (req , res) => {
             else if (match['cards'].get(req.body.player) && match['cards'].get(req.body.player) === 'red'){
                 console.log("error player already suspended");
                 res.send("error player already suspended");
-                return;
             }
             else {
                 const update = {};
