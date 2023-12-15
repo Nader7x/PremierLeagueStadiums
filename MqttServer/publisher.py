@@ -3,7 +3,7 @@ import time
 import random
 import requests
 
-token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTdjOGZiYWYyOTE4MTU3ZGM5NWNjYjAiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MDI2NjUzNDQsImV4cCI6MzE3Mjc4NjY1MzQ0fQ.KciTmNIVrYcfo0DaNu3Mi06DHf5ns0YiMgDVNXrxwVo"
+token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTdjOGZiYWYyOTE4MTU3ZGM5NWNjYjAiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MDI2Njk2NjYsImV4cCI6MzE3Mjc4NjY5NjY2fQ.EXPvjDuNXZAk4oZ123MEtmm9J6HMPQ9bVZoWLudRL8s"
 
 URL = "http://localhost:3000"
 mqttBroker = "mqtt.eclipseprojects.io"
@@ -14,6 +14,7 @@ headers = {
 }
 while True:
     response = requests.get(f"{URL}/matchesLive", headers=headers)
+    print(len(response.json()))
     for i in range(len(response.json())):
         homeTeam = response.json()[i]["homeTeam"]
         awayTeam = response.json()[i]["awayTeam"]

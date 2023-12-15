@@ -71,7 +71,7 @@ const getLiveMatches = async (req, res)=> {
             }
         }).populate('referee', 'name')
         .populate('commentator', 'name').populate('stadium', 'name');
-    console.log(result)
+    //console.log(result)
     res.send(result)
 };
 
@@ -130,7 +130,7 @@ const goal = async (req,res)=>{
         matchofGoals[req.body.player]=1;
        result = await Match.findByIdAndUpdate(match['_id'],{'goals':matchofGoals}, {new :true})
     }
-    console.log(result);
+    //console.log(result);
     res.send(result);
 };
 const endMatch = async (req , res) => {
@@ -161,7 +161,7 @@ const endMatch = async (req , res) => {
     }
     await Team.findByIdAndUpdate(hometeamId, homeTeam);
     await Team.findByIdAndUpdate(awayteamId, awayTeam);
-    console.log(result);
+    //console.log(result);
     res.send(result)
 }
 const giveCard = async (req , res) => {
@@ -190,7 +190,7 @@ const giveCard = async (req , res) => {
                 const update = {};
                 update['cards.' + req.body.player] = req.body.card;
                 const result = await Match.findByIdAndUpdate(req.body.match, {$set: update}, {new: true});
-                console.log(result);
+                //console.log(result);
                 res.send(result);
             }
         }
