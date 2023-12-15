@@ -1,6 +1,5 @@
 const cron = require('node-cron');
 const axios = require('axios');
-const {toString} = require("express");
 const moment = require('moment-timezone');
 
 
@@ -23,7 +22,7 @@ async function start() {
              const matchYear = matchDate.year();
              const matchMonth = matchDate.month() + 1; // Months are zero-based
              const matchDay = matchDate.date();
-             const matchHours = matchDate.hour()-2;
+             const matchHours = matchDate.tz('Europe/Athens').hour();
              const matchMinutes = matchDate.minute();
 
              if (

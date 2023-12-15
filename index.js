@@ -13,7 +13,9 @@ const StartMatchService = require('./Services/StartMatchService')
 const bodyParser = require('body-parser')
 const express = require("express");
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const app = express();
+app.use(cookieParser());
 mongoose.set('strictQuery', false);
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.static("public"));

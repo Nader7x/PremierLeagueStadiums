@@ -72,6 +72,7 @@ const getTeam = async (req, res)=>{
     res.send(result);
 }
 
+//get team with players
 const getTeamWithPlayers = async function (req, res) {
     const result = await Team.findById(req.params['id']).populate("squad","name");
     console.log(result)

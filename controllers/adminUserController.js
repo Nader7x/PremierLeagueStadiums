@@ -1,8 +1,19 @@
 const {Admin,User} = require("../models/persons");
-
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
+const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const saltRounds = 10; // Number of salt rounds, you can adjust this based on your security requirements
+// const keyLength = 32;
+// const randomBytes = crypto.randomBytes(keyLength);
+// const key = randomBytes.toString('hex');
+// process.env["JWT_SECRET_KEY"] = key;
 
+const generateToken = (userId, role) => {
+    const secretKey = process.env["JWT_SECRET_KEY"];
+    const expiresIn = '1w';
+    return jwt.sign({ userId, role }, secretKey, { expiresIn });
+};
 const register = async (req, res) => {
     let human;
 
@@ -41,27 +52,34 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
-        const result = await Admin.findOne({ username: req.body.username });
+        const resultAdmin = await Admin.findOne({ username: req.body.username });
 
-        if (!result) {
-            const result2 = await User.findOne({ username: req.body.username });
+        if (!resultAdmin) {
+            const resultUser = await User.findOne({ username: req.body.username });
 
-            if (!result2) {
+            if (!resultUser) {
                 res.send(false);
             } else {
-                const passwordMatch = await bcrypt.compare(req.body.password, result2.password);
-
+                const passwordMatch = await bcrypt.compare(req.body.password, resultUser.password);
                 if (passwordMatch) {
-                    res.send(result2);
+                    const token = generateToken(resultUser['_id'], 'user');
+                    res.header('Authorization', `Bearer ${token}`);
+                    // Set the token as a cookie
+                    res.cookie('token', token, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000 }); // 1 week expiration
+                    res.json({ user: resultUser, token });
                 } else {
                     res.send(false);
                 }
             }
         } else {
-            const passwordMatch = await bcrypt.compare(req.body.password, result.password);
+            const passwordMatch = await bcrypt.compare(req.body.password, resultAdmin.password);
 
             if (passwordMatch) {
-                res.send(result);
+                const token = generateToken(resultAdmin['_id'], 'admin');
+                res.header('Authorization', `Bearer ${token}`);
+                // Set the token as a cookie
+                res.cookie('token', token, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000 }); // 1 week expiration
+                res.json({ admin: resultAdmin, token });
             } else {
                 res.send(false);
             }

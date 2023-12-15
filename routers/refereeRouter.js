@@ -1,15 +1,18 @@
 const {updateReferee, deleteReferee, addReferee, getReferee, getAllReferee} = require("../controllers/refereeController");
 const express = require('express');
+const authenticateToken= require('../controllers/apiSecurityController')
+const isAdmin = authenticateToken('admin');
+const isUser = authenticateToken('user');
 const router = express.Router();
 
-router.get("/referees",getAllReferee);
+router.get("/referees",isAdmin,getAllReferee);
 
-router.post("/referee",addReferee);
+router.post("/referee",isAdmin,addReferee);
 
-router.get("/referee/:id",getReferee);
+router.get("/referee/:id",isAdmin || isUser,getReferee);
 
-router.delete("/referee/:id",deleteReferee);
+router.delete("/referee/:id",isAdmin,deleteReferee);
 
-router.patch("/referee/:id",updateReferee)
+router.patch("/referee/:id",isAdmin,updateReferee)
 
 module.exports = router;
