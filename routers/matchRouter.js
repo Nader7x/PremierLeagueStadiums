@@ -1,35 +1,38 @@
 const {addMatch,getAllMatches,getAllMatchesWithNames,getMatchWithNames,deleteMatch,getMatch,getLiveMatches,
     getHistoryMatches,goal,endMatch,giveCard,matchWithAllData, startMatch} = require('../controllers/matchController')
 const express = require('express');
+const authenticateToken= require('../controllers/apiSecurityController')
+const isAdmin = authenticateToken('admin');
+const isUser = authenticateToken('user');
 const router = express.Router();
 
-router.get("/matches",getAllMatches);
+router.get("/matches",isAdmin,getAllMatches);
 
-router.get("/matchesLive",getLiveMatches)
+router.get("/matchesLive",isAdmin,getLiveMatches)
 
-router.get("/matchesHistory",getHistoryMatches)
+router.get("/matchesHistory",isAdmin,getHistoryMatches)
 
-router.get("/matchesWithNames",getAllMatchesWithNames);
+router.get("/matchesWithNames",isAdmin,getAllMatchesWithNames);
 
-router.post("/match",addMatch);
+router.post("/match",isAdmin,addMatch);
 
 //take match,team and player all  id's
-router.post("/goal",goal)
+router.post("/goal",isAdmin,goal)
 
 //takes match and player both id's
-router.post("/card",giveCard)
+router.post("/card",isAdmin,giveCard)
 
-router.get("/matchWithNames/:id",getMatchWithNames);
+router.get("/matchWithNames/:id",isAdmin,getMatchWithNames);
 
-router.get("/match/:id",getMatch);
+router.get("/match/:id",isAdmin,getMatch);
 
-router.delete("/match/:id",deleteMatch);
+router.delete("/match/:id",isAdmin,deleteMatch);
 
-router.get("/endMatch/:id", endMatch);
+router.get("/endMatch/:id",isAdmin, endMatch);
 
 router.get("/matchWithAllData/:id",isAdmin,matchWithAllData)
 
-router.get("/matchStart/:id",startMatch)
+router.get("/matchStart/:id",isAdmin,startMatch)
 
 
 
