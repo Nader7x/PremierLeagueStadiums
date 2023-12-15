@@ -7,7 +7,11 @@ const getPlayer = async (req, res)=> {
     console.log(result)
     res.send(result);
 }
-
+const playersWithSameTeam = async function (req, res) {
+    const result = await Team.find({'team':req.params['teamId']} ).populate('squad','name');
+    console.log(result)
+    res.send(result)
+}
 const addPlayer = async (req, res)=> {
 
     const player = new Player({
@@ -76,4 +80,4 @@ const addPlayers = async (req, res) =>{
 };
 
 
-module.exports = {getPlayer,addPlayer,updatePlayer,deletePlayer,getAllPlayers,addPlayers};
+module.exports = {getPlayer,addPlayer,updatePlayer,deletePlayer,getAllPlayers,addPlayers,playersWithSameTeam};
