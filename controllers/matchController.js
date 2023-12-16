@@ -14,32 +14,32 @@ const addMatch = async (req, res)=>{
         date:req.body.date
     });
     const result = await match.save().catch((err)=>console.log(err));
-    console.log(result);
+    // console.log(result);
     res.send(result)
 }
 
 const getAllMatches = async (req,res)=>{
     const result = await Match.find({});
-    console.log(result);
+    // console.log(result);
     res.send(result);
 };
 
 const getAllMatchesWithNames = async (req,res)=>{
     const result = await Match.find({}).populate('homeTeam','name').populate('awayTeam','name').populate('referee','name').populate('commentator','name');
-    console.log(result);
+    // console.log(result);
     res.send(result);
 };
 
 const getMatchWithNames = async (req,res)=>{
     const result = await Match.findById(req.params['id']).populate('homeTeam','name').populate('awayTeam','name').populate('referee','name').populate('commentator','name');
-    console.log(result);
+    // console.log(result);
     res.send(result);
 };
 
 const deleteMatch = async (req,res)=>{
     try {
         const result = await Match.findByIdAndDelete(req.params['id']);
-        console.log(result);
+        // console.log(result);
         res.send(result);
     }catch (e) {
         console.log(e)
@@ -49,12 +49,12 @@ const deleteMatch = async (req,res)=>{
 
 const getMatch = async (req,res)=>{
     const result = await Match.findById(req.params['id']);
-    console.log(result);
+    // console.log(result);
     res.send(result);
 };
 
 const getLiveMatches = async (req, res)=> {
-    const result = await Match.find({status:true}).populate({
+    const result = await Match.find({status:true,endState:false}).populate({
         path: 'homeTeam',
         populate: {
             path: 'squad',
@@ -71,12 +71,12 @@ const getLiveMatches = async (req, res)=> {
             }
         }).populate('referee', 'name')
         .populate('commentator', 'name').populate('stadium', 'name');
-    console.log(result)
+    // console.log(result)
     res.send(result)
 };
 
 const getHistoryMatches = async (req, res)=> {
-    const result = await Match.find({status : false}).populate({
+    const result = await Match.find({endState : true , status : true}).populate({
         path: 'homeTeam',
         populate: {
             path: 'squad',
@@ -91,8 +91,7 @@ const getHistoryMatches = async (req, res)=> {
                 model: 'Player',
                 select: 'name'
             }
-        }).populate('referee', 'name')
-        .populate('commentator', 'name');
+        }).populate('referee', 'name').populate('commentator', 'name');
     // console.log(result)
     res.send(result)
 };
@@ -130,12 +129,12 @@ const goal = async (req,res)=>{
         matchofGoals[req.body.player]=1;
        result = await Match.findByIdAndUpdate(match['_id'],{'goals':matchofGoals}, {new :true})
     }
-    console.log(result);
+    // console.log(result);
     res.send(result);
 };
 const endMatch = async (req , res) => {
-    const  result = await Match.findByIdAndUpdate(req.params['id'],{status : false}, {new: true});
-    await Stadium.findByIdAndUpdate(result['stadium'],{state: false});
+    const  result = await Match.findByIdAndUpdate(req.params['id'],{ endState : true}, {new: true});
+    await Stadium.findByIdAndUpdate(result['stadium'],{state: false });
     const hometeamId = result['homeTeam']
     const awayteamId = result['awayTeam']
     const homeTeam = await Team.findById(hometeamId);
@@ -161,7 +160,7 @@ const endMatch = async (req , res) => {
     }
     await Team.findByIdAndUpdate(hometeamId, homeTeam);
     await Team.findByIdAndUpdate(awayteamId, awayTeam);
-    console.log(result);
+    // console.log(result);
     res.send(result)
 }
 const giveCard = async (req , res) => {
@@ -179,7 +178,7 @@ const giveCard = async (req , res) => {
                 const update = {};
                 update['cards.' + req.body.player] = 'red';
                 const result = await Match.findByIdAndUpdate(req.body.match, {$set: update}, {new: true});
-                console.log(result);
+                // console.log(result);
                 res.send(result);
             }
             else if (match['cards'].get(req.body.player) && match['cards'].get(req.body.player) === 'red'){
@@ -190,7 +189,7 @@ const giveCard = async (req , res) => {
                 const update = {};
                 update['cards.' + req.body.player] = req.body.card;
                 const result = await Match.findByIdAndUpdate(req.body.match, {$set: update}, {new: true});
-                console.log(result);
+                // console.log(result);
                 res.send(result);
             }
         }
@@ -212,4 +211,9 @@ const startMatch = async (req,res)=>{
     // console.log(result);
     res.send(result);
 }
-module.exports = {addMatch,getAllMatches,getAllMatchesWithNames,getMatchWithNames,deleteMatch,getMatch,getLiveMatches,getHistoryMatches,goal,endMatch,giveCard,matchWithAllData,startMatch};
+const getUpcomingMatches = async (req,res)=>{
+    const result = await Match.find({status: false , endState: false})
+    // console.log(result)
+    res.send(result)
+}
+module.exports = {addMatch,getAllMatches,getAllMatchesWithNames,getMatchWithNames,deleteMatch,getMatch,getLiveMatches,getHistoryMatches,goal,endMatch,giveCard,matchWithAllData,startMatch,getUpcomingMatches};

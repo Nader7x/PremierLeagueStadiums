@@ -4,12 +4,12 @@ const Team = require("../models/teamModel");
 
 const getPlayer = async (req, res)=> {
     const result = await Player.findOne({_id: req.params['playerId']});
-    console.log(result)
+    // console.log(result)
     res.send(result);
 }
 const playersWithSameTeam = async function (req, res) {
     const result = await Team.find({'team':req.params['teamId']} ).populate('squad','name');
-    console.log(result)
+    // console.log(result)
     res.send(result)
 }
 const addPlayer = async (req, res)=> {
@@ -30,14 +30,14 @@ const addPlayer = async (req, res)=> {
     }catch (e) {
         console.log(e);
     }
-    console.log(result);
+    // console.log(result);
     res.send(result)
 };
 
 const updatePlayer = async (req, res) => {
     //result send data before update
     const result = await Player.findByIdAndUpdate(req.params['id'],req.body);
-    console.log(result);
+    // console.log(result);
     res.send(result);
 };
 
@@ -48,7 +48,7 @@ const deletePlayer = async (req, res) => {
         const teamId = player['team'];
         await Team.findByIdAndUpdate(teamId,{$pull:{squad:playerId}});
         const result = await Player.findByIdAndDelete(playerId);
-        console.log(result);
+        // console.log(result);
         res.send(result)
     }catch (e) {
         res.send(e)
@@ -58,7 +58,7 @@ const deletePlayer = async (req, res) => {
 
 const getAllPlayers = async (req, res) => {
     const result = await Player.find({});
-    console.log(result)
+    // console.log(result)
     res.send(result);
 };
 
@@ -75,7 +75,7 @@ const addPlayers = async (req, res) =>{
     }catch (e) {
         console.log(e);
     }
-    console.log(result);
+    // console.log(result);
     res.send(result)
 };
 

@@ -47,7 +47,7 @@ const register = async (req, res) => {
         }
 
         const result = await human.save();
-        console.log(result);
+        // console.log(result);
         res.send(result);
     } catch (err) {
         console.log(err);

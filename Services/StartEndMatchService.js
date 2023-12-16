@@ -14,7 +14,7 @@ async function start() {
         const [month, day, year] = date.split('/');
         const [hours, minutes, seconds] = time.split(':');
 
-       const response = await axios.get(url +"matchesHistory",{
+       const response = await axios.get(url +"upcomingMatches",{
            headers: {
                Authorization: `Bearer ${token}`,
            },

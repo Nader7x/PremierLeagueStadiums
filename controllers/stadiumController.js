@@ -14,25 +14,25 @@ const addStadium = async (req, res)=>{
     const result = await stadium.save().catch((err)=>console.log(err));
     console.log(result);
     await Team.findByIdAndUpdate(result['homeTeam'],{stadium:result["_id"]});
-    console.log(result);
+    // console.log(result);
     res.send(result)
 };
 
 const getAllStadiums = async (req,res)=>{
     const result = await Stadium.find({});
-    console.log(result);
+    // console.log(result);
     res.send(result);
 };
 
 const getAllStadiumsWithTeam = async (req,res)=>{
     const result = await Stadium.find({}).populate('homeTeam','name');
-    console.log(result);
+    // console.log(result);
     res.send(result);
 };
 
 const getStadiumWithTeam = async (req,res)=>{
     const result = await Stadium.findById(req.params['id']).populate('homeTeam','name');
-    console.log(result);
+    // console.log(result);
     res.send(result);
 };
 
@@ -42,7 +42,7 @@ const deleteStadium = async (req,res)=>{
         const teamId = await stadium['homeTeam'];
         await Team.findByIdAndUpdate(teamId, {$unset: {stadium: 1}});
         const result = await Stadium.findByIdAndDelete(req.params['id']);
-        console.log(result);
+        // console.log(result);
         res.send(result);
     }catch (e) {
         console.log(e)
@@ -52,7 +52,7 @@ const deleteStadium = async (req,res)=>{
 
 const getStadium = async (req,res)=>{
     const result = await Stadium.findById(req.params['id']);
-    console.log(result);
+    // console.log(result);
     res.send(result);
 };
 
@@ -63,12 +63,12 @@ const updateStadium = async (req,res)=>{
         delete newJson['homeTeam'];
     }
     const result = await Stadium.findByIdAndUpdate(req.params['id'],newJson);
-    console.log(result);
+    // console.log(result);
     res.send(result);
 }
 const stadiumMatches = async (req,res) =>{
     const result = await Match.find({stadium : req.params['id']}).populate('homeTeam', 'name').populate('awayTeam', 'name');
-    console.log(result)
+    // console.log(result)
     res.send(result)
 }
 module.exports = {addStadium,getAllStadiums,getAllStadiumsWithTeam,getStadiumWithTeam,deleteStadium,getStadium,updateStadium,stadiumMatches};

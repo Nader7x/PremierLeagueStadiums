@@ -2,13 +2,13 @@ const {Referee} = require("../models/persons");
 
 const updateReferee = async (req, res)=>{
     const result = await Referee.findByIdAndUpdate(req.params['id'], req.body);
-    console.log(result);
+    // console.log(result);
     res.send(result);
 };
 
 const deleteReferee = async (req, res)=>{
     const result = await Referee.findByIdAndDelete(req.params['id']);
-    console.log(result);
+    // console.log(result);
     res.send(result)
 }
 
@@ -19,19 +19,19 @@ const addReferee = async (req, res)=>{
         nationality:req.body.nationality,
     });
     const result = await referee.save().catch((err)=>console.log(err));
-    console.log(result);
+    // console.log(result);
     res.send(result)
 };
 
 const getReferee = async (req, res)=>{
     const result = await Referee.findOne({'_id':req.params['id']});
-    console.log(result);
+    // console.log(result);
     res.send(result);
 }
 
 const getAllReferee = async (req, res)=>{
     const result = await Referee.find({});
-    console.log(result);
+    // console.log(result);
     res.send(result);
 };
 
