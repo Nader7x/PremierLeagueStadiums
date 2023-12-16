@@ -26,7 +26,6 @@ def on_message(clients, userdata, message):
 mqttBroker = "mqtt.eclipseprojects.io"
 client = mqtt.Client("webPage")
 client.connect(mqttBroker)
-URL = "http://localhost:3000"
 client.loop_start()
 client.subscribe("EVENT")
 client.on_message = on_message

@@ -5,19 +5,19 @@ const Stadium = require("../models/stadiumModel");
 
 const teamsWithPlayers = async function (req, res) {
     const result = await Team.find({}).populate('coach','name').populate('squad','name');
-    console.log(result)
+    // console.log(result)
     res.send(result)
 }
 
 const getAllTeams = async (req, res)=>{
     const result = await Team.find({});
-    console.log(result)
+    // console.log(result)
     res.send(result)
 }
 
 const getTeamsWithNoStadium = async (req, res) =>{
     const teamsWithoutStadium = await Team.find({ stadium: { $exists: false} });
-    console.log(teamsWithoutStadium);
+    // console.log(teamsWithoutStadium);
     res.send(teamsWithoutStadium);
 }
 
@@ -35,7 +35,7 @@ const addTeam = async function(req, res){
         logo:req.body.logo
     });
     const result = await team.save().catch((err)=>console.log(err));
-    console.log(result);
+    // console.log(result);
     res.send(result)
 }
 
@@ -47,7 +47,7 @@ const deleteTeam = async (req, res) => {
         await Player.findByIdAndUpdate(playerId,{team:null});
     }
     const result = await Team.findByIdAndDelete(req.params['id']);
-    console.log(result);
+    // console.log(result);
     res.send(result)
 }
 
@@ -61,21 +61,21 @@ const updateTeam = async (req, res) =>{
         delete newJson['squad'];
     }
     const result = await Team.findByIdAndUpdate(req.params['id'],newJson);
-    console.log(result);
+    // console.log(result);
     res.send(result)
 
 }
 
 const getTeam = async (req, res)=>{
     const result = await Team.findById(req.params['id']);
-    console.log(result)
+    // console.log(result)
     res.send(result);
 }
 
 //get team with players
 const getTeamWithPlayers = async function (req, res) {
     const result = await Team.findById(req.params['id']).populate("squad","name");
-    console.log(result)
+    // console.log(result)
     res.send(result);
 }
 
