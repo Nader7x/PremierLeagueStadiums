@@ -76,7 +76,7 @@ const getLiveMatches = async (req, res)=> {
 };
 
 const getHistoryMatches = async (req, res)=> {
-    const result = await Match.find({endState : true , status : true}).populate({
+    const result = await Match.find({endState : true}).populate({
         path: 'homeTeam',
         populate: {
             path: 'squad',
@@ -134,7 +134,7 @@ const goal = async (req,res)=>{
     res.send(result);
 };
 const endMatch = async (req , res) => {
-    const  result = await Match.findByIdAndUpdate(req.params['id'],{ endState : true}, {new: true});
+    const  result = await Match.findByIdAndUpdate(req.params['id'],{endState : true, status:false}, {new: true});
     await Stadium.findByIdAndUpdate(result['stadium'],{state: false });
     const hometeamId = result['homeTeam']
     const awayteamId = result['awayTeam']

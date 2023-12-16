@@ -4,7 +4,7 @@ import time
 import requests
 
 URL = "http://localhost:3000"
-token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTdjOGZiYWYyOTE4MTU3ZGM5NWNjYjAiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MDI2Njk2NjYsImV4cCI6MzE3Mjc4NjY5NjY2fQ.EXPvjDuNXZAk4oZ123MEtmm9J6HMPQ9bVZoWLudRL8s"
+token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTdjOGZiYWYyOTE4MTU3ZGM5NWNjYjAiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MDI3MzI5ODIsImV4cCI6MzE3Mjc4NzMyOTgyfQ.XPhNQCvwkJ8LsDrvo5HJ1EhvBhKNzBucDdpZEk2k36s"
 headers = {
         'Authorization': f'Bearer {token}'
     }
