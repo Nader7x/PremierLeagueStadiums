@@ -91,7 +91,8 @@ const getHistoryMatches = async (req, res)=> {
                 model: 'Player',
                 select: 'name'
             }
-        }).populate('referee', 'name').populate('commentator', 'name');
+        }).populate('referee', 'name')
+        .populate('commentator', 'name');
     // console.log(result)
     res.send(result)
 };

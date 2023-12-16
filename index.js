@@ -39,6 +39,15 @@ async function connectToMongoDB() {
 
 connectToMongoDB().then();
 
+try {
+    StartMatchService.start().then(
+
+    );
+} catch (error) {
+    console.error("Error in cron job:", error);
+}
+
+
 app.get("/addCoach", async function (req, res) {
     try {
         res.render("addCoach"); // Pass the teams data to the EJS template
@@ -117,10 +126,8 @@ app.use('/',coachRoute);
 
 app.use('/',matchRoute);
 
+
 app.use('/',teamRoute);
-
-
-StartMatchService.start().then();
 app.listen(3000,function () {
     console.log("Server started");
 });
