@@ -20,12 +20,9 @@ export class AdminDropdownComponent {
   showForm: boolean = false;
   selectedCategory: string = '';
 
-  constructor(private uiService: UiService, private commentatorService: CommentatorService, private refereeService: RefreeService, private coachService: CoachService, private teamService: TeamService, private playerService: PlayerService, private stadiumService: StadiumService){
-    console.log(this.text);
-  }
+  constructor(private uiService: UiService, private commentatorService: CommentatorService, private refereeService: RefreeService, private coachService: CoachService, private teamService: TeamService, private playerService: PlayerService, private stadiumService: StadiumService){}
 
   toggleAddTask(){
-    console.log(`Toggling task for ${this.text}`);
     switch(this.text){
       case "Add":
         this.uiService.toggleModifyComponentAdd();
@@ -65,16 +62,10 @@ export class AdminDropdownComponent {
 
   submitCommentator(commentator: ObjectId | any){
     
-    if(this.text === 'Add'){
-      console.log("Going to the service to post");
+    if(this.text === 'Add')
       this.commentatorService.addCommentator(commentator).subscribe();
-    }else if(this.text === 'Update'){
-
-    }else{
-      console.log('deletingggg');
-      // console.log(`the type is ${commentator}`);
+    else
       this.commentatorService.deleteCommentator(commentator).subscribe();
-    }
   }
 
   submitReferee(referee: any | ObjectId){
@@ -82,7 +73,6 @@ export class AdminDropdownComponent {
       this.refereeService.addReferee(referee).subscribe();
     else
       this.refereeService.deleteReferee(referee).subscribe();
-    
   }
 
   submitCoach(coach: any | ObjectId){
@@ -90,15 +80,12 @@ export class AdminDropdownComponent {
       this.coachService.addCoach(coach).subscribe();
     else
       this.coachService.deleteCoach(coach).subscribe();
-    
   }
 
   submitTeam(team: any){
-    if(this.text === 'Add'){
-      console.log(`from submit team the team is ${team.homeKit}`);
-      console.log(`from submit team the team is ${team.awayKit}`);
+    if(this.text === 'Add')
       this.teamService.addTeam(team).subscribe();
-    }else if (this.text === 'Update'){
+    else if (this.text === 'Update'){
       let newMap: {
         name: string,
         kit: string[],
@@ -119,18 +106,18 @@ export class AdminDropdownComponent {
   }
 
   submitPlayer(player: any){
-    if(this.text === 'Add'){
+    if(this.text === 'Add')
       this.playerService.addPlayer(player).subscribe();
-    }else if(this.text === 'Update'){
+    else if(this.text === 'Update')
       this.playerService.updatePlayer(player._id, player).subscribe();
-    }else{
+    else
       this.playerService.deletePlayer(player).subscribe();
-    }
+    
   }
 
   submitStadium(stadium: any){
-    if(this.text === 'Add'){
+    if(this.text === 'Add')
       this.stadiumService.addStadium(stadium).subscribe();
-    }
+    
   }
 }

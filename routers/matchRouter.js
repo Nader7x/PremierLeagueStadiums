@@ -27,7 +27,7 @@ router.delete("/match/:id",deleteMatch);
 
 router.get("/endMatch/:id", endMatch);
 
-router.get("/matchWithAllData/:id",matchWithAllData)
+router.get("/matchWithAllData/:id",matchWithAllData)    //will give me the whole data that I need
 
 router.get("/matchStart/:id",startMatch)
 

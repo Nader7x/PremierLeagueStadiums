@@ -96,6 +96,30 @@ export class TeamComponent {
   }
 
 
+  static hex2rgb(hex: string) {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    
+    // return {r, g, b} 
+    return { r, g, b };
+  }
+
+  static calculateColorDifference(color1: any, color2: any) {
+    // Calculate the Euclidean distance in the RGB color space
+    const dr = color1.r - color2.r;
+    const dg = color1.g - color2.g;
+    const db = color1.b - color2.b;
+
+    return Math.sqrt(dr * dr + dg * dg + db * db);
+  }
+
+  static isColorDifferent(color1: any, color2: any, threshold = 50) {
+    // Set a threshold for color difference
+    return this.calculateColorDifference(color1, color2) > threshold;
+  }
+
+
   showSelectedTeamAttributes(){
     this.chosenTeamToUpdate = true;
 

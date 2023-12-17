@@ -1,7 +1,10 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import {HttpClientModule} from '@angular/common/http'
+import {HttpClientModule} from '@angular/common/http';
+import { GoogleMapsModule } from '@angular/google-maps';
+import { RouterModule, Routes } from '@angular/router';
+
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -15,7 +18,14 @@ import { CoachComponent } from './components/modification-categories/coach/coach
 import { RefreeComponent } from './components/modification-categories/refree/refree.component';
 import { CommentatorComponent } from './components/modification-categories/commentator/commentator.component';
 import { LiveViewComponent } from './pages/live-view/live-view.component';
+import { MapComponent } from './pages/map/map.component';
+import { SignInComponent } from './pages/sign-in/sign-in.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+const appRoutes: Routes = [
+  {path: '', component: MapComponent},
+  {path: 'match/:data', component: LiveViewComponent}
+]
 
 @NgModule({
   declarations: [
@@ -30,12 +40,17 @@ import { LiveViewComponent } from './pages/live-view/live-view.component';
     RefreeComponent,
     CommentatorComponent,
     LiveViewComponent,
+    MapComponent,
+    SignInComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    GoogleMapsModule,
+    RouterModule.forRoot(appRoutes),
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

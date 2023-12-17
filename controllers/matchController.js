@@ -70,7 +70,8 @@ const getLiveMatches = async (req, res)=> {
                 select: 'name'
             }
         }).populate('referee', 'name')
-        .populate('commentator', 'name');
+        .populate('commentator', 'name')
+        .populate('stadium','name');
     console.log(result)
     res.send(result)
 };
