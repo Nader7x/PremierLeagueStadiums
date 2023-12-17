@@ -232,4 +232,11 @@ const getSortedEvents=async (req , res) =>
     console.log(result);
     res.send(result);
 }
-module.exports = {addMatch,getAllMatches,getAllMatchesWithNames,getMatchWithNames,deleteMatch,getMatch,getLiveMatches,getHistoryMatches,goal,endMatch,giveCard,matchWithAllData,startMatch,getUpcomingMatches,getSortedEvents};
+const fixMatches = async (req , res) =>
+{
+    //find all matches and clear the goals and cards and make status and end state false and initialize the events
+    const matches = await Match.updateMany({},{homeGoals:0,awayGoals:0 ,goals:{},cards:{},status:false,endState:false,events:[]});
+    console.log(matches);
+    res.send(matches);
+}
+module.exports = {addMatch,getAllMatches,getAllMatchesWithNames,getMatchWithNames,deleteMatch,getMatch,getLiveMatches,getHistoryMatches,goal,endMatch,giveCard,matchWithAllData,startMatch,getUpcomingMatches,getSortedEvents,fixMatches};
