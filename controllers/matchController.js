@@ -12,6 +12,7 @@ const addMatch = async (req, res)=>{
         commentator:req.body.commentator,
         stadium:team['stadium'],
         date:req.body.date
+
     });
     const result = await match.save().catch((err)=>console.log(err));
     // console.log(result);
@@ -123,12 +124,16 @@ const goal = async (req,res)=>{
     if(match['goals'].get(req.body.player))
     {
         matchofGoals[req.body.player]++;
-        result = await Match.findByIdAndUpdate(match['_id'],{'goals':matchofGoals}, {new : true})
+        result = await Match.findByIdAndUpdate(match['_id'],{'goals':matchofGoals,$push: {
+                events: [req.body.player, 'goal']
+            }}, {new : true})
     }
     else
     {
         matchofGoals[req.body.player]=1;
-       result = await Match.findByIdAndUpdate(match['_id'],{'goals':matchofGoals}, {new :true})
+       result = await Match.findByIdAndUpdate(match['_id'],{'goals':matchofGoals,$push: {
+               events: [req.body.player, 'goal']
+           }}, {new :true})
     }
     // console.log(result);
     res.send(result);
@@ -178,7 +183,9 @@ const giveCard = async (req , res) => {
             if (match['cards'].get(req.body.player) && match['cards'].get(req.body.player) === 'yellow') {
                 const update = {};
                 update['cards.' + req.body.player] = 'red';
-                const result = await Match.findByIdAndUpdate(req.body.match, {$set: update}, {new: true});
+                const result = await Match.findByIdAndUpdate(req.body.match, {$set: update,$push: {
+                        events: [req.body.player, 'red']
+                    }}, {new: true});
                 // console.log(result);
                 res.send(result);
             }
@@ -189,7 +196,9 @@ const giveCard = async (req , res) => {
             else {
                 const update = {};
                 update['cards.' + req.body.player] = req.body.card;
-                const result = await Match.findByIdAndUpdate(req.body.match, {$set: update}, {new: true});
+                const result = await Match.findByIdAndUpdate(req.body.match, {$set: update,$push: {
+                        events: [req.body.player, req.body.card]
+                    }}, {new: true});
                 // console.log(result);
                 res.send(result);
             }
@@ -217,4 +226,11 @@ const getUpcomingMatches = async (req,res)=>{
     // console.log(result)
     res.send(result)
 }
-module.exports = {addMatch,getAllMatches,getAllMatchesWithNames,getMatchWithNames,deleteMatch,getMatch,getLiveMatches,getHistoryMatches,goal,endMatch,giveCard,matchWithAllData,startMatch,getUpcomingMatches};
+const getSortedEvents=async (req , res) =>
+{
+    const match = await Match.findById(req.params['id']);
+    const result = match['events'];
+    console.log(result);
+    res.send(result);
+}
+module.exports = {addMatch,getAllMatches,getAllMatchesWithNames,getMatchWithNames,deleteMatch,getMatch,getLiveMatches,getHistoryMatches,goal,endMatch,giveCard,matchWithAllData,startMatch,getUpcomingMatches,getSortedEvents};
