@@ -13,7 +13,8 @@ const matchSchema = new mongoose.Schema({
     status:{type:Boolean,required:false,default:false},
     goals:{type:Map,required:false,default:{}},
     date:{type:Date,required:true},
-    endState:{type:Boolean,required:false,default:false}
+    endState:{type:Boolean,required:false,default:false},
+    events:[[]]
 });
 const Match = mongoose.model("Match",matchSchema);
 
