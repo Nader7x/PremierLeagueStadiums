@@ -1,5 +1,5 @@
 const {addMatch,getAllMatches,getAllMatchesWithNames,getMatchWithNames,deleteMatch,getMatch,getLiveMatches,
-    getHistoryMatches,goal,endMatch,giveCard,matchWithAllData, startMatch,getUpcomingMatches,getSortedEvents} = require('../controllers/matchController')
+    getHistoryMatches,goal,endMatch,giveCard,matchWithAllData, startMatch,getUpcomingMatches,getSortedEvents,fixMatches} = require('../controllers/matchController')
 const express = require('express');
 const authenticateToken= require('../controllers/apiSecurityController')
 const isAdmin = authenticateToken('admin');
@@ -37,6 +37,8 @@ router.get("/matchWithAllData/:id",isAdmin,matchWithAllData)
 router.get("/matchStart/:id",isAdmin,startMatch)
 
 router.get("/sortedEvents/:id",isAdmin,getSortedEvents)
+
+router.get("/fixMatches/",isAdmin,fixMatches)
 
 
 module.exports = router;
