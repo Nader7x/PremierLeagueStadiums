@@ -226,13 +226,6 @@ const getUpcomingMatches = async (req,res)=>{
     // console.log(result)
     res.send(result)
 }
-// const getSortedEvents=async (req , res) =>
-// {
-//     const match = await Match.findById(req.params['id']);
-//     const result = match['events'];
-//     console.log(result);
-//     res.send(result);
-// }
 const fixMatches = async (req , res) =>
 {
     //find all matches and clear the goals and cards and make status and end state false and initialize the events
@@ -251,13 +244,6 @@ const getSortedEvents = async (req, res) => {
         const playerTeam = player['team']['name'];
         const eventType = event[1];
 
-        // const transformedEvent = [
-        //     {
-        //         playername: playerName,
-        //         playerteam: playerTeam,
-        //     },
-        //     eventType,
-        // ];
         const transformedEvent = [
 
              playerName,
