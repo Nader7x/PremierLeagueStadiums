@@ -8,7 +8,7 @@ const getPlayer = async (req, res)=> {
     res.send(result);
 }
 const playersWithSameTeam = async function (req, res) {
-    const result = await Team.find({'team':req.params['teamId']} ).populate('squad','name');
+    const result = await Player.find({'team':req.params['teamId']} );
     // console.log(result)
     res.send(result)
 }

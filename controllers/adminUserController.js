@@ -1,7 +1,7 @@
 const {Admin,User} = require("../models/persons");
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
-const crypto = require('crypto');
+// const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const saltRounds = 10; // Number of salt rounds, you can adjust this based on your security requirements
 // const keyLength = 32;
@@ -62,7 +62,7 @@ const login = async (req, res) => {
             const resultUser = await User.findOne({ username: req.body.username });
 
             if (!resultUser) {
-                res.send(false);
+                res.status(400).send(false);
             } else {
                 const passwordMatch = await bcrypt.compare(req.body.password, resultUser.password);
                 if (passwordMatch) {
@@ -70,9 +70,9 @@ const login = async (req, res) => {
                     res.header('Authorization', `Bearer ${token}`);
                     // Set the token as a cookie
                     res.cookie('token', token, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000 }); // 1 week expiration
-                    res.json({ user: resultUser, token });
+                    res.status(200).json({ user: resultUser, token });
                 } else {
-                    res.send(false);
+                    res.status(400).send(false);
                 }
             }
         } else {
@@ -83,9 +83,9 @@ const login = async (req, res) => {
                 res.header('Authorization', `Bearer ${token}`);
                 // Set the token as a cookie
                 res.cookie('token', token, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000 }); // 1 week expiration
-                res.json({ admin: resultAdmin, token });
+                res.status(200).json({ admin: resultAdmin, token });
             } else {
-                res.send(false);
+                res.status(400).send(false);
             }
         }
 };

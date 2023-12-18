@@ -1,6 +1,7 @@
 const Match = require("../models/matchModel");
 const Team = require("../models/teamModel");
 const Stadium = require("../models/stadiumModel");
+const {Player} = require("../models/persons");
 
 const addMatch = async (req, res)=>{
     const team = await Team.findById(req.body.homeTeam)
@@ -226,13 +227,13 @@ const getUpcomingMatches = async (req,res)=>{
     // console.log(result)
     res.send(result)
 }
-const getSortedEvents=async (req , res) =>
-{
-    const match = await Match.findById(req.params['id']);
-    const result = match['events'];
-    console.log(result);
-    res.send(result);
-}
+// const getSortedEvents=async (req , res) =>
+// {
+//     const match = await Match.findById(req.params['id']);
+//     const result = match['events'];
+//     console.log(result);
+//     res.send(result);
+// }
 const fixMatches = async (req , res) =>
 {
     //find all matches and clear the goals and cards and make status and end state false and initialize the events
@@ -240,4 +241,36 @@ const fixMatches = async (req , res) =>
     console.log(matches);
     res.send(matches);
 }
+const getSortedEvents = async (req, res) => {
+    const match = await Match.findById(req.params['id']);
+    const events = match['events'];
+
+    const sortedEvents = [];
+    for (const event of events) {
+        const player = await Player.findById(event[0]).populate('team','name');
+        const playerName = player['name'];
+        const playerTeam = player['team']['name'];
+        const eventType = event[1];
+
+        // const transformedEvent = [
+        //     {
+        //         playername: playerName,
+        //         playerteam: playerTeam,
+        //     },
+        //     eventType,
+        // ];
+        const transformedEvent = [
+
+             playerName,
+             playerTeam,
+             eventType,
+        ];
+
+
+        sortedEvents.push(transformedEvent);
+    }
+
+    console.log(sortedEvents);
+    res.send(sortedEvents);
+};
 module.exports = {addMatch,getAllMatches,getAllMatchesWithNames,getMatchWithNames,deleteMatch,getMatch,getLiveMatches,getHistoryMatches,goal,endMatch,giveCard,matchWithAllData,startMatch,getUpcomingMatches,getSortedEvents,fixMatches};
