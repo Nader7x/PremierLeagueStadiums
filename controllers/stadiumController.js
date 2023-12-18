@@ -71,4 +71,10 @@ const stadiumMatches = async (req,res) =>{
     // console.log(result)
     res.send(result)
 }
-module.exports = {addStadium,getAllStadiums,getAllStadiumsWithTeam,getStadiumWithTeam,deleteStadium,getStadium,updateStadium,stadiumMatches};
+const stadiumHistoryMatches = async (req,res) =>
+{
+    const result = await Match.find({stadium : req.params['id'], endState: true}).populate('homeTeam', 'name').populate('awayTeam', 'name');
+    // console.log(result)
+    res.send(result)
+}
+module.exports = {addStadium,getAllStadiums,getAllStadiumsWithTeam,getStadiumWithTeam,deleteStadium,getStadium,updateStadium,stadiumMatches,stadiumHistoryMatches};
