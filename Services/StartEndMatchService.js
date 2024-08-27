@@ -6,89 +6,87 @@ const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTdjOGZiYWYy
 async function start() {
 
     const url = "http://localhost:3000/"
-    cron.schedule('*/29 * * * * * ', async () => {
-        console.log('running a task every 29 seconds');
-        const nDate = new Date().toLocaleString('en-US', {timeZone: 'Europe/Athens'});
-        // Split the formatted date string into separate variables
-        const [date, time] = nDate.split(' ');
+    cron.schedule('*/19 * * * * * ', async () => {
+            console.log('running a task every 19 seconds');
+            const nDate = new Date().toLocaleString('en-US', {timeZone: 'Europe/Athens'});
+            // Split the formatted date string into separate variables
+            const [date, time] = nDate.split(' ');
 
-        const [month, day, year] = date.split('/');
-        const [hours, minutes, seconds] = time.split(':');
+            const [month, day, year] = date.split('/');
+            const [hours, minutes, seconds] = time.split(':');
 
-        const response = await axios.get(url + "matchesHistory", {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
+            const response = await axios.get(url +"upcomingMatches",{
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
 
-        for (const match of (response.data)) {
-            const matchTime = moment(match['date']).tz('Etc/GMT+0');
+            for (const match of (response.data)) {
+                const matchTime = moment(match['date']).tz('Etc/GMT+0');
 
-            const matchYear = matchTime.year();
-            const matchMonth = matchTime.month() + 1; // Months are zero-based
-            const matchDay = matchTime.date();
-            const matchHours = matchTime.hour();
-            const matchMinutes = matchTime.minute();
+                const matchYear = matchTime.year();
+                const matchMonth = matchTime.month() + 1; // Months are zero-based
+                const matchDay = matchTime.date();
+                const matchHours = matchTime.hour();
+                const matchMinutes = matchTime.minute();
 
-            if (
-                String(matchYear) === year.substring(0, (year.length) - 1)
-                &&
-                String(matchMonth) === String(month)
-                &&
-                String(matchDay) === String(day)
-                &&
-                String(matchHours) === String(hours)
-                &&
-                String(matchMinutes) == String(minutes)
-            ) {
-                await axios.get(url + "matchStart/" + String(match['_id']), {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-                console.log("start match" + String(match['_id']));
+                if (
+                    String(matchYear) === year.substring(0,(year.length)-1)
+                    &&
+                    String(matchMonth) === String(month)
+                    &&
+                    String(matchDay) === String(day)
+                    &&
+                    String(matchHours) === String(hours)
+                    &&
+                    String(matchMinutes) == String(minutes)
+                ) {
+                    await axios.get(url + "matchStart/" + String(match['_id']),{
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    });
+                    console.log("match started " + match['_id']);
+                }
+
             }
+            //endmatch ===========================================================================
+            const liveResponse = await axios.get(url +"matchesLive",{
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
 
-        }
-        //endmatch ===========================================================================
-        const liveResponse = await axios.get(url + "matchesLive", {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
+            for (const match of (liveResponse.data)) {
+                const matchTime = moment(match['date']).tz('Etc/GMT+0');
 
-        });
+                const matchYear = matchTime.year();
+                const matchMonth = matchTime.month() + 1; // Months are zero-based
+                const matchDay = matchTime.date();
+                const matchHours = matchTime.hour();
+                const matchMinutes = matchTime.minute();
 
-        for (const match of (liveResponse.data)) {
-            const matchTime = moment(match['date']).tz('Etc/GMT+0');
+                if (
+                    String(matchYear) === year.substring(0,(year.length)-1)
+                    &&
+                    String(matchMonth) === String(month)
+                    &&
+                    String(matchDay) === String(day)
+                    &&
+                    String(matchHours) === String(hours)
+                    &&
+                    String(matchMinutes) <= String(minutes-2)
+                ) {
+                    await axios.get(url + "endMatch/" + String(match['_id']),{
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    });
+                    console.log("match ended " + match['_id']);
+                }
 
-            const matchYear = matchTime.year();
-            const matchMonth = matchTime.month() + 1; // Months are zero-based
-            const matchDay = matchTime.date();
-            const matchHours = matchTime.hour();
-            const matchMinutes = matchTime.minute();
-
-            if (
-                String(matchYear) === year.substring(0, (year.length) - 1)
-                &&
-                String(matchMonth) === String(month)
-                &&
-                String(matchDay) === String(day)
-                &&
-                String(matchHours) === String(hours)
-                &&
-                String(matchMinutes) <= String(minutes - 2)
-            ) {
-                await axios.get(url + "endMatch/" + String(match['_id']), {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-                console.log("end match" + String(match['_id']));
             }
-
         }
-
-});
+    )
 }
-
 module.exports = { start };

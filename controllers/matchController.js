@@ -24,11 +24,13 @@ const addMatch = async (req, res)=>{
     });
     const result = await match.save().catch((err)=>console.log(err));
     // console.log(result);
+    // console.log(result);
     res.send(result)
 }
 
 const getAllMatches = async (req,res)=>{
     const result = await Match.find({});
+    // console.log(result);
     // console.log(result);
     res.send(result);
 };
@@ -36,11 +38,13 @@ const getAllMatches = async (req,res)=>{
 const getAllMatchesWithNames = async (req,res)=>{
     const result = await Match.find({}).populate('homeTeam','name').populate('awayTeam','name').populate('referee','name').populate('commentator','name');
     // console.log(result);
+    // console.log(result);
     res.send(result);
 };
 
 const getMatchWithNames = async (req,res)=>{
     const result = await Match.findById(req.params['id']).populate('homeTeam','name').populate('awayTeam','name').populate('referee','name').populate('commentator','name');
+    // console.log(result);
     // console.log(result);
     res.send(result);
 };
@@ -48,6 +52,7 @@ const getMatchWithNames = async (req,res)=>{
 const deleteMatch = async (req,res)=>{
     try {
         const result = await Match.findByIdAndDelete(req.params['id']);
+        // console.log(result);
         // console.log(result);
         res.send(result);
     }catch (e) {
@@ -58,6 +63,7 @@ const deleteMatch = async (req,res)=>{
 
 const getMatch = async (req,res)=>{
     const result = await Match.findById(req.params['id']);
+    // console.log(result);
     // console.log(result);
     res.send(result);
 };
@@ -85,7 +91,7 @@ const getLiveMatches = async (req, res)=> {
 };
 
 const getHistoryMatches = async (req, res)=> {
-    const result = await Match.find({endState : true}).populate({
+    const result = await Match.find({endState : true , status : true}).populate({
         path: 'homeTeam',
         populate: {
             path: 'squad',
@@ -183,6 +189,7 @@ const endMatch = async (req , res) => {
     }
     await Team.findByIdAndUpdate(hometeamId, homeTeam);
     await Team.findByIdAndUpdate(awayteamId, awayTeam);
+    // console.log(result);
     // console.log(result);
     res.send(result)
 }

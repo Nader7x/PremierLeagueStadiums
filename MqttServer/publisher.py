@@ -3,7 +3,11 @@ import time
 import random
 import requests
 
+<<<<<<< HEAD
+token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTdjMmZlZmU5YmYyOWQwZTBjZTAwNTkiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MDI4MDgyOTAsImV4cCI6MzE3Mjc4ODA4MjkwfQ.YrI15KaFPRcSQppU77UIJ16Hch8Tm2frYt9wCYzjQpk"
+=======
 token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTdjOGZiYWYyOTE4MTU3ZGM5NWNjYjAiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MDI2Njk2NjYsImV4cCI6MzE3Mjc4NjY5NjY2fQ.EXPvjDuNXZAk4oZ123MEtmm9J6HMPQ9bVZoWLudRL8s"
+>>>>>>> 4b41f0bfeceded176bd220f5189d6b8c61fa0f10
 
 URL = "http://localhost:3000"
 mqttBroker = "mqtt.eclipseprojects.io"
