@@ -45,6 +45,22 @@ export class CommentatorComponent {
       
   }
 
+  static makeSound(event: string, commentatorName: string){
+    let randomNum: number = Math.floor(Math.random() * (3 - 1) + 1);
+    if(event === "win")
+      event = `${event}${randomNum}`;
+    
+    const src: string = `../../../assets/audio/${commentatorName} ${event}.mp3`;
+    let audio = new Audio(src);
+    try{
+      
+      audio.play();
+    }catch(err){
+      console.log(err);
+    }
+  }
+  
+
   onSubmit(): void{
     // console.log(this.age,this.name,this.nationality);
 

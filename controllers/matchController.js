@@ -14,8 +14,10 @@ const addMatch = async (req, res)=>{
         stadium:team['stadium'],
         date:req.body.date
 
+
     });
     const result = await match.save().catch((err)=>console.log(err));
+    // console.log(result);
     // console.log(result);
     res.send(result)
 }
@@ -23,11 +25,13 @@ const addMatch = async (req, res)=>{
 const getAllMatches = async (req,res)=>{
     const result = await Match.find({});
     // console.log(result);
+    // console.log(result);
     res.send(result);
 };
 
 const getAllMatchesWithNames = async (req,res)=>{
     const result = await Match.find({}).populate('homeTeam','name').populate('awayTeam','name').populate('referee','name').populate('commentator','name');
+    // console.log(result);
     // console.log(result);
     res.send(result);
 };
@@ -35,12 +39,14 @@ const getAllMatchesWithNames = async (req,res)=>{
 const getMatchWithNames = async (req,res)=>{
     const result = await Match.findById(req.params['id']).populate('homeTeam','name').populate('awayTeam','name').populate('referee','name').populate('commentator','name');
     // console.log(result);
+    // console.log(result);
     res.send(result);
 };
 
 const deleteMatch = async (req,res)=>{
     try {
         const result = await Match.findByIdAndDelete(req.params['id']);
+        // console.log(result);
         // console.log(result);
         res.send(result);
     }catch (e) {
@@ -51,6 +57,7 @@ const deleteMatch = async (req,res)=>{
 
 const getMatch = async (req,res)=>{
     const result = await Match.findById(req.params['id']);
+    // console.log(result);
     // console.log(result);
     res.send(result);
 };
@@ -71,9 +78,7 @@ const getLiveMatches = async (req, res)=> {
                 model: 'Player',
                 select: 'name'
             }
-        }).populate('referee', 'name')
-        .populate('commentator', 'name').populate('stadium', 'name');
-    // console.log(result)
+        }).populate('referee', 'name').populate('commentator', 'name').populate('stadium', 'name');
     res.send(result)
 };
 
@@ -93,8 +98,7 @@ const getHistoryMatches = async (req, res)=> {
                 model: 'Player',
                 select: 'name'
             }
-        }).populate('referee', 'name')
-        .populate('commentator', 'name');
+        }).populate('referee', 'name').populate('commentator', 'name');
     // console.log(result)
     res.send(result)
 };
@@ -124,6 +128,7 @@ const goal = async (req,res)=>{
     var matchofGoals= JSON.parse(JSON.stringify(match['goals']));
     if(match['goals'].get(req.body.player))
     {
+        const playername = await Player.findById(req.body.player);
         matchofGoals[req.body.player]++;
         result = await Match.findByIdAndUpdate(match['_id'],{'goals':matchofGoals,$push: {
                 events: [req.body.player, 'goal']
@@ -167,6 +172,7 @@ const endMatch = async (req , res) => {
     }
     await Team.findByIdAndUpdate(hometeamId, homeTeam);
     await Team.findByIdAndUpdate(awayteamId, awayTeam);
+    // console.log(result);
     // console.log(result);
     res.send(result)
 }

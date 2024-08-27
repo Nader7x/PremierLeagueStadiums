@@ -10,9 +10,7 @@ export class ButtonComponent {
   @Input() color: string| undefined;
   @Output() btnClick = new EventEmitter();
 
-  constructor(){
-    console.log(`From button text is ${this.text}`);
-  }
+  constructor(){}
   // ngOnInit(): void{
   //   //like a promise
   //   console.log(`From on init text is ${this.text}`);

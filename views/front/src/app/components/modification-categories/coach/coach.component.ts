@@ -31,12 +31,8 @@ export class CoachComponent {
     else if(this.text ==="Delete"){
       this.subscription = this.uiService.onDeleteToggle().subscribe((value) => this.showModifyComponent = value);
       this.coachService.getAllCoaches().subscribe((data)=>{
-        for(let i=0; i<data.length; i++){
-          // this.coaches.push(data[i]['name']);
+        for(let i=0; i<data.length; i++)
           this.coaches.push({name: data[i]['name'], id: data[i]['_id']});
-          // console.log('pushed');
-          // console.log(this.commentator[i].id);
-        }
       });
     }
     else
