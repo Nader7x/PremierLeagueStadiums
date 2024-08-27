@@ -5,7 +5,7 @@ const isAdmin = authenticateToken('admin');
 const isUser = authenticateToken('user');
 const router = express.Router();
 
-router.get("/stadiums",isAdmin,getAllStadiums);
+router.get("/stadiums",isAdmin || isUser,getAllStadiums);
 
 router.post("/stadium",isAdmin,addStadium);
 

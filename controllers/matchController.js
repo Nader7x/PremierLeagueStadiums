@@ -2,7 +2,14 @@ const Match = require("../models/matchModel");
 const Team = require("../models/teamModel");
 const Stadium = require("../models/stadiumModel");
 const {Player} = require("../models/persons");
-
+const {messaging} = require("../controllers/notificationController")
+const message = {
+    notification: {
+        title: '',
+        body: '',
+    },
+    token: 'dDz0h0a9x0k7lQh1JS6a-W:APA91bEf6kEaHTwy9zsSIseCVuTljO03geOhgorBshq_YwdRifb8AOolx-9j9asU9ukcSRc48NAIw1Oe2okq2vvIBPDkRSIBQ_NophwjSxOutCt6uqBjss3VwBJ9Q_M73PSKYoNEU1-M',
+};
 const addMatch = async (req, res)=>{
     const team = await Team.findById(req.body.homeTeam)
 
@@ -123,10 +130,15 @@ const goal = async (req,res)=>{
     var matchofGoals= JSON.parse(JSON.stringify(match['goals']));
     if(match['goals'].get(req.body.player))
     {
+        const playername = await Player.findById(req.body.player);
         matchofGoals[req.body.player]++;
         result = await Match.findByIdAndUpdate(match['_id'],{'goals':matchofGoals,$push: {
                 events: [req.body.player, 'goal']
             }}, {new : true})
+        message['notification']['title'] = 'Goal';
+        message['notification']['body'] = playername['name'];
+        console.log(playername['name']);
+        messaging.send(message);
     }
     else
     {
@@ -134,6 +146,11 @@ const goal = async (req,res)=>{
        result = await Match.findByIdAndUpdate(match['_id'],{'goals':matchofGoals,$push: {
                events: [req.body.player, 'goal']
            }}, {new :true})
+        const playername = await Player.findById(req.body.player);
+        message['notification']['title'] = 'Goal'
+        message['notification']['body'] = playername['name'];
+        console.log(playername['name']);
+        messaging.send(message)
     }
     // console.log(result);
     res.send(result);

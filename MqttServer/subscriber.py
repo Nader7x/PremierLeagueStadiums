@@ -11,6 +11,7 @@ headers = {
 
 
 def on_message(clients, userdata, message):
+    print(message)
     json_data = message.payload.decode("utf-8").replace("'", "\"")
     message_json = json.loads(json_data)
     #   print("Received message: ", str(message.payload.decode("utf-8")))
