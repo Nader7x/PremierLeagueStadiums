@@ -1,10 +1,8 @@
 const {addStadium,getAllStadiums,getAllStadiumsWithTeam,getStadiumWithTeam,deleteStadium,getStadium,updateStadium,stadiumMatches,stadiumHistoryMatches} = require('../controllers/stadiumController')
-const {addStadium,getAllStadiums,getAllStadiumsWithTeam,getStadiumWithTeam,deleteStadium,getStadium,updateStadium,stadiumMatches,stadiumHistoryMatches} = require('../controllers/stadiumController')
 const express = require('express');
 const authenticateToken= require('../controllers/apiSecurityController')
 const isAdmin = authenticateToken('admin');
 const isUser = authenticateToken('user');
-const authenticateToken= require('../controllers/apiSecurityController')
 const router = express.Router();
 
 router.get("/stadiums",isAdmin,getAllStadiums);
