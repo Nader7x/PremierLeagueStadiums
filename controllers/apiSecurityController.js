@@ -1,5 +1,6 @@
 
 const jwt = require('jsonwebtoken');
+const { GoogleAuth } = require('google-auth-library');
 
 const authenticateToken = (requiredRole) => (req, res, next) => {
     let token;
@@ -26,8 +27,18 @@ const authenticateToken = (requiredRole) => (req, res, next) => {
             res.status(403).json({ message: 'Forbidden: Insufficient role' });
         }
     } catch (err) {
+        console.log(err)
         res.status(401).json({ message: 'Unauthorized: Invalid token' });
     }
 };
 
-module.exports = authenticateToken;
+async function getFcmAccessToken() {
+    const auth = new GoogleAuth({
+        keyFile: 'premier-noti-6028058f5902.json',
+        scopes: ['https://www.googleapis.com/auth/firebase.messaging']
+    });
+    const client = await auth.getClient();
+    const accessToken = await client.getAccessToken();
+    return accessToken.token
+}
+module.exports = {authenticateToken, getFcmAccessToken};
