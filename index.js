@@ -139,7 +139,7 @@ app.use('/',coachRoute);
 app.use('/',matchRoute);
 
 app.use('/',teamRoute);
-
-app.listen(3000,function () {
+const port = process.env.PORT || 3000;
+app.listen(port,function () {
     console.log("Server started");
 });
