@@ -1,17 +1,17 @@
 const {updateCoach, deleteCoach, addCoach, getCoach, getAllCoaches} = require("../controllers/coachController");
 const express = require('express');
-const authenticateToken= require('../controllers/apiSecurityController')
+const {authenticateToken}= require('../controllers/apiSecurityController')
 const router = express.Router();
 const isAdmin = authenticateToken('admin');
 const isUser = authenticateToken('user');
-router.get("/coaches",isAdmin,getAllCoaches);
+router.get("/coaches",getAllCoaches);
 
-router.post("/coach",isAdmin,addCoach);
+router.post("/coach",addCoach);
 
-router.get("/coach/:id",isAdmin,getCoach);
+router.get("/coach/:id",getCoach);
 
-router.delete("/coach/:id",isAdmin,deleteCoach);
+router.delete("/coach/:id",deleteCoach);
 
-router.patch("/coach/:id",isAdmin,updateCoach)
+router.patch("/coach/:id",updateCoach)
 
 module.exports = router;

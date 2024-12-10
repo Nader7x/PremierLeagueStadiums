@@ -7,9 +7,10 @@ const coachRoute = require('./routers/coachRouter')
 const teamRoute = require('./routers/teamRouter')
 const adminUserRoute = require('./routers/adminUserRouter')
 const mongoose = require('mongoose').default;
+//const { MongoClient, ServerApiVersion } = require('mongodb');
 const {Coach, Referee, Commentator} = require("./models/persons");
 const Team = require("./models/teamModel")
-const StartMatchService = require('./Services/StartEndMatchService')
+// const StartMatchService = require('./Services/StartEndMatchService')
 const bodyParser = require('body-parser')
 const express = require('express');
 const cors = require('cors');
@@ -36,16 +37,26 @@ async function connectToMongoDB() {
     }
 }
 
-
-connectToMongoDB().then();
-
-try {
-    StartMatchService.start().then(
-
-    );
-} catch (error) {
-    console.error("Error in cron job:", error);
+async function connectToMongoDBOnline() {
+    try {
+        mongoose.set("strictQuery", false);
+        await mongoose.connect(`mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.raud4.mongodb.net/premierLeagueDB?retryWrites=true&w=majority&appName=Cluster0`);
+        console.log("Connected to Mongo Successfully!");
+    } catch (error) {
+        console.log(error);
+    }
 }
+
+connectToMongoDBOnline().then()
+//connectToMongoDB().then();
+
+// try {
+//     StartMatchService.start().then(
+//
+//     );
+// } catch (error) {
+//     console.error("Error in cron job:", error);
+// }
 
 
 app.get("/addCoach", async function (req, res) {
@@ -127,8 +138,8 @@ app.use('/',coachRoute);
 
 app.use('/',matchRoute);
 
-
 app.use('/',teamRoute);
-app.listen(3000,function () {
+const port = process.env.PORT || 3000;
+app.listen(port,function () {
     console.log("Server started");
 });

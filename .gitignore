@@ -1,5 +1,7 @@
 service token.txt
 node_modules
+premier-noti-6028058f5902.json
+.env
 .idea
 pnpm-lock.yaml
 package-lock.json

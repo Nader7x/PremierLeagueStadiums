@@ -13,7 +13,8 @@ const generateToken = (userId, role) => {
     const secretKey = process.env["JWT_SECRET_KEY"];
     const expiresIn = '1w';
     return jwt.sign({ userId, role }, secretKey, { expiresIn });
-};const generatelifeToken = (userId, role) => {
+};
+const generatelifeToken = (userId, role) => {
     const secretKey = process.env["JWT_SECRET_KEY"];
     const expiresIn = '10000y';
     return jwt.sign({ userId, role }, secretKey, { expiresIn });

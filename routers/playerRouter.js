@@ -1,22 +1,22 @@
 const {getPlayer,addPlayer,updatePlayer,deletePlayer,getAllPlayers,addPlayers,playersWithSameTeam} = require('../controllers/playerController');
 const express = require('express');
-const authenticateToken= require('../controllers/apiSecurityController')
+const {authenticateToken}= require('../controllers/apiSecurityController')
 const isAdmin = authenticateToken('admin');
 const isUser = authenticateToken('user');
 const router = express.Router();
 
-router.post("/player",isAdmin,addPlayer);
+router.post("/player",addPlayer);
 
-router.get("/players",isAdmin,getAllPlayers);
+router.get("/players",getAllPlayers);
 
-router.post("/addPlayers",isAdmin,addPlayers);
+router.post("/addPlayers",addPlayers);
 
-router.patch("/player/:id",isAdmin,updatePlayer);
+router.patch("/player/:id",updatePlayer);
 
-router.delete("/player/:id",isAdmin,deletePlayer);
+router.delete("/player/:id",deletePlayer);
 
-router.get("/player/:playerId",isAdmin,getPlayer);
+router.get("/player/:playerId",getPlayer);
 
-router.get("/playersWithSameTeam/:teamId",isAdmin,playersWithSameTeam)
+router.get("/playersWithSameTeam/:teamId",playersWithSameTeam)
 
 module.exports = router;

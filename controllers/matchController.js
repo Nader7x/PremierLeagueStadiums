@@ -2,14 +2,7 @@ const Match = require("../models/matchModel");
 const Team = require("../models/teamModel");
 const Stadium = require("../models/stadiumModel");
 const {Player} = require("../models/persons");
-const {messaging} = require("../controllers/notificationController")
-const message = {
-    notification: {
-        title: '',
-        body: '',
-    },
-    token: 'dDz0h0a9x0k7lQh1JS6a-W:APA91bEf6kEaHTwy9zsSIseCVuTljO03geOhgorBshq_YwdRifb8AOolx-9j9asU9ukcSRc48NAIw1Oe2okq2vvIBPDkRSIBQ_NophwjSxOutCt6uqBjss3VwBJ9Q_M73PSKYoNEU1-M',
-};
+
 const addMatch = async (req, res)=>{
     const team = await Team.findById(req.body.homeTeam)
 
@@ -20,6 +13,7 @@ const addMatch = async (req, res)=>{
         commentator:req.body.commentator,
         stadium:team['stadium'],
         date:req.body.date
+
 
     });
     const result = await match.save().catch((err)=>console.log(err));
@@ -116,6 +110,7 @@ const goal = async (req,res)=>{
     const match = await Match.findById(req.body.match);
     const homeTeam = await  Team.findById(match['homeTeam'])
     const awayTeam = await  Team.findById(match['awayTeam'])
+    const isHome = req.body.team === String(match['homeTeam'])
     if (!(homeTeam['squad'].includes(req.body.player)) && !(awayTeam['squad'].includes(req.body.player)))
     {
         console.log("no player with this name in the match")
@@ -127,13 +122,14 @@ const goal = async (req,res)=>{
         res.send("this player is suspended can't score a goal")
         return;
     }
-    if (req.body.team === String(match['homeTeam'])) {
+    if (isHome) {
         await Match.findByIdAndUpdate(req.body.match, {homeGoals: ++match['homeGoals']})
     } else {
        await Match.findByIdAndUpdate(req.body.match, {awayGoals: ++match['awayGoals']})
     }
     let result;
-    var matchofGoals= JSON.parse(JSON.stringify(match['goals']));
+    const matchofGoals= JSON.parse(JSON.stringify(match['goals']));
+    const playerName = await Player.findById(req.body.player);
     if(match['goals'].get(req.body.player))
     {
         const playername = await Player.findById(req.body.player);
@@ -160,10 +156,43 @@ const goal = async (req,res)=>{
     }
     // console.log(result);
     res.send(result);
+    const score = isHome? `[${result["homeGoals"]}] : ${result["awayGoals"]}` : `${result["homeGoals"]} : [${result["awayGoals"]}]`
+    const payload = {
+        message: {
+            topic: "all",
+            notification: {
+                title: "Goal!",
+                body: `${homeTeam['name']} ${score} ${awayTeam['name']}\n${playerName['name']}`
+            },
+            android: {
+                notification: {
+                    channel_id: "noti2"
+                }
+            }
+        }
+    };
+
+    try {
+        await axios.post(
+            "https://fcm.googleapis.com/v1/projects/premier-noti/messages:send",
+            payload,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${await getFcmAccessToken()}`
+                }
+            }
+        )
+    }catch (e) {
+        console.log(e);
+    }
+
+    // console.log(result);
+
 };
 const endMatch = async (req , res) => {
     const  result = await Match.findByIdAndUpdate(req.params['id'],{endState : true, status:false}, {new: true});
-    await Stadium.findByIdAndUpdate(result['stadium'],{state: false });
+    await Stadium.findByIdAndUpdate(result['stadium'],{state: false});
     const hometeamId = result['homeTeam']
     const awayteamId = result['awayTeam']
     const homeTeam = await Team.findById(hometeamId);
@@ -192,46 +221,101 @@ const endMatch = async (req , res) => {
     // console.log(result);
     // console.log(result);
     res.send(result)
+    try{
+        const payload = {
+            message: {
+                topic: "all",
+                notification: {
+                    title: "Match Ended",
+                    body: `${homeTeam['name']} ${result['homeGoals']} - ${result['awayGoals']} ${awayTeam['name']}`
+                },
+                android: {
+                    notification: {
+                        channel_id: "noti1"
+                    }
+                }
+            }
+        };
+        await axios.post(
+            "https://fcm.googleapis.com/v1/projects/premier-noti/messages:send",
+            payload,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${await getFcmAccessToken()}`
+                }
+            }
+        )
+    }catch (e) {
+        console.log(e);
+    }
 }
 const giveCard = async (req , res) => {
     try {
-            const match = await Match.findById(req.body.match)
-            const homeTeam = await  Team.findById(match['homeTeam'])
-            const awayTeam = await  Team.findById(match['awayTeam'])
-            if (!(homeTeam['squad'].includes(req.body.player)) && !(awayTeam['squad'].includes(req.body.player)))
-            {
-                console.log("no player with this name in the match")
-                res.send("no player with this name in the match")
-                return;
-            }
-            if (match['cards'].get(req.body.player) && match['cards'].get(req.body.player) === 'yellow') {
-                const update = {};
-                update['cards.' + req.body.player] = 'red';
-                const result = await Match.findByIdAndUpdate(req.body.match, {$set: update,$push: {
-                        events: [req.body.player, 'red']
-                    }}, {new: true});
-                // console.log(result);
-                res.send(result);
-            }
-            else if (match['cards'].get(req.body.player) && match['cards'].get(req.body.player) === 'red'){
-                console.log("error player already suspended");
-                res.send("error player already suspended");
-            }
-            else {
-                const update = {};
-                update['cards.' + req.body.player] = req.body.card;
-                const result = await Match.findByIdAndUpdate(req.body.match, {$set: update,$push: {
-                        events: [req.body.player, req.body.card]
-                    }}, {new: true});
-                // console.log(result);
-                res.send(result);
-            }
-        }
-        catch (e)
+        const match = await Match.findById(req.body.match)
+        const homeTeam = await  Team.findById(match['homeTeam'])
+        const awayTeam = await  Team.findById(match['awayTeam'])
+        let cardType = req.body['card']
+        if (!(homeTeam['squad'].includes(req.body.player)) && !(awayTeam['squad'].includes(req.body.player)))
         {
-            console.log(e);
-            res.send(e);
+            console.log("no player with this name in the match")
+            res.send("no player with this name in the match")
+            return;
         }
+        const playerName = await Player.findById(req.body.player);
+        if (match['cards'].get(req.body.player) && match['cards'].get(req.body.player) === 'yellow') {
+            const update = {};
+            cardType = "red"
+            update['cards.' + req.body.player] = 'red';
+            const result = await Match.findByIdAndUpdate(req.body.match, {$set: update,$push: {
+                    events: [req.body.player, 'red']
+                }}, {new: true});
+            // console.log(result);
+            res.send(result);
+        }
+        else if (match['cards'].get(req.body.player) && match['cards'].get(req.body.player) === 'red'){
+            console.log("error player already suspended");
+            res.send("error player already suspended");
+        }
+        else {
+            const update = {};
+            update['cards.' + req.body.player] = req.body.card;
+            const result = await Match.findByIdAndUpdate(req.body.match, {$set: update,$push: {
+                    events: [req.body.player, req.body.card]
+                }}, {new: true});
+            // console.log(result);
+            res.send(result);
+        }
+        const payload = {
+            message: {
+                topic: "all",
+                notification: {
+                    title: "Card!",
+                    body: `${homeTeam['name']} VS ${awayTeam['name']}\n${playerName['name']} ${cardType} card`
+                },
+                android: {
+                    notification: {
+                        channel_id: "noti3"
+                    }
+                }
+            }
+        };
+        await axios.post(
+            "https://fcm.googleapis.com/v1/projects/premier-noti/messages:send",
+            payload,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${await getFcmAccessToken()}`
+                }
+            }
+        )
+    }
+    catch (e)
+    {
+        console.log(e);
+        res.send(e);
+    }
 }
 const matchWithAllData = async (req,res)=>
 {
@@ -244,12 +328,49 @@ const startMatch = async (req,res)=>{
     await Stadium.findByIdAndUpdate(result['stadium'],{state: true});
     // console.log(result);
     res.send(result);
+    try{
+        const homeTeam = await Team.findById(result['homeTeam'])
+        const awayTeam = await Team.findById(result['awayTeam'])
+        const payload = {
+            message: {
+                topic: "all",
+                notification: {
+                    title: "Match Started",
+                    body: `${homeTeam['name']} VS ${awayTeam['name']}`
+                },
+                android: {
+                    notification: {
+                        channel_id: "noti1"
+                    }
+                }
+            }
+        };
+        await axios.post(
+            "https://fcm.googleapis.com/v1/projects/premier-noti/messages:send",
+            payload,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getFcmAccessToken()}`
+                }
+            }
+        )
+    }catch (e) {
+        console.log(e);
+    }
 }
 const getUpcomingMatches = async (req,res)=>{
     const result = await Match.find({status: false , endState: false})
     // console.log(result)
     res.send(result)
 }
+// const getSortedEvents=async (req , res) =>
+// {
+//     const match = await Match.findById(req.params['id']);
+//     const result = match['events'];
+//     console.log(result);
+//     res.send(result);
+// }
 const fixMatches = async (req , res) =>
 {
     //find all matches and clear the goals and cards and make status and end state false and initialize the events
@@ -268,6 +389,13 @@ const getSortedEvents = async (req, res) => {
         const playerTeam = player['team']['name'];
         const eventType = event[1];
 
+        // const transformedEvent = [
+        //     {
+        //         playername: playerName,
+        //         playerteam: playerTeam,
+        //     },
+        //     eventType,
+        // ];
         const transformedEvent = [
 
              playerName,

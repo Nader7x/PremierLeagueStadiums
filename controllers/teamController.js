@@ -4,7 +4,7 @@ const Stadium = require("../models/stadiumModel");
 
 
 const teamsWithPlayers = async function (req, res) {
-    const result = await Team.find({}).populate('coach','name').populate('squad','name');
+    const result = await Team.find({}).populate('coach','name').populate('squad','name kitNumber position');
     // console.log(result)
     res.send(result)
 }
