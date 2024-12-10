@@ -1,7 +1,18 @@
-service token.txt
+# Node modules
 node_modules
-premier-noti-6028058f5902.json
+
+# Environment variables
 .env
+
+# Service token
+service token.txt
+
+# IDE settings
 .idea
+
+# Lock files
 pnpm-lock.yaml
 package-lock.json
+
+# Google Cloud service account key
+premier-noti-6028058f5902.json
