@@ -16,6 +16,8 @@ const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const app = express();
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
 app.use(cookieParser());
 mongoose.set('strictQuery', false);
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -25,6 +27,18 @@ app.use(bodyParser.json())
 app.use(cors());
 require('ejs');
 
+
+const options = {
+    definition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'EPL Grounds API Documentation',
+            version: '1.0.0',
+            description: 'API documentation for EPL Grounds API',
+        },
+    },
+    apis: ['./routers/*.js'], // Path to the API docs
+};
 //const positions = ['gk','cb','lb','rb','cm','cam','cdm','cf','rw','rm','lw','lm','st']
 
 async function connectToMongoDB() {
@@ -47,8 +61,8 @@ async function connectToMongoDBOnline() {
     }
 }
 
-connectToMongoDBOnline().then()
-//connectToMongoDB().then();
+// connectToMongoDBOnline().then()
+connectToMongoDB().then();
 
 // try {
 //     StartMatchService.start().then(
@@ -139,6 +153,10 @@ app.use('/',coachRoute);
 app.use('/',matchRoute);
 
 app.use('/',teamRoute);
+
+const specs = swaggerJsdoc(options);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 const port = process.env.PORT || 3000;
 app.listen(port,function () {
     console.log("Server started");

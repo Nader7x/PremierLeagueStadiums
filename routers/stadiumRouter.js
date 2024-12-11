@@ -1,26 +1,172 @@
-const {addStadium,getAllStadiums,getAllStadiumsWithTeam,getStadiumWithTeam,deleteStadium,getStadium,updateStadium,stadiumMatches,stadiumHistoryMatches} = require('../controllers/stadiumController')
+const {addStadium, getAllStadiums, getAllStadiumsWithTeam, getStadiumWithTeam, deleteStadium, getStadium, updateStadium, stadiumMatches, stadiumHistoryMatches} = require('../controllers/stadiumController');
 const express = require('express');
-const {authenticateToken}= require('../controllers/apiSecurityController')
+const {authenticateToken} = require('../controllers/apiSecurityController');
 const isAdmin = authenticateToken('admin');
 const isUser = authenticateToken('user');
 const router = express.Router();
 
-router.get("/stadiums",getAllStadiums);
+/**
+ * @swagger
+ * /stadiums:
+ *   get:
+ *     summary: Retrieve a list of stadiums
+ *     tags: [Stadiums]
+ *     responses:
+ *       200:
+ *         description: A list of stadiums
+ */
+router.get("/stadiums", getAllStadiums);
 
-router.post("/stadium",addStadium);
+/**
+ * @swagger
+ * /stadium:
+ *   post:
+ *     summary: Add a new stadium
+ *     tags: [Stadiums]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               homeTeam:
+ *                 type: string
+ *               name:
+ *                 type: string
+ *               capacity:
+ *                 type: integer
+ *               state:
+ *                 type: boolean
+ *             required:
+ *               - homeTeam
+ *               - name
+ *               - capacity
+ *               - state
+ *     responses:
+ *       201:
+ *         description: Stadium added
+ */
+router.post("/stadium", addStadium);
 
-router.get("/stadiumsWithTeam",getAllStadiumsWithTeam);
+/**
+ * @swagger
+ * /stadiumsWithTeam:
+ *   get:
+ *     summary: Retrieve a list of stadiums with teams
+ *     tags: [Stadiums]
+ *     responses:
+ *       200:
+ *         description: A list of stadiums with teams
+ */
+router.get("/stadiumsWithTeam", getAllStadiumsWithTeam);
 
-router.get("/stadiumWithTeam/:id",getStadiumWithTeam);
+/**
+ * @swagger
+ * /stadiumWithTeam/{id}:
+ *   get:
+ *     summary: Retrieve a stadium with team by ID
+ *     tags: [Stadiums]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: A stadium with team
+ */
+router.get("/stadiumWithTeam/:id", getStadiumWithTeam);
 
-router.get("/stadium/:id",getStadium);
-//can't update team
-router.patch("/stadium/:id",updateStadium);
+/**
+ * @swagger
+ * /stadium/{id}:
+ *   get:
+ *     summary: Retrieve a stadium by ID
+ *     tags: [Stadiums]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: A stadium
+ */
+router.get("/stadium/:id", getStadium);
 
-router.delete("/stadium/:id",deleteStadium);
-//get all matches in this stadium
-router.get("/stadiumMatches/:id", stadiumMatches)
-//get stadium history matches
-router.get("/stadiumHistoryMatches/:id", stadiumHistoryMatches)
+/**
+ * @swagger
+ * /stadium/{id}:
+ *   patch:
+ *     summary: Update a stadium by ID
+ *     tags: [Stadiums]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Stadium updated
+ */
+router.patch("/stadium/:id", updateStadium);
+
+/**
+ * @swagger
+ * /stadium/{id}:
+ *   delete:
+ *     summary: Delete a stadium by ID
+ *     tags: [Stadiums]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Stadium deleted
+ */
+router.delete("/stadium/:id", deleteStadium);
+
+/**
+ * @swagger
+ * /stadiumMatches/{id}:
+ *   get:
+ *     summary: Retrieve matches in a stadium by ID
+ *     tags: [Stadiums]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Matches in a stadium
+ */
+router.get("/stadiumMatches/:id", stadiumMatches);
+
+/**
+ * @swagger
+ * /stadiumHistoryMatches/{id}:
+ *   get:
+ *     summary: Retrieve historical matches in a stadium by ID
+ *     tags: [Stadiums]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Historical matches in a stadium
+ */
+router.get("/stadiumHistoryMatches/:id", stadiumHistoryMatches);
 
 module.exports = router;

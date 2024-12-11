@@ -4,7 +4,7 @@
   "description": "Tracking Premier League Stadiums matches and statistics",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node --watch index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -28,7 +28,9 @@
     "mongoose": "^8.0.1",
     "mqtt": "^5.3.3",
     "node-cron": "^3.0.3",
-    "popper.js": "^1.16.1"
+    "popper.js": "^1.16.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "@types/google.maps": "^3.54.10"

@@ -32,7 +32,6 @@ const getAllMatches = async (req,res)=>{
 const getAllMatchesWithNames = async (req,res)=>{
     const result = await Match.find({}).populate('homeTeam','name').populate('awayTeam','name').populate('referee','name').populate('commentator','name');
     // console.log(result);
-    // console.log(result);
     res.send(result);
 };
 
