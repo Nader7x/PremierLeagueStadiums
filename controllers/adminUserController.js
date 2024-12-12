@@ -71,7 +71,10 @@ const register = async (req, res) => {
         res.send(result);
     } catch (err) {
         console.log(err);
-        res.status(500).send("Internal Server Error");
+        res.status(500).send({
+            message: "An error occurred during registration. Please try again later.",
+            error: err.message
+        });
     }
 };
 
@@ -85,37 +88,51 @@ const register = async (req, res) => {
  * @param {Object} res - The response object.
  */
 const login = async (req, res) => {
-    const resultAdmin = await Admin.findOne({username: req.body.username});
+    try {
+        const resultAdmin = await Admin.findOne({username: req.body.username});
 
-    if (!resultAdmin) {
-        const resultUser = await User.findOne({username: req.body.username});
+        if (!resultAdmin) {
+            const resultUser = await User.findOne({username: req.body.username});
 
-        if (!resultUser) {
-            res.status(400).send(false);
+            if (!resultUser) {
+                res.status(400).send({
+                    message: "Invalid username or password. Please try again."
+                });
+            } else {
+                const passwordMatch = await bcrypt.compare(req.body.password, resultUser.password);
+                if (passwordMatch) {
+                    const token = generateToken(resultUser['_id'], 'user');
+                    res.header('Authorization', `Bearer ${token}`);
+                    // Set the token as a cookie
+                    res.cookie('token', token, {httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000}); // 1 week expiration
+                    res.status(200).json({user: resultUser, token});
+                } else {
+                    res.status(400).send({
+                        message: "Invalid username or password. Please try again."
+                    });
+                }
+            }
         } else {
-            const passwordMatch = await bcrypt.compare(req.body.password, resultUser.password);
+            const passwordMatch = await bcrypt.compare(req.body.password, resultAdmin.password);
+
             if (passwordMatch) {
-                const token = generateToken(resultUser['_id'], 'user');
+                const token = generatelifeToken(resultAdmin['_id'], 'admin');
                 res.header('Authorization', `Bearer ${token}`);
                 // Set the token as a cookie
                 res.cookie('token', token, {httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000}); // 1 week expiration
-                res.status(200).json({user: resultUser, token});
+                res.status(200).json({admin: resultAdmin, token});
             } else {
-                res.status(400).send(false);
+                res.status(400).send({
+                    message: "Invalid username or password. Please try again."
+                });
             }
         }
-    } else {
-        const passwordMatch = await bcrypt.compare(req.body.password, resultAdmin.password);
-
-        if (passwordMatch) {
-            const token = generatelifeToken(resultAdmin['_id'], 'admin');
-            res.header('Authorization', `Bearer ${token}`);
-            // Set the token as a cookie
-            res.cookie('token', token, {httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000}); // 1 week expiration
-            res.status(200).json({admin: resultAdmin, token});
-        } else {
-            res.status(400).send(false);
-        }
+    } catch (err) {
+        console.log(err);
+        res.status(500).send({
+            message: "An error occurred during login. Please try again later.",
+            error: err.message
+        });
     }
 };
 
