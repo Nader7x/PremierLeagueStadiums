@@ -1,6 +1,6 @@
-const {getPlayer, addPlayer, updatePlayer, deletePlayer, getAllPlayers, addPlayers, playersWithSameTeam} = require('../controllers/playerController');
-const express = require('express');
-const {authenticateToken} = require('../controllers/apiSecurityController');
+import { getPlayer, addPlayer, updatePlayer, deletePlayer, getAllPlayers, addPlayers, playersWithSameTeam } from '../controllers/playerController';
+import express from 'express';
+import { authenticateToken } from '../controllers/apiSecurityController';
 const isAdmin = authenticateToken('admin');
 const isUser = authenticateToken('user');
 const router = express.Router();
@@ -139,4 +139,4 @@ router.get("/player/:playerId", getPlayer);
  */
 router.get("/playersWithSameTeam/:teamId", playersWithSameTeam);
 
-module.exports = router;
+export default router;

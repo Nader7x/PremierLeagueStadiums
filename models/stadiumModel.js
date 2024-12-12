@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 mongoose.set('strictQuery', false);
 
 const stadiumSchema = new mongoose.Schema({
@@ -9,4 +9,4 @@ const stadiumSchema = new mongoose.Schema({
 
 const Stadium = mongoose.model("Stadium",stadiumSchema);
 
-module.exports = Stadium;
+export default Stadium;

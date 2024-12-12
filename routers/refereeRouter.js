@@ -1,6 +1,7 @@
-const {updateReferee, deleteReferee, addReferee, getReferee, getAllReferee} = require("../controllers/refereeController");
-const express = require('express');
-const {authenticateToken}= require('../controllers/apiSecurityController')
+import express from 'express';
+import { updateReferee, deleteReferee, addReferee, getReferee, getAllReferee } from "../controllers/refereeController";
+import { authenticateToken } from '../controllers/apiSecurityController';
+
 const isAdmin = authenticateToken('admin');
 const isUser = authenticateToken('user');
 const router = express.Router();
@@ -100,4 +101,4 @@ router.delete("/referee/:id", deleteReferee);
  */
 router.patch("/referee/:id", updateReferee);
 
-module.exports = router;
+export default router;

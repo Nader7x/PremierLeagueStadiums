@@ -1,6 +1,5 @@
-
-const jwt = require('jsonwebtoken');
-const { GoogleAuth } = require('google-auth-library');
+import jwt from 'jsonwebtoken';
+import { GoogleAuth } from 'google-auth-library';
 
 const authenticateToken = (requiredRole) => (req, res, next) => {
     let token;
@@ -41,4 +40,5 @@ async function getFcmAccessToken() {
     const accessToken = await client.getAccessToken();
     return accessToken.token
 }
-module.exports = {authenticateToken, getFcmAccessToken};
+
+export { authenticateToken, getFcmAccessToken };

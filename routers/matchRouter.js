@@ -1,7 +1,7 @@
-const {addMatch,getAllMatches,getAllMatchesWithNames,getMatchWithNames,deleteMatch,getMatch,getLiveMatches,
-    getHistoryMatches,goal,endMatch,giveCard,matchWithAllData, startMatch,getUpcomingMatches,getSortedEvents,fixMatches} = require('../controllers/matchController')
-const express = require('express');
-const {authenticateToken}= require('../controllers/apiSecurityController')
+import { addMatch, getAllMatches, getAllMatchesWithNames, getMatchWithNames, deleteMatch, getMatch, getLiveMatches, getHistoryMatches, goal, endMatch, giveCard, matchWithAllData, startMatch, getUpcomingMatches, getSortedEvents, fixMatches } from '../controllers/matchController';
+import express from 'express';
+import { authenticateToken } from '../controllers/apiSecurityController';
+
 const isAdmin = authenticateToken('admin');
 const isUser = authenticateToken('user');
 const router = express.Router();
@@ -276,4 +276,4 @@ router.get("/sortedEvents/:id", getSortedEvents);
  */
 router.get("/fixMatches", fixMatches);
 
-module.exports = router;
+export default router;

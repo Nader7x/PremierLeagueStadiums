@@ -1,24 +1,24 @@
-const {Admin,User} = require("../models/persons");
-const jwt = require('jsonwebtoken');
-require('dotenv').config();
-// const crypto = require('crypto');
-const bcrypt = require('bcrypt');
+import { Admin, User } from "../models/persons";
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+import bcrypt from 'bcrypt';
+
+dotenv.config();
+
 const saltRounds = 10; // Number of salt rounds, you can adjust this based on your security requirements
-// const keyLength = 32;
-// const randomBytes = crypto.randomBytes(keyLength);
-// const key = randomBytes.toString('hex');
-// process.env["JWT_SECRET_KEY"] = key;
 
 const generateToken = (userId, role) => {
     const secretKey = process.env["JWT_SECRET_KEY"];
     const expiresIn = '1w';
     return jwt.sign({ userId, role }, secretKey, { expiresIn });
 };
+
 const generatelifeToken = (userId, role) => {
     const secretKey = process.env["JWT_SECRET_KEY"];
     const expiresIn = '10000y';
     return jwt.sign({ userId, role }, secretKey, { expiresIn });
 };
+
 const register = async (req, res) => {
     let human;
 
@@ -48,7 +48,6 @@ const register = async (req, res) => {
         }
 
         const result = await human.save();
-        // console.log(result);
         res.send(result);
     } catch (err) {
         console.log(err);
@@ -57,38 +56,38 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
-        const resultAdmin = await Admin.findOne({ username: req.body.username });
+    const resultAdmin = await Admin.findOne({ username: req.body.username });
 
-        if (!resultAdmin) {
-            const resultUser = await User.findOne({ username: req.body.username });
+    if (!resultAdmin) {
+        const resultUser = await User.findOne({ username: req.body.username });
 
-            if (!resultUser) {
-                res.status(400).send(false);
-            } else {
-                const passwordMatch = await bcrypt.compare(req.body.password, resultUser.password);
-                if (passwordMatch) {
-                    const token = generateToken(resultUser['_id'], 'user');
-                    res.header('Authorization', `Bearer ${token}`);
-                    // Set the token as a cookie
-                    res.cookie('token', token, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000 }); // 1 week expiration
-                    res.status(200).json({ user: resultUser, token });
-                } else {
-                    res.status(400).send(false);
-                }
-            }
+        if (!resultUser) {
+            res.status(400).send(false);
         } else {
-            const passwordMatch = await bcrypt.compare(req.body.password, resultAdmin.password);
-
+            const passwordMatch = await bcrypt.compare(req.body.password, resultUser.password);
             if (passwordMatch) {
-                const token = generatelifeToken(resultAdmin['_id'], 'admin');
+                const token = generateToken(resultUser['_id'], 'user');
                 res.header('Authorization', `Bearer ${token}`);
                 // Set the token as a cookie
                 res.cookie('token', token, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000 }); // 1 week expiration
-                res.status(200).json({ admin: resultAdmin, token });
+                res.status(200).json({ user: resultUser, token });
             } else {
                 res.status(400).send(false);
             }
         }
+    } else {
+        const passwordMatch = await bcrypt.compare(req.body.password, resultAdmin.password);
+
+        if (passwordMatch) {
+            const token = generatelifeToken(resultAdmin['_id'], 'admin');
+            res.header('Authorization', `Bearer ${token}`);
+            // Set the token as a cookie
+            res.cookie('token', token, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000 }); // 1 week expiration
+            res.status(200).json({ admin: resultAdmin, token });
+        } else {
+            res.status(400).send(false);
+        }
+    }
 };
 
-module.exports = {register,login};
+export { register, login };

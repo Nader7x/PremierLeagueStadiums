@@ -1,6 +1,7 @@
-const {updateCommentator, deleteCommentator, addCommentator, getCommentator, getAllCommentators} = require("../controllers/commentatorController");
-const express = require('express');
-const {authenticateToken}= require('../controllers/apiSecurityController')
+import express from 'express';
+import { updateCommentator, deleteCommentator, addCommentator, getCommentator, getAllCommentators } from "../controllers/commentatorController";
+import { authenticateToken } from '../controllers/apiSecurityController';
+
 const isAdmin = authenticateToken('admin');
 const isUser = authenticateToken('user');
 const router = express.Router();
@@ -113,4 +114,4 @@ router.delete("/commentator/:id", deleteCommentator);
  */
 router.patch("/commentator/:id", updateCommentator);
 
-module.exports = router;
+export default router;

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 mongoose.set('strictQuery', false);
 
 const baseOptions = {
@@ -13,4 +13,4 @@ const adminUserSchema = new mongoose.Schema({
 
 const AdminUser = mongoose.model("AdminUser",adminUserSchema);
 
-module.exports = AdminUser
+export default AdminUser;

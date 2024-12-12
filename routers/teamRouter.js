@@ -1,7 +1,8 @@
-const express = require("express");
+import express from "express";
+import { getTeam, addTeam, updateTeam, deleteTeam, getAllTeams, getTeamWithPlayers, teamsWithPlayers, getTeamsWithNoStadium } from "../controllers/teamController";
+import { authenticateToken } from '../controllers/apiSecurityController';
+
 const router = express.Router();
-const {getTeam, addTeam, updateTeam, deleteTeam, getAllTeams, getTeamWithPlayers, teamsWithPlayers, getTeamsWithNoStadium} = require("../controllers/teamController");
-const {authenticateToken} = require('../controllers/apiSecurityController');
 const isAdmin = authenticateToken('admin');
 const isUser = authenticateToken('user');
 
@@ -155,4 +156,4 @@ router.delete('/team/:id', deleteTeam);
  */
 router.patch('/team/:id', updateTeam);
 
-module.exports = router;
+export default router;
