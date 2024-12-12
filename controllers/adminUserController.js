@@ -7,18 +7,38 @@ dotenv.config();
 
 const saltRounds = 10; // Number of salt rounds, you can adjust this based on your security requirements
 
+/**
+ * Generates a JWT token for a user with a specified role.
+ * @param {string} userId - The ID of the user.
+ * @param {string} role - The role of the user (e.g., 'admin', 'user').
+ * @returns {string} - The generated JWT token.
+ */
 const generateToken = (userId, role) => {
     const secretKey = process.env["JWT_SECRET_KEY"];
     const expiresIn = '1w';
     return jwt.sign({userId, role}, secretKey, {expiresIn});
 };
 
+/**
+ * Generates a long-lived JWT token for a user with a specified role.
+ * @param {string} userId - The ID of the user.
+ * @param {string} role - The role of the user (e.g., 'admin', 'user').
+ * @returns {string} - The generated JWT token.
+ */
 const generatelifeToken = (userId, role) => {
     const secretKey = process.env["JWT_SECRET_KEY"];
     const expiresIn = '10000y';
     return jwt.sign({userId, role}, secretKey, {expiresIn});
 };
 
+/**
+ * Registers a new user (admin or regular user) in the system.
+ * - Hashes the user's password before saving.
+ * - Checks if the username already exists.
+ * - Creates a new Admin or User based on the provided role.
+ * @param {Object} req - The request object containing user details.
+ * @param {Object} res - The response object.
+ */
 const register = async (req, res) => {
     let human;
 
@@ -55,6 +75,15 @@ const register = async (req, res) => {
     }
 };
 
+/**
+ * Logs in a user (admin or regular user) by verifying their credentials.
+ * - Checks if the user exists.
+ * - Compares the provided password with the stored hashed password.
+ * - Generates a JWT token for the user upon successful login.
+ * - Sets the token as a cookie in the response.
+ * @param {Object} req - The request object containing login details.
+ * @param {Object} res - The response object.
+ */
 const login = async (req, res) => {
     const resultAdmin = await Admin.findOne({username: req.body.username});
 
