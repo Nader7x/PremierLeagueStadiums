@@ -1,3 +1,16 @@
+import express from "express";
+import mongoose from "mongoose";
+import bodyParser from "body-parser";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+import swaggerJsdoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express";
+import { createYoga, createSchema } from "graphql-yoga";
+import { ruruHTML } from "ruru/server";
+import redis from "redis";
+import util from "util";
+import ejs from "ejs";
+
 import commentatorRoute from "./routers/commentatorRouter.js";
 import stadiumRoute from "./routers/stadiumRouter.js";
 import refereeRoute from "./routers/refereeRouter.js";
@@ -6,20 +19,9 @@ import matchRoute from "./routers/matchRouter.js";
 import coachRoute from "./routers/coachRouter.js";
 import teamRoute from "./routers/teamRouter.js";
 import adminUserRoute from "./routers/adminUserRouter.js";
-import mongoose from "mongoose";
 import { Coach, Referee, Commentator } from "./models/persons.js";
 import Team from "./models/teamModel.js";
-import bodyParser from "body-parser";
-import express from "express";
-import cors from "cors"
-import cookieParser from "cookie-parser";
-import swaggerJsdoc from "swagger-jsdoc";
-import swaggerUi from "swagger-ui-express";
-import { createYoga, createSchema } from "graphql-yoga";
-import { ruruHTML } from "ruru/server";
-import {typeDefs,resolvers} from "./graphql/schema.js";
-import redis from "redis";
-import util from "util";
+import { typeDefs, resolvers } from "./graphql/schema.js";
 
 const app = express();
 app.use(cookieParser());
@@ -29,7 +31,7 @@ app.use(express.static("public"));
 app.set('view engine', 'ejs');
 app.use(bodyParser.json());
 app.use(cors());
-import ejs from "ejs";
+
 const options = {
     definition: {
         openapi: '3.0.0',
@@ -42,6 +44,7 @@ const options = {
     apis: ['./routers/*.js'], // Path to the API docs
 };
 
+// Function to connect to MongoDB
 async function connectToMongoDB() {
     try {
         mongoose.set("strictQuery", false);
@@ -52,18 +55,9 @@ async function connectToMongoDB() {
     }
 }
 
-// async function connectToMongoDBOnline() {
-//     try {
-//         mongoose.set("strictQuery", false);
-//         await mongoose.connect(`mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.raud4.mongodb.net/premierLeagueDB?retryWrites=true&w=majority&appName=Cluster0`);
-//         console.log("Connected to Mongo Successfully!");
-//     } catch (error) {
-//         console.log(error);
-//     }
-// }
-
 connectToMongoDB().then();
 
+// Redis client configuration
 const redisClient = redis.createClient({
     username: 'default',
     password: process.env.REDIS_PASSWORD,
@@ -74,6 +68,16 @@ const redisClient = redis.createClient({
 });
 redisClient.get = util.promisify(redisClient.get);
 
+// Redis connection status check
+redisClient.on('connect', () => {
+    console.log('Connected to Redis successfully!');
+});
+
+redisClient.on('error', (err) => {
+    console.log('Redis connection error:', err);
+});
+
+// Middleware to cache responses in Redis
 app.use(async (req, res, next) => {
     const cacheKey = req.originalUrl;
     const cachedData = await redisClient.get(cacheKey);
@@ -88,6 +92,7 @@ app.use(async (req, res, next) => {
     next();
 });
 
+// Route handlers
 app.get("/addCoach", async function (req, res) {
     try {
         res.render("addCoach"); // Pass the teams data to the EJS template
@@ -147,6 +152,7 @@ app.get('/addMatch', async (req, res) => {
     }
 });
 
+// Register routes
 app.use('/',commentatorRoute);
 app.use('/',adminUserRoute);
 app.use('/',stadiumRoute);
@@ -156,6 +162,7 @@ app.use('/',coachRoute);
 app.use('/',matchRoute);
 app.use('/',teamRoute);
 
+// GraphQL setup
 const yoga = createYoga({
     schema: createSchema({
         typeDefs: typeDefs,
@@ -165,6 +172,7 @@ const yoga = createYoga({
 
 app.use('/graphql', yoga);
 
+// Swagger setup
 const specs = swaggerJsdoc(options);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
@@ -172,6 +180,8 @@ app.get("/", (_req, res) => {
     res.type("html");
     res.end(ruruHTML({ endpoint: "/graphql" }));
 });
+
+// Start the server
 const port = process.env.PORT || 3000;
 app.listen(port,function () {
     console.log("Server started");

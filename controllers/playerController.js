@@ -6,6 +6,15 @@ import util from "util";
 const redisClient = redis.createClient();
 redisClient.get = util.promisify(redisClient.get);
 
+// Redis connection status check
+redisClient.on('connect', () => {
+    console.log('Connected to Redis successfully!');
+});
+
+redisClient.on('error', (err) => {
+    console.log('Redis connection error:', err);
+});
+
 const getPlayer = async (req, res) => {
     try {
         const cacheKey = `player:${req.params['playerId']}`;
