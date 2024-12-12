@@ -18,6 +18,8 @@ const cookieParser = require('cookie-parser');
 const app = express();
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
+const { createYoga, createSchema } = require('@graphql-yoga/node');
+const schema = require('./graphql/schema');
 app.use(cookieParser());
 mongoose.set('strictQuery', false);
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -153,6 +155,15 @@ app.use('/',coachRoute);
 app.use('/',matchRoute);
 
 app.use('/',teamRoute);
+
+const yoga = createYoga({
+    schema: createSchema({
+        typeDefs: schema.typeDefs,
+        resolvers: schema.resolvers,
+    }),
+});
+
+app.use('/graphql', yoga);
 
 const specs = swaggerJsdoc(options);
 
