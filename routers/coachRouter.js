@@ -1,6 +1,7 @@
-const {updateCoach, deleteCoach, addCoach, getCoach, getAllCoaches} = require("../controllers/coachController");
-const express = require('express');
-const {authenticateToken}= require('../controllers/apiSecurityController')
+import express from 'express';
+import { updateCoach, deleteCoach, addCoach, getCoach, getAllCoaches } from "../controllers/coachController";
+import { authenticateToken } from '../controllers/apiSecurityController';
+
 const router = express.Router();
 const isAdmin = authenticateToken('admin');
 const isUser = authenticateToken('user');
@@ -113,4 +114,4 @@ router.delete("/coach/:id", deleteCoach);
  */
 router.patch("/coach/:id", updateCoach);
 
-module.exports = router;
+export default router;

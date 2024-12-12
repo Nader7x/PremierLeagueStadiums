@@ -1,5 +1,5 @@
-const express = require('express');
-const {register, login} = require("../controllers/adminUserController");
+import express from 'express';
+import { register, login } from "../controllers/adminUserController";
 const router = express.Router();
 
 /**
@@ -64,4 +64,4 @@ router.post("/login", login);
  */
 router.post("/register", register);
 
-module.exports = router;
+export default router;

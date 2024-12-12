@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 mongoose.set('strictQuery', false);
 
 const baseOptions = {
@@ -12,4 +12,4 @@ const personSchema = new mongoose.Schema({
 },baseOptions);
 const Person = mongoose.model("Person",personSchema);
 
-module.exports = Person;
+export default Person;

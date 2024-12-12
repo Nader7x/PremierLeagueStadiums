@@ -1,8 +1,8 @@
-const { gql } = require('graphql-tag');
-const { Admin, User, Coach, Commentator, Referee, Player } = require('../models/persons');
-const Match = require('../models/matchModel');
-const Team = require('../models/teamModel');
-const Stadium = require('../models/stadiumModel');
+import { gql } from 'graphql-tag';
+import { Admin, User, Coach, Commentator, Referee, Player } from '../models/persons';
+import Match from '../models/matchModel';
+import Team from '../models/teamModel';
+import Stadium from '../models/stadiumModel';
 
 const typeDefs = gql`
   type Admin {
@@ -457,4 +457,4 @@ const resolvers = {
   },
 };
 
-module.exports = { typeDefs, resolvers };
+export { typeDefs, resolvers };

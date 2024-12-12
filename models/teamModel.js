@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 mongoose.set('strictQuery', false);
 
 const teamSchema = new mongoose.Schema({
@@ -12,9 +12,8 @@ const teamSchema = new mongoose.Schema({
     stadium: {type: mongoose.Schema.Types.ObjectId, ref: 'Stadium',required:false},
     kit: {type: [String],min:2,max:2, required: true},
     logo: {type: String, required: false},
-
-
 });
+
 const Team = mongoose.model("Team",teamSchema);
 
-module.exports = Team;
+export default Team;

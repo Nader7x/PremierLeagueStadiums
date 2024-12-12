@@ -1,6 +1,6 @@
-const {addStadium, getAllStadiums, getAllStadiumsWithTeam, getStadiumWithTeam, deleteStadium, getStadium, updateStadium, stadiumMatches, stadiumHistoryMatches} = require('../controllers/stadiumController');
-const express = require('express');
-const {authenticateToken} = require('../controllers/apiSecurityController');
+import { addStadium, getAllStadiums, getAllStadiumsWithTeam, getStadiumWithTeam, deleteStadium, getStadium, updateStadium, stadiumMatches, stadiumHistoryMatches } from '../controllers/stadiumController';
+import express from 'express';
+import { authenticateToken } from '../controllers/apiSecurityController';
 const isAdmin = authenticateToken('admin');
 const isUser = authenticateToken('user');
 const router = express.Router();
@@ -169,4 +169,4 @@ router.get("/stadiumMatches/:id", stadiumMatches);
  */
 router.get("/stadiumHistoryMatches/:id", stadiumHistoryMatches);
 
-module.exports = router;
+export default router;
