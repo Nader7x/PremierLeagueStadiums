@@ -1,6 +1,8 @@
-import { getPlayer, addPlayer, updatePlayer, deletePlayer, getAllPlayers, addPlayers, playersWithSameTeam } from '../controllers/playerController';
+import {getPlayer, addPlayer, updatePlayer, deletePlayer, getAllPlayers, addPlayers, playersWithSameTeam}
+    from '../controllers/playerController.js';
 import express from 'express';
-import { authenticateToken } from '../controllers/apiSecurityController';
+import {authenticateToken} from '../controllers/apiSecurityController.js';
+
 const isAdmin = authenticateToken('admin');
 const isUser = authenticateToken('user');
 const router = express.Router();

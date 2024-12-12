@@ -1,4 +1,4 @@
-import { Coach } from "../models/persons";
+import {Coach} from "../models/persons.js";
 
 const updateCoach = async (req, res) => {
     const result = await Coach.findByIdAndUpdate(req.params['id'], req.body);
@@ -21,7 +21,7 @@ const addCoach = async (req, res) => {
 };
 
 const getCoach = async (req, res) => {
-    const result = await Coach.findOne({ '_id': req.params['id'] });
+    const result = await Coach.findOne({'_id': req.params['id']});
     res.send(result);
 }
 
@@ -30,4 +30,4 @@ const getAllCoaches = async (req, res) => {
     res.send(result);
 };
 
-export { updateCoach, deleteCoach, addCoach, getCoach, getAllCoaches };
+export {updateCoach, deleteCoach, addCoach, getCoach, getAllCoaches};

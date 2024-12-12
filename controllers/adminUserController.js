@@ -1,7 +1,7 @@
-import { Admin, User } from "../models/persons";
-import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
-import bcrypt from 'bcrypt';
+import {Admin, User} from "../models/persons.js";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+import bcrypt from "bcrypt";
 
 dotenv.config();
 
@@ -10,13 +10,13 @@ const saltRounds = 10; // Number of salt rounds, you can adjust this based on yo
 const generateToken = (userId, role) => {
     const secretKey = process.env["JWT_SECRET_KEY"];
     const expiresIn = '1w';
-    return jwt.sign({ userId, role }, secretKey, { expiresIn });
+    return jwt.sign({userId, role}, secretKey, {expiresIn});
 };
 
 const generatelifeToken = (userId, role) => {
     const secretKey = process.env["JWT_SECRET_KEY"];
     const expiresIn = '10000y';
-    return jwt.sign({ userId, role }, secretKey, { expiresIn });
+    return jwt.sign({userId, role}, secretKey, {expiresIn});
 };
 
 const register = async (req, res) => {
@@ -25,7 +25,7 @@ const register = async (req, res) => {
     try {
         const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
         // Check if the username already exists
-        const usernameExists = await User.exists({ username: req.body.username });
+        const usernameExists = await User.exists({username: req.body.username});
 
         if (usernameExists) {
             return res.status(400).send("Username is already taken");
@@ -56,10 +56,10 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
-    const resultAdmin = await Admin.findOne({ username: req.body.username });
+    const resultAdmin = await Admin.findOne({username: req.body.username});
 
     if (!resultAdmin) {
-        const resultUser = await User.findOne({ username: req.body.username });
+        const resultUser = await User.findOne({username: req.body.username});
 
         if (!resultUser) {
             res.status(400).send(false);
@@ -69,8 +69,8 @@ const login = async (req, res) => {
                 const token = generateToken(resultUser['_id'], 'user');
                 res.header('Authorization', `Bearer ${token}`);
                 // Set the token as a cookie
-                res.cookie('token', token, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000 }); // 1 week expiration
-                res.status(200).json({ user: resultUser, token });
+                res.cookie('token', token, {httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000}); // 1 week expiration
+                res.status(200).json({user: resultUser, token});
             } else {
                 res.status(400).send(false);
             }
@@ -82,12 +82,12 @@ const login = async (req, res) => {
             const token = generatelifeToken(resultAdmin['_id'], 'admin');
             res.header('Authorization', `Bearer ${token}`);
             // Set the token as a cookie
-            res.cookie('token', token, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000 }); // 1 week expiration
-            res.status(200).json({ admin: resultAdmin, token });
+            res.cookie('token', token, {httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000}); // 1 week expiration
+            res.status(200).json({admin: resultAdmin, token});
         } else {
             res.status(400).send(false);
         }
     }
 };
 
-export { register, login };
+export {register, login};

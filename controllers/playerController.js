@@ -1,13 +1,13 @@
-import { Player } from "../models/persons";
-import Team from "../models/teamModel";
+import {Player} from "../models/persons.js";
+import Team from "../models/teamModel.js";
 
 const getPlayer = async (req, res) => {
-    const result = await Player.findOne({ _id: req.params['playerId'] });
+    const result = await Player.findOne({_id: req.params['playerId']});
     res.send(result);
 };
 
 const playersWithSameTeam = async (req, res) => {
-    const result = await Player.find({ 'team': req.params['teamId'] });
+    const result = await Player.find({'team': req.params['teamId']});
     res.send(result);
 };
 
@@ -23,7 +23,7 @@ const addPlayer = async (req, res) => {
     const result = await player.save().catch((err) => console.log(err));
     try {
         const playerTeam = await Team.findById(result['team']);
-        await Team.findByIdAndUpdate(result['team'], { squad: playerTeam['squad'].concat(result['_id']) });
+        await Team.findByIdAndUpdate(result['team'], {squad: playerTeam['squad'].concat(result['_id'])});
     } catch (e) {
         console.log(e);
     }
@@ -38,9 +38,9 @@ const updatePlayer = async (req, res) => {
 const deletePlayer = async (req, res) => {
     try {
         const playerId = req.params['id'];
-        const player = await Player.findOne({ _id: playerId });
+        const player = await Player.findOne({_id: playerId});
         const teamId = player['team'];
-        await Team.findByIdAndUpdate(teamId, { $pull: { squad: playerId } });
+        await Team.findByIdAndUpdate(teamId, {$pull: {squad: playerId}});
         const result = await Player.findByIdAndDelete(playerId);
         res.send(result);
     } catch (e) {
@@ -58,7 +58,7 @@ const addPlayers = async (req, res) => {
     try {
         for (const player of result) {
             const playerTeam = await Team.findById(player['team']);
-            await Team.findByIdAndUpdate(player['team'], { squad: playerTeam['squad'].concat(player['_id']) });
+            await Team.findByIdAndUpdate(player['team'], {squad: playerTeam['squad'].concat(player['_id'])});
         }
     } catch (e) {
         console.log(e);
@@ -66,4 +66,4 @@ const addPlayers = async (req, res) => {
     res.send(result);
 };
 
-export { getPlayer, addPlayer, updatePlayer, deletePlayer, getAllPlayers, addPlayers, playersWithSameTeam };
+export {getPlayer, addPlayer, updatePlayer, deletePlayer, getAllPlayers, addPlayers, playersWithSameTeam};

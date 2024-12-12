@@ -7,4 +7,4 @@ admin.initializeApp({
 
 const messaging = admin.messaging();
 
-export { messaging };
+export {messaging};

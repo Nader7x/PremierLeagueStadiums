@@ -1,6 +1,6 @@
 import express from 'express';
-import { updateCoach, deleteCoach, addCoach, getCoach, getAllCoaches } from "../controllers/coachController";
-import { authenticateToken } from '../controllers/apiSecurityController';
+import { updateCoach, deleteCoach, addCoach, getCoach, getAllCoaches } from "../controllers/coachController.js";
+import { authenticateToken } from '../controllers/apiSecurityController.js';
 
 const router = express.Router();
 const isAdmin = authenticateToken('admin');

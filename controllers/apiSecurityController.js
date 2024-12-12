@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { GoogleAuth } from 'google-auth-library';
+import {GoogleAuth} from 'google-auth-library';
 
 const authenticateToken = (requiredRole) => (req, res, next) => {
     let token;
@@ -14,7 +14,7 @@ const authenticateToken = (requiredRole) => (req, res, next) => {
         token = req.cookies.token;
     }
     if (!token) {
-        return res.status(401).json({ message: 'Unauthorized: Missing token' });
+        return res.status(401).json({message: 'Unauthorized: Missing token'});
     }
 
     try {
@@ -23,11 +23,11 @@ const authenticateToken = (requiredRole) => (req, res, next) => {
             req.user = decoded;
             next();
         } else {
-            res.status(403).json({ message: 'Forbidden: Insufficient role' });
+            res.status(403).json({message: 'Forbidden: Insufficient role'});
         }
     } catch (err) {
         console.log(err)
-        res.status(401).json({ message: 'Unauthorized: Invalid token' });
+        res.status(401).json({message: 'Unauthorized: Invalid token'});
     }
 };
 
@@ -41,4 +41,4 @@ async function getFcmAccessToken() {
     return accessToken.token
 }
 
-export { authenticateToken, getFcmAccessToken };
+export {authenticateToken, getFcmAccessToken};

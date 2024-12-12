@@ -1,6 +1,15 @@
 import express from "express";
-import { getTeam, addTeam, updateTeam, deleteTeam, getAllTeams, getTeamWithPlayers, teamsWithPlayers, getTeamsWithNoStadium } from "../controllers/teamController";
-import { authenticateToken } from '../controllers/apiSecurityController';
+import {
+    getTeam,
+    addTeam,
+    updateTeam,
+    deleteTeam,
+    getAllTeams,
+    getTeamWithPlayers,
+    teamsWithPlayers,
+    getTeamsWithNoStadium
+} from "../controllers/teamController.js";
+import {authenticateToken} from '../controllers/apiSecurityController.js';
 
 const router = express.Router();
 const isAdmin = authenticateToken('admin');

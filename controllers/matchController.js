@@ -1,7 +1,7 @@
-import Match from "../models/matchModel";
-import Team from "../models/teamModel";
-import Stadium from "../models/stadiumModel";
-import { Player } from "../models/persons";
+import Match from "../models/matchModel.js";
+import Team from "../models/teamModel.js";
+import Stadium from "../models/stadiumModel.js";
+import {Player} from "../models/persons.js";
 
 const addMatch = async (req, res) => {
     const team = await Team.findById(req.body.homeTeam);
@@ -49,20 +49,14 @@ const getMatch = async (req, res) => {
 };
 
 const getLiveMatches = async (req, res) => {
-    const result = await Match.find({ status: true, endState: false }).populate({
-        path: 'homeTeam',
-        populate: {
-            path: 'squad',
-            model: 'Player',
-            select: 'name'
+    const result = await Match.find({status: true, endState: false}).populate({
+        path: 'homeTeam', populate: {
+            path: 'squad', model: 'Player', select: 'name'
         }
     })
         .populate({
-            path: 'awayTeam',
-            populate: {
-                path: 'squad',
-                model: 'Player',
-                select: 'name'
+            path: 'awayTeam', populate: {
+                path: 'squad', model: 'Player', select: 'name'
             }
         }).populate('referee', 'name')
         .populate('commentator', 'name').populate('stadium', 'name');
@@ -70,20 +64,14 @@ const getLiveMatches = async (req, res) => {
 };
 
 const getHistoryMatches = async (req, res) => {
-    const result = await Match.find({ endState: true, status: true }).populate({
-        path: 'homeTeam',
-        populate: {
-            path: 'squad',
-            model: 'Player',
-            select: 'name'
+    const result = await Match.find({endState: true, status: true}).populate({
+        path: 'homeTeam', populate: {
+            path: 'squad', model: 'Player', select: 'name'
         }
     })
         .populate({
-            path: 'awayTeam',
-            populate: {
-                path: 'squad',
-                model: 'Player',
-                select: 'name'
+            path: 'awayTeam', populate: {
+                path: 'squad', model: 'Player', select: 'name'
             }
         }).populate('referee', 'name').populate('commentator', 'name');
     res.send(result);
@@ -105,9 +93,9 @@ const goal = async (req, res) => {
         return;
     }
     if (isHome) {
-        await Match.findByIdAndUpdate(req.body.match, { homeGoals: ++match['homeGoals'] });
+        await Match.findByIdAndUpdate(req.body.match, {homeGoals: ++match['homeGoals']});
     } else {
-        await Match.findByIdAndUpdate(req.body.match, { awayGoals: ++match['awayGoals'] });
+        await Match.findByIdAndUpdate(req.body.match, {awayGoals: ++match['awayGoals']});
     }
     let result;
     const matchofGoals = JSON.parse(JSON.stringify(match['goals']));
@@ -115,14 +103,18 @@ const goal = async (req, res) => {
     if (match['goals'].get(req.body.player)) {
         const playername = await Player.findById(req.body.player);
         matchofGoals[req.body.player]++;
-        result = await Match.findByIdAndUpdate(match['_id'], { 'goals': matchofGoals, $push: { events: [req.body.player, 'goal'] } }, { new: true });
+        result = await Match.findByIdAndUpdate(match['_id'], {
+            'goals': matchofGoals, $push: {events: [req.body.player, 'goal']}
+        }, {new: true});
         message['notification']['title'] = 'Goal';
         message['notification']['body'] = playername['name'];
         console.log(playername['name']);
         messaging.send(message);
     } else {
         matchofGoals[req.body.player] = 1;
-        result = await Match.findByIdAndUpdate(match['_id'], { 'goals': matchofGoals, $push: { events: [req.body.player, 'goal'] } }, { new: true });
+        result = await Match.findByIdAndUpdate(match['_id'], {
+            'goals': matchofGoals, $push: {events: [req.body.player, 'goal']}
+        }, {new: true});
         const playername = await Player.findById(req.body.player);
         message['notification']['title'] = 'Goal';
         message['notification']['body'] = playername['name'];
@@ -133,12 +125,9 @@ const goal = async (req, res) => {
     const score = isHome ? `[${result["homeGoals"]}] : ${result["awayGoals"]}` : `${result["homeGoals"]} : [${result["awayGoals"]}]`;
     const payload = {
         message: {
-            topic: "all",
-            notification: {
-                title: "Goal!",
-                body: `${homeTeam['name']} ${score} ${awayTeam['name']}\n${playerName['name']}`
-            },
-            android: {
+            topic: "all", notification: {
+                title: "Goal!", body: `${homeTeam['name']} ${score} ${awayTeam['name']}\n${playerName['name']}`
+            }, android: {
                 notification: {
                     channel_id: "noti2"
                 }
@@ -147,24 +136,19 @@ const goal = async (req, res) => {
     };
 
     try {
-        await axios.post(
-            "https://fcm.googleapis.com/v1/projects/premier-noti/messages:send",
-            payload,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${await getFcmAccessToken()}`
-                }
+        await axios.post("https://fcm.googleapis.com/v1/projects/premier-noti/messages:send", payload, {
+            headers: {
+                'Content-Type': 'application/json', 'Authorization': `Bearer ${await getFcmAccessToken()}`
             }
-        );
+        });
     } catch (e) {
         console.log(e);
     }
 };
 
 const endMatch = async (req, res) => {
-    const result = await Match.findByIdAndUpdate(req.params['id'], { endState: true, status: false }, { new: true });
-    await Stadium.findByIdAndUpdate(result['stadium'], { state: false });
+    const result = await Match.findByIdAndUpdate(req.params['id'], {endState: true, status: false}, {new: true});
+    await Stadium.findByIdAndUpdate(result['stadium'], {state: false});
     const hometeamId = result['homeTeam'];
     const awayteamId = result['awayTeam'];
     const homeTeam = await Team.findById(hometeamId);
@@ -189,28 +173,21 @@ const endMatch = async (req, res) => {
     try {
         const payload = {
             message: {
-                topic: "all",
-                notification: {
+                topic: "all", notification: {
                     title: "Match Ended",
                     body: `${homeTeam['name']} ${result['homeGoals']} - ${result['awayGoals']} ${awayTeam['name']}`
-                },
-                android: {
+                }, android: {
                     notification: {
                         channel_id: "noti1"
                     }
                 }
             }
         };
-        await axios.post(
-            "https://fcm.googleapis.com/v1/projects/premier-noti/messages:send",
-            payload,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${await getFcmAccessToken()}`
-                }
+        await axios.post("https://fcm.googleapis.com/v1/projects/premier-noti/messages:send", payload, {
+            headers: {
+                'Content-Type': 'application/json', 'Authorization': `Bearer ${await getFcmAccessToken()}`
             }
-        );
+        });
     } catch (e) {
         console.log(e);
     }
@@ -232,7 +209,9 @@ const giveCard = async (req, res) => {
             const update = {};
             cardType = "red";
             update['cards.' + req.body.player] = 'red';
-            const result = await Match.findByIdAndUpdate(req.body.match, { $set: update, $push: { events: [req.body.player, 'red'] } }, { new: true });
+            const result = await Match.findByIdAndUpdate(req.body.match, {
+                $set: update, $push: {events: [req.body.player, 'red']}
+            }, {new: true});
             res.send(result);
         } else if (match['cards'].get(req.body.player) && match['cards'].get(req.body.player) === 'red') {
             console.log("error player already suspended");
@@ -240,33 +219,28 @@ const giveCard = async (req, res) => {
         } else {
             const update = {};
             update['cards.' + req.body.player] = req.body.card;
-            const result = await Match.findByIdAndUpdate(req.body.match, { $set: update, $push: { events: [req.body.player, req.body.card] } }, { new: true });
+            const result = await Match.findByIdAndUpdate(req.body.match, {
+                $set: update, $push: {events: [req.body.player, req.body.card]}
+            }, {new: true});
             res.send(result);
         }
         const payload = {
             message: {
-                topic: "all",
-                notification: {
+                topic: "all", notification: {
                     title: "Card!",
                     body: `${homeTeam['name']} VS ${awayTeam['name']}\n${playerName['name']} ${cardType} card`
-                },
-                android: {
+                }, android: {
                     notification: {
                         channel_id: "noti3"
                     }
                 }
             }
         };
-        await axios.post(
-            "https://fcm.googleapis.com/v1/projects/premier-noti/messages:send",
-            payload,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${await getFcmAccessToken()}`
-                }
+        await axios.post("https://fcm.googleapis.com/v1/projects/premier-noti/messages:send", payload, {
+            headers: {
+                'Content-Type': 'application/json', 'Authorization': `Bearer ${await getFcmAccessToken()}`
             }
-        );
+        });
     } catch (e) {
         console.log(e);
         res.send(e);
@@ -279,48 +253,42 @@ const matchWithAllData = async (req, res) => {
 };
 
 const startMatch = async (req, res) => {
-    const result = await Match.findByIdAndUpdate(req.params['id'], { status: true }, { new: true });
-    await Stadium.findByIdAndUpdate(result['stadium'], { state: true });
+    const result = await Match.findByIdAndUpdate(req.params['id'], {status: true}, {new: true});
+    await Stadium.findByIdAndUpdate(result['stadium'], {state: true});
     res.send(result);
     try {
         const homeTeam = await Team.findById(result['homeTeam']);
         const awayTeam = await Team.findById(result['awayTeam']);
         const payload = {
             message: {
-                topic: "all",
-                notification: {
-                    title: "Match Started",
-                    body: `${homeTeam['name']} VS ${awayTeam['name']}`
-                },
-                android: {
+                topic: "all", notification: {
+                    title: "Match Started", body: `${homeTeam['name']} VS ${awayTeam['name']}`
+                }, android: {
                     notification: {
                         channel_id: "noti1"
                     }
                 }
             }
         };
-        await axios.post(
-            "https://fcm.googleapis.com/v1/projects/premier-noti/messages:send",
-            payload,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${getFcmAccessToken()}`
-                }
+        await axios.post("https://fcm.googleapis.com/v1/projects/premier-noti/messages:send", payload, {
+            headers: {
+                'Content-Type': 'application/json', 'Authorization': `Bearer ${getFcmAccessToken()}`
             }
-        );
+        });
     } catch (e) {
         console.log(e);
     }
 };
 
 const getUpcomingMatches = async (req, res) => {
-    const result = await Match.find({ status: false, endState: false });
+    const result = await Match.find({status: false, endState: false});
     res.send(result);
 };
 
 const fixMatches = async (req, res) => {
-    const matches = await Match.updateMany({}, { homeGoals: 0, awayGoals: 0, goals: {}, cards: {}, status: false, endState: false, events: [] });
+    const matches = await Match.updateMany({}, {
+        homeGoals: 0, awayGoals: 0, goals: {}, cards: {}, status: false, endState: false, events: []
+    });
     res.send(matches);
 };
 
@@ -335,11 +303,7 @@ const getSortedEvents = async (req, res) => {
         const playerTeam = player['team']['name'];
         const eventType = event[1];
 
-        const transformedEvent = [
-            playerName,
-            playerTeam,
-            eventType,
-        ];
+        const transformedEvent = [playerName, playerTeam, eventType,];
 
         sortedEvents.push(transformedEvent);
     }
@@ -347,4 +311,21 @@ const getSortedEvents = async (req, res) => {
     res.send(sortedEvents);
 };
 
-export { addMatch, getAllMatches, getAllMatchesWithNames, getMatchWithNames, deleteMatch, getMatch, getLiveMatches, getHistoryMatches, goal, endMatch, giveCard, matchWithAllData, startMatch, getUpcomingMatches, getSortedEvents, fixMatches };
+export {
+    addMatch,
+    getAllMatches,
+    getAllMatchesWithNames,
+    getMatchWithNames,
+    deleteMatch,
+    getMatch,
+    getLiveMatches,
+    getHistoryMatches,
+    goal,
+    endMatch,
+    giveCard,
+    matchWithAllData,
+    startMatch,
+    getUpcomingMatches,
+    getSortedEvents,
+    fixMatches
+};

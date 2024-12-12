@@ -1,6 +1,6 @@
-import { addMatch, getAllMatches, getAllMatchesWithNames, getMatchWithNames, deleteMatch, getMatch, getLiveMatches, getHistoryMatches, goal, endMatch, giveCard, matchWithAllData, startMatch, getUpcomingMatches, getSortedEvents, fixMatches } from '../controllers/matchController';
+import { addMatch, getAllMatches, getAllMatchesWithNames, getMatchWithNames, deleteMatch, getMatch, getLiveMatches, getHistoryMatches, goal, endMatch, giveCard, matchWithAllData, startMatch, getUpcomingMatches, getSortedEvents, fixMatches } from '../controllers/matchController.js';
 import express from 'express';
-import { authenticateToken } from '../controllers/apiSecurityController';
+import { authenticateToken } from '../controllers/apiSecurityController.js';
 
 const isAdmin = authenticateToken('admin');
 const isUser = authenticateToken('user');

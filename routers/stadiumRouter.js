@@ -1,6 +1,17 @@
-import { addStadium, getAllStadiums, getAllStadiumsWithTeam, getStadiumWithTeam, deleteStadium, getStadium, updateStadium, stadiumMatches, stadiumHistoryMatches } from '../controllers/stadiumController';
+import {
+    addStadium,
+    getAllStadiums,
+    getAllStadiumsWithTeam,
+    getStadiumWithTeam,
+    deleteStadium,
+    getStadium,
+    updateStadium,
+    stadiumMatches,
+    stadiumHistoryMatches
+} from '../controllers/stadiumController.js';
 import express from 'express';
-import { authenticateToken } from '../controllers/apiSecurityController';
+import {authenticateToken} from '../controllers/apiSecurityController.js';
+
 const isAdmin = authenticateToken('admin');
 const isUser = authenticateToken('user');
 const router = express.Router();

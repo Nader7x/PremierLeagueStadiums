@@ -1,6 +1,6 @@
-import Team from "../models/teamModel";
-import { Player } from "../models/persons";
-import Stadium from "../models/stadiumModel";
+import Team from "../models/teamModel.js";
+import {Player} from "../models/persons.js";
+import Stadium from "../models/stadiumModel.js";
 
 const teamsWithPlayers = async function (req, res) {
     const result = await Team.find({}).populate('coach', 'name').populate('squad', 'name kitNumber position');
@@ -13,7 +13,7 @@ const getAllTeams = async (req, res) => {
 };
 
 const getTeamsWithNoStadium = async (req, res) => {
-    const teamsWithoutStadium = await Team.find({ stadium: { $exists: false } });
+    const teamsWithoutStadium = await Team.find({stadium: {$exists: false}});
     res.send(teamsWithoutStadium);
 };
 
@@ -36,9 +36,9 @@ const addTeam = async function (req, res) {
 const deleteTeam = async (req, res) => {
     const team = await Team.findById(req.params['id']);
     const players = team['squad'];
-    await Stadium.findByIdAndUpdate(team['stadium'], { homeTeam: null });
+    await Stadium.findByIdAndUpdate(team['stadium'], {homeTeam: null});
     for (const playerId of players) {
-        await Player.findByIdAndUpdate(playerId, { team: null });
+        await Player.findByIdAndUpdate(playerId, {team: null});
     }
     const result = await Team.findByIdAndDelete(req.params['id']);
     res.send(result);
@@ -66,4 +66,13 @@ const getTeamWithPlayers = async function (req, res) {
     res.send(result);
 };
 
-export { teamsWithPlayers, getAllTeams, getTeamsWithNoStadium, addTeam, deleteTeam, updateTeam, getTeam, getTeamWithPlayers };
+export {
+    teamsWithPlayers,
+    getAllTeams,
+    getTeamsWithNoStadium,
+    addTeam,
+    deleteTeam,
+    updateTeam,
+    getTeam,
+    getTeamWithPlayers
+};

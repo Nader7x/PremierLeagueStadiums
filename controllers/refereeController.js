@@ -1,4 +1,4 @@
-import { Referee } from "../models/persons";
+import {Referee} from "../models/persons.js";
 
 const updateReferee = async (req, res) => {
     const result = await Referee.findByIdAndUpdate(req.params['id'], req.body);
@@ -21,7 +21,7 @@ const addReferee = async (req, res) => {
 };
 
 const getReferee = async (req, res) => {
-    const result = await Referee.findOne({ '_id': req.params['id'] });
+    const result = await Referee.findOne({'_id': req.params['id']});
     res.send(result);
 };
 
@@ -30,4 +30,4 @@ const getAllReferee = async (req, res) => {
     res.send(result);
 };
 
-export { updateReferee, deleteReferee, addReferee, getReferee, getAllReferee };
+export {updateReferee, deleteReferee, addReferee, getReferee, getAllReferee};

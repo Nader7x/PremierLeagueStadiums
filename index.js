@@ -1,23 +1,23 @@
-import commentatorRoute from './routers/commentatorRouter';
-import stadiumRoute from './routers/stadiumRouter';
-import refereeRoute from './routers/refereeRouter';
-import playerRoute from './routers/playerRouter';
-import matchRoute from './routers/matchRouter';
-import coachRoute from './routers/coachRouter';
-import teamRoute from './routers/teamRouter';
-import adminUserRoute from './routers/adminUserRouter';
-import mongoose from 'mongoose';
-import { Coach, Referee, Commentator } from "./models/persons";
-import Team from "./models/teamModel";
-import bodyParser from 'body-parser';
-import express from 'express';
-import cors from 'cors';
-import cookieParser from 'cookie-parser';
-import swaggerJsdoc from 'swagger-jsdoc';
-import swaggerUi from 'swagger-ui-express';
-import { createYoga, createSchema } from 'graphql-yoga';
+import commentatorRoute from "./routers/commentatorRouter.js";
+import stadiumRoute from "./routers/stadiumRouter.js";
+import refereeRoute from "./routers/refereeRouter.js";
+import playerRoute from "./routers/playerRouter.js";
+import matchRoute from "./routers/matchRouter.js";
+import coachRoute from "./routers/coachRouter.js";
+import teamRoute from "./routers/teamRouter.js";
+import adminUserRoute from "./routers/adminUserRouter.js";
+import mongoose from "mongoose";
+import { Coach, Referee, Commentator } from "./models/persons.js";
+import Team from "./models/teamModel.js";
+import bodyParser from "body-parser";
+import express from "express";
+import cors from "cors"
+import cookieParser from "cookie-parser";
+import swaggerJsdoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express";
+import { createYoga, createSchema } from "graphql-yoga";
 import { ruruHTML } from "ruru/server";
-import schema from './graphql/schema';
+import {typeDefs,resolvers} from "./graphql/schema.js";
 
 const app = express();
 app.use(cookieParser());
@@ -27,8 +27,7 @@ app.use(express.static("public"));
 app.set('view engine', 'ejs');
 app.use(bodyParser.json());
 app.use(cors());
-require('ejs');
-
+import ejs from "ejs";
 const options = {
     definition: {
         openapi: '3.0.0',
@@ -51,15 +50,15 @@ async function connectToMongoDB() {
     }
 }
 
-async function connectToMongoDBOnline() {
-    try {
-        mongoose.set("strictQuery", false);
-        await mongoose.connect(`mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.raud4.mongodb.net/premierLeagueDB?retryWrites=true&w=majority&appName=Cluster0`);
-        console.log("Connected to Mongo Successfully!");
-    } catch (error) {
-        console.log(error);
-    }
-}
+// async function connectToMongoDBOnline() {
+//     try {
+//         mongoose.set("strictQuery", false);
+//         await mongoose.connect(`mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.raud4.mongodb.net/premierLeagueDB?retryWrites=true&w=majority&appName=Cluster0`);
+//         console.log("Connected to Mongo Successfully!");
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
 
 connectToMongoDB().then();
 
@@ -133,8 +132,8 @@ app.use('/',teamRoute);
 
 const yoga = createYoga({
     schema: createSchema({
-        typeDefs: schema.typeDefs,
-        resolvers: schema.resolvers,
+        typeDefs: typeDefs,
+        resolvers: resolvers,
     }),
 });
 

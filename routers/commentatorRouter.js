@@ -1,6 +1,6 @@
 import express from 'express';
-import { updateCommentator, deleteCommentator, addCommentator, getCommentator, getAllCommentators } from "../controllers/commentatorController";
-import { authenticateToken } from '../controllers/apiSecurityController';
+import { updateCommentator, deleteCommentator, addCommentator, getCommentator, getAllCommentators } from "../controllers/commentatorController.js";
+import { authenticateToken } from '../controllers/apiSecurityController.js';
 
 const isAdmin = authenticateToken('admin');
 const isUser = authenticateToken('user');
