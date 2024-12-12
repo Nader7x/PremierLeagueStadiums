@@ -1,9 +1,20 @@
 import {Player} from "../models/persons.js";
 import Team from "../models/teamModel.js";
+import redis from "redis";
+import util from "util";
+
+const redisClient = redis.createClient();
+redisClient.get = util.promisify(redisClient.get);
 
 const getPlayer = async (req, res) => {
     try {
+        const cacheKey = `player:${req.params['playerId']}`;
+        const cachedData = await redisClient.get(cacheKey);
+        if (cachedData) {
+            return res.send(JSON.parse(cachedData));
+        }
         const result = await Player.findOne({_id: req.params['playerId']});
+        redisClient.set(cacheKey, JSON.stringify(result));
         res.send(result);
     } catch (err) {
         console.log(err);
@@ -16,7 +27,13 @@ const getPlayer = async (req, res) => {
 
 const playersWithSameTeam = async (req, res) => {
     try {
+        const cacheKey = `playersWithSameTeam:${req.params['teamId']}`;
+        const cachedData = await redisClient.get(cacheKey);
+        if (cachedData) {
+            return res.send(JSON.parse(cachedData));
+        }
         const result = await Player.find({'team': req.params['teamId']});
+        redisClient.set(cacheKey, JSON.stringify(result));
         res.send(result);
     } catch (err) {
         console.log(err);
@@ -86,7 +103,13 @@ const deletePlayer = async (req, res) => {
 
 const getAllPlayers = async (req, res) => {
     try {
+        const cacheKey = 'allPlayers';
+        const cachedData = await redisClient.get(cacheKey);
+        if (cachedData) {
+            return res.send(JSON.parse(cachedData));
+        }
         const result = await Player.find({});
+        redisClient.set(cacheKey, JSON.stringify(result));
         res.send(result);
     } catch (err) {
         console.log(err);

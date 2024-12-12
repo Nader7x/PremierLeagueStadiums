@@ -18,6 +18,8 @@ import swaggerUi from "swagger-ui-express";
 import { createYoga, createSchema } from "graphql-yoga";
 import { ruruHTML } from "ruru/server";
 import {typeDefs,resolvers} from "./graphql/schema.js";
+import redis from "redis";
+import util from "util";
 
 const app = express();
 app.use(cookieParser());
@@ -61,6 +63,30 @@ async function connectToMongoDB() {
 // }
 
 connectToMongoDB().then();
+
+const redisClient = redis.createClient({
+    username: 'default',
+    password: process.env.REDIS_PASSWORD,
+    socket: {
+        host: 'redis-19658.c328.europe-west3-1.gce.redns.redis-cloud.com',
+        port: 19658
+    }
+});
+redisClient.get = util.promisify(redisClient.get);
+
+app.use(async (req, res, next) => {
+    const cacheKey = req.originalUrl;
+    const cachedData = await redisClient.get(cacheKey);
+    if (cachedData) {
+        return res.send(JSON.parse(cachedData));
+    }
+    res.sendResponse = res.send;
+    res.send = (body) => {
+        redisClient.set(cacheKey, JSON.stringify(body));
+        res.sendResponse(body);
+    };
+    next();
+});
 
 app.get("/addCoach", async function (req, res) {
     try {

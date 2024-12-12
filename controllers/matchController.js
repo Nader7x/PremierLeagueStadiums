@@ -2,6 +2,11 @@ import Match from "../models/matchModel.js";
 import Team from "../models/teamModel.js";
 import Stadium from "../models/stadiumModel.js";
 import {Player} from "../models/persons.js";
+import redis from "redis";
+import util from "util";
+
+const redisClient = redis.createClient();
+redisClient.get = util.promisify(redisClient.get);
 
 const addMatch = async (req, res) => {
     try {
@@ -28,7 +33,13 @@ const addMatch = async (req, res) => {
 
 const getAllMatches = async (req, res) => {
     try {
+        const cacheKey = 'allMatches';
+        const cachedData = await redisClient.get(cacheKey);
+        if (cachedData) {
+            return res.send(JSON.parse(cachedData));
+        }
         const result = await Match.find({});
+        redisClient.set(cacheKey, JSON.stringify(result));
         res.send(result);
     } catch (err) {
         console.log(err);
@@ -80,7 +91,13 @@ const deleteMatch = async (req, res) => {
 
 const getMatch = async (req, res) => {
     try {
+        const cacheKey = `match:${req.params['id']}`;
+        const cachedData = await redisClient.get(cacheKey);
+        if (cachedData) {
+            return res.send(JSON.parse(cachedData));
+        }
         const result = await Match.findById(req.params['id']);
+        redisClient.set(cacheKey, JSON.stringify(result));
         res.send(result);
     } catch (err) {
         console.log(err);
@@ -93,6 +110,11 @@ const getMatch = async (req, res) => {
 
 const getLiveMatches = async (req, res) => {
     try {
+        const cacheKey = 'liveMatches';
+        const cachedData = await redisClient.get(cacheKey);
+        if (cachedData) {
+            return res.send(JSON.parse(cachedData));
+        }
         const result = await Match.find({status: true, endState: false}).populate({
             path: 'homeTeam', populate: {
                 path: 'squad', model: 'Player', select: 'name'
@@ -104,6 +126,7 @@ const getLiveMatches = async (req, res) => {
                 }
             }).populate('referee', 'name')
             .populate('commentator', 'name').populate('stadium', 'name');
+        redisClient.set(cacheKey, JSON.stringify(result));
         res.send(result);
     } catch (err) {
         console.log(err);
@@ -116,6 +139,11 @@ const getLiveMatches = async (req, res) => {
 
 const getHistoryMatches = async (req, res) => {
     try {
+        const cacheKey = 'historyMatches';
+        const cachedData = await redisClient.get(cacheKey);
+        if (cachedData) {
+            return res.send(JSON.parse(cachedData));
+        }
         const result = await Match.find({endState: true, status: true}).populate({
             path: 'homeTeam', populate: {
                 path: 'squad', model: 'Player', select: 'name'
@@ -126,6 +154,7 @@ const getHistoryMatches = async (req, res) => {
                     path: 'squad', model: 'Player', select: 'name'
                 }
             }).populate('referee', 'name').populate('commentator', 'name');
+        redisClient.set(cacheKey, JSON.stringify(result));
         res.send(result);
     } catch (err) {
         console.log(err);
