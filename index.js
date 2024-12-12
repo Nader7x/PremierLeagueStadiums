@@ -17,7 +17,6 @@ import {createYoga, createSchema} from "graphql-yoga";
 import {ruruHTML} from "ruru/server";
 import {typeDefs, resolvers} from "./graphql/schema.js";
 import redis from "redis";
-import util from "util";
 
 const app = express();
 app.use(cookieParser());
@@ -27,6 +26,7 @@ app.use(express.static("public"));
 app.set('view engine', 'ejs');
 app.use(bodyParser.json());
 app.use(cors());
+
 
 const options = {
     definition: {
@@ -57,7 +57,6 @@ const redisClient = redis.createClient({
     }
 });
 
-redisClient.get = util.promisify(redisClient.get);
 
 try {
     await redisClient.connect();
@@ -65,10 +64,9 @@ try {
 } catch (err) {
     console.error('Redis connection error:', err);
 }
-const cacheData = async (key, data, expiry = 3600) => {
+const cacheData = async (key, data) => {
     try {
-        await redisClient.set(key, JSON.stringify(data), 'EX', expiry);
-        console.log(`key: ${key} , data: ${data} , expiry: ${expiry}`);
+        await redisClient.json.set(key, "$", data);
         console.log(`Data cached successfully for key: ${key}`);
     } catch (error) {
         console.error(`Error caching data for key: ${key}`, error);
@@ -77,14 +75,8 @@ const cacheData = async (key, data, expiry = 3600) => {
 
 const getCachedData = async (key) => {
     try {
-        console.log(key)
-        const cachedData = await redisClient.get(key);
-        if (cachedData) {
-            console.log(`Cache hit for key: ${key}`);
-            return JSON.parse(cachedData);
-        }
-        console.log(`Cache miss for key: ${key}`);
-        return null;
+        const data = await redisClient.json.get(key);
+        return data;
     } catch (error) {
         console.error(`Error retrieving cached data for key: ${key}`, error);
         return null;
@@ -95,37 +87,6 @@ const getCachedData = async (key) => {
 // Export the Redis client for reuse
 export {cacheData, getCachedData};
 
-// // Middleware to handle caching
-// app.use(async (req, res, next) => {
-//     try {
-//         // Skip caching for Swagger and GraphQL endpoints
-//         if (req.originalUrl.startsWith('/api-docs') || req.originalUrl.startsWith('/graphql')) {
-//             console.log('Skipping cache for:', req.originalUrl)
-//             return next()
-//         }
-//
-//         const cacheKey = req.originalUrl; // Cache based on the full URL
-//         const cachedData = await getCachedData(cacheKey);
-//
-//         // If data is cached, return the cached response
-//         if (cachedData) {
-//             console.log(`Cache hit for ${cacheKey}`);
-//             return res.json(cachedData);
-//         }
-//
-//         // Otherwise, intercept and cache the response once it's sent
-//         const originalSend = res.send;
-//         res.send = (body) => {
-//             cacheData(cacheKey, body, 3600); // Cache the body with expiry time
-//             originalSend.call(res, body); // Proceed to send the response
-//         };
-//
-//         next();
-//     } catch (error) {
-//         console.error('Redis middleware error:', error);
-//         next(); // Proceed to the next middleware/route
-//     }
-// });
 
 // Register routes
 app.use('/', commentatorRoute);

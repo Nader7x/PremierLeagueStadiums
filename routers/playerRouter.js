@@ -80,7 +80,7 @@ router.post("/addPlayers", addPlayers);
  *         name: id
  *         required: true
  *         schema:
- *           type: integer
+ *           type: string
  *     responses:
  *       200:
  *         description: Player updated
@@ -98,7 +98,7 @@ router.patch("/player/:id", updatePlayer);
  *         name: id
  *         required: true
  *         schema:
- *           type: integer
+ *           type: string
  *     responses:
  *       200:
  *         description: Player deleted
@@ -116,7 +116,7 @@ router.delete("/player/:id", deletePlayer);
  *         name: playerId
  *         required: true
  *         schema:
- *           type: integer
+ *           type: string
  *     responses:
  *       200:
  *         description: A player
@@ -134,7 +134,7 @@ router.get("/player/:playerId", getPlayer);
  *         name: teamId
  *         required: true
  *         schema:
- *           type: integer
+ *           type: string
  *     responses:
  *       200:
  *         description: Players with the same team
