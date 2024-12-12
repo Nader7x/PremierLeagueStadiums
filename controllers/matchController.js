@@ -2,20 +2,9 @@ import Match from "../models/matchModel.js";
 import Team from "../models/teamModel.js";
 import Stadium from "../models/stadiumModel.js";
 import {Player} from "../models/persons.js";
-import redis from "redis";
-import util from "util";
+import {cacheData, getCachedData} from "../index.js";
 
-const redisClient = redis.createClient();
-redisClient.get = util.promisify(redisClient.get);
 
-// Redis connection status check
-redisClient.on('connect', () => {
-    console.log('Connected to Redis successfully!');
-});
-
-redisClient.on('error', (err) => {
-    console.log('Redis connection error:', err);
-});
 
 const addMatch = async (req, res) => {
     try {
@@ -34,8 +23,7 @@ const addMatch = async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(500).send({
-            message: "An error occurred while adding the match. Please try again later.",
-            error: err.message
+            message: "An error occurred while adding the match. Please try again later.", error: err.message
         });
     }
 };
@@ -43,25 +31,33 @@ const addMatch = async (req, res) => {
 const getAllMatches = async (req, res) => {
     try {
         const cacheKey = 'allMatches';
-        const cachedData = await redisClient.get(cacheKey);
+        const cachedData = await getCachedData(cacheKey);
+
         if (cachedData) {
-            return res.send(JSON.parse(cachedData));
+            return res.status(200).json(cachedData);
         }
+
         const result = await Match.find({});
-        redisClient.set(cacheKey, JSON.stringify(result));
-        res.send(result);
+        await cacheData(cacheKey, result, 3600); // Cache the data with expiry
+        res.status(200).json(result);
     } catch (err) {
-        console.log(err);
+        console.error('Error fetching matches:', err);
         res.status(500).send({
-            message: "An error occurred while retrieving all matches. Please try again later.",
-            error: err.message
+            message: "An error occurred while retrieving all matches.",
+            error: err.message,
         });
     }
 };
 
 const getAllMatchesWithNames = async (req, res) => {
     try {
+        const cacheKey = 'allMatchesWithNames';
+        const cachedData = await getCachedData(cacheKey);
+        if (cachedData) {
+            return res.send(cachedData);
+        }
         const result = await Match.find({}).populate('homeTeam', 'name').populate('awayTeam', 'name').populate('referee', 'name').populate('commentator', 'name');
+        await cacheData(cacheKey, result, 3600);
         res.send(result);
     } catch (err) {
         console.log(err);
@@ -92,8 +88,7 @@ const deleteMatch = async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(500).send({
-            message: "An error occurred while deleting the match. Please try again later.",
-            error: err.message
+            message: "An error occurred while deleting the match. Please try again later.", error: err.message
         });
     }
 };
@@ -101,12 +96,12 @@ const deleteMatch = async (req, res) => {
 const getMatch = async (req, res) => {
     try {
         const cacheKey = `match:${req.params['id']}`;
-        const cachedData = await redisClient.get(cacheKey);
+        const cachedData = await getCachedData(cacheKey);
         if (cachedData) {
-            return res.send(JSON.parse(cachedData));
+            return res.send(cachedData);
         }
         const result = await Match.findById(req.params['id']);
-        redisClient.set(cacheKey, JSON.stringify(result));
+        await cacheData(cacheKey, result, 3600);
         res.send(result);
     } catch (err) {
         console.log(err);
@@ -116,13 +111,12 @@ const getMatch = async (req, res) => {
         });
     }
 };
-
 const getLiveMatches = async (req, res) => {
     try {
         const cacheKey = 'liveMatches';
-        const cachedData = await redisClient.get(cacheKey);
+        const cachedData = await getCachedData(cacheKey);
         if (cachedData) {
-            return res.send(JSON.parse(cachedData));
+            return res.send(cachedData);
         }
         const result = await Match.find({status: true, endState: false}).populate({
             path: 'homeTeam', populate: {
@@ -135,7 +129,7 @@ const getLiveMatches = async (req, res) => {
                 }
             }).populate('referee', 'name')
             .populate('commentator', 'name').populate('stadium', 'name');
-        redisClient.set(cacheKey, JSON.stringify(result));
+        await cacheData(cacheKey, result, 3600);
         res.send(result);
     } catch (err) {
         console.log(err);
@@ -149,9 +143,9 @@ const getLiveMatches = async (req, res) => {
 const getHistoryMatches = async (req, res) => {
     try {
         const cacheKey = 'historyMatches';
-        const cachedData = await redisClient.get(cacheKey);
+        const cachedData = await getCachedData(cacheKey);
         if (cachedData) {
-            return res.send(JSON.parse(cachedData));
+            return res.send(cachedData);
         }
         const result = await Match.find({endState: true, status: true}).populate({
             path: 'homeTeam', populate: {
@@ -163,7 +157,7 @@ const getHistoryMatches = async (req, res) => {
                     path: 'squad', model: 'Player', select: 'name'
                 }
             }).populate('referee', 'name').populate('commentator', 'name');
-        redisClient.set(cacheKey, JSON.stringify(result));
+        await cacheData(cacheKey, result, 3600);
         res.send(result);
     } catch (err) {
         console.log(err);
@@ -173,6 +167,7 @@ const getHistoryMatches = async (req, res) => {
         });
     }
 };
+
 
 const goal = async (req, res) => {
     try {
@@ -249,8 +244,7 @@ const goal = async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(500).send({
-            message: "An error occurred while processing the goal. Please try again later.",
-            error: err.message
+            message: "An error occurred while processing the goal. Please try again later.", error: err.message
         });
     }
 };
@@ -304,8 +298,7 @@ const endMatch = async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(500).send({
-            message: "An error occurred while ending the match. Please try again later.",
-            error: err.message
+            message: "An error occurred while ending the match. Please try again later.", error: err.message
         });
     }
 };
@@ -365,8 +358,7 @@ const giveCard = async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(500).send({
-            message: "An error occurred while giving the card. Please try again later.",
-            error: err.message
+            message: "An error occurred while giving the card. Please try again later.", error: err.message
         });
     }
 };
@@ -414,8 +406,7 @@ const startMatch = async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(500).send({
-            message: "An error occurred while starting the match. Please try again later.",
-            error: err.message
+            message: "An error occurred while starting the match. Please try again later.", error: err.message
         });
     }
 };
@@ -427,8 +418,7 @@ const getUpcomingMatches = async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(500).send({
-            message: "An error occurred while retrieving upcoming matches. Please try again later.",
-            error: err.message
+            message: "An error occurred while retrieving upcoming matches. Please try again later.", error: err.message
         });
     }
 };
@@ -442,8 +432,7 @@ const fixMatches = async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(500).send({
-            message: "An error occurred while fixing matches. Please try again later.",
-            error: err.message
+            message: "An error occurred while fixing matches. Please try again later.", error: err.message
         });
     }
 };
@@ -469,8 +458,7 @@ const getSortedEvents = async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(500).send({
-            message: "An error occurred while retrieving sorted events. Please try again later.",
-            error: err.message
+            message: "An error occurred while retrieving sorted events. Please try again later.", error: err.message
         });
     }
 };

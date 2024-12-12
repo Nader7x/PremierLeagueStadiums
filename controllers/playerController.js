@@ -1,57 +1,56 @@
 import {Player} from "../models/persons.js";
 import Team from "../models/teamModel.js";
-import redis from "redis";
-import util from "util";
+import {cacheData, getCachedData} from "../index.js";
 
-const redisClient = redis.createClient();
-redisClient.get = util.promisify(redisClient.get);
-
-// Redis connection status check
-redisClient.on('connect', () => {
-    console.log('Connected to Redis successfully!');
-});
-
-redisClient.on('error', (err) => {
-    console.log('Redis connection error:', err);
-});
 
 const getPlayer = async (req, res) => {
     try {
-        const cacheKey = `player:${req.params['playerId']}`;
-        const cachedData = await redisClient.get(cacheKey);
+        const cacheKey = `players:${req.params['playerId']}`;
+        const cachedData = await getCachedData(cacheKey);
+
         if (cachedData) {
-            return res.send(JSON.parse(cachedData));
+            return res.status(200).json(cachedData);
         }
-        const result = await Player.findOne({_id: req.params['playerId']});
-        redisClient.set(cacheKey, JSON.stringify(result));
-        res.send(result);
+
+        const result = await Player.findById(req.params['playerId']);
+        await cacheData(cacheKey, result, 3600); // Cache the data with expiry
+        res.status(200).json(result);
     } catch (err) {
-        console.log(err);
+        console.error('Error fetching player:', err);
         res.status(500).send({
-            message: "An error occurred while retrieving the player. Please try again later.",
-            error: err.message
+            message: "An error occurred while retrieving the player.",
+            error: err.message,
         });
     }
 };
 
 const playersWithSameTeam = async (req, res) => {
     try {
-        const cacheKey = `playersWithSameTeam:${req.params['teamId']}`;
-        const cachedData = await redisClient.get(cacheKey);
+        const teamId = req.params['teamId'];
+        const cacheKey = `playersWithSameTeam:${teamId}`;
+
+        const cachedData = await getCachedData(cacheKey);
         if (cachedData) {
-            return res.send(JSON.parse(cachedData));
+            console.log(`Cache hit for ${cacheKey}`);
+            return res.status(200).json(cachedData);
         }
-        const result = await Player.find({'team': req.params['teamId']});
-        redisClient.set(cacheKey, JSON.stringify(result));
-        res.send(result);
+
+        const result = await Player.find({ team: teamId });
+        if (!result || result.length === 0) {
+            return res.status(404).json({ message: "No players found for this team." });
+        }
+
+        await cacheData(cacheKey, result, 3600); // Cache the data with expiry
+        res.status(200).json(result);
     } catch (err) {
-        console.log(err);
+        console.error('Error fetching players with the same team:', err);
         res.status(500).send({
-            message: "An error occurred while retrieving players with the same team. Please try again later.",
-            error: err.message
+            message: "An error occurred while retrieving players with the same team.",
+            error: err.message,
         });
     }
 };
+
 
 const addPlayer = async (req, res) => {
     try {
@@ -74,8 +73,7 @@ const addPlayer = async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(500).send({
-            message: "An error occurred while adding the player. Please try again later.",
-            error: err.message
+            message: "An error occurred while adding the player. Please try again later.", error: err.message
         });
     }
 };
@@ -87,8 +85,7 @@ const updatePlayer = async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(500).send({
-            message: "An error occurred while updating the player. Please try again later.",
-            error: err.message
+            message: "An error occurred while updating the player. Please try again later.", error: err.message
         });
     }
 };
@@ -104,27 +101,27 @@ const deletePlayer = async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(500).send({
-            message: "An error occurred while deleting the player. Please try again later.",
-            error: err.message
+            message: "An error occurred while deleting the player. Please try again later.", error: err.message
         });
     }
 };
-
 const getAllPlayers = async (req, res) => {
     try {
         const cacheKey = 'allPlayers';
-        const cachedData = await redisClient.get(cacheKey);
+        const cachedData = await getCachedData(cacheKey);
+
         if (cachedData) {
-            return res.send(JSON.parse(cachedData));
+            console.log(`Cache hit for ${cacheKey}`);
+            return res.status(200).json(cachedData);
         }
         const result = await Player.find({});
-        redisClient.set(cacheKey, JSON.stringify(result));
-        res.send(result);
+        await cacheData(cacheKey, result, 3600); // Cache the data with expiry
+        res.status(200).json(result);
     } catch (err) {
-        console.log(err);
+        console.error('Error fetching all players:', err);
         res.status(500).send({
-            message: "An error occurred while retrieving all players. Please try again later.",
-            error: err.message
+            message: "An error occurred while retrieving all players.",
+            error: err.message,
         });
     }
 };
@@ -144,8 +141,7 @@ const addPlayers = async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(500).send({
-            message: "An error occurred while adding players. Please try again later.",
-            error: err.message
+            message: "An error occurred while adding players. Please try again later.", error: err.message
         });
     }
 };
