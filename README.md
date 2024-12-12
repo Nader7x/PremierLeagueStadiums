@@ -111,3 +111,44 @@ The application will start on `http://localhost:3000`.
 - `POST /commentator`: Add a new commentator.
 - `DELETE /commentator/:id`: Delete a commentator.
 - `PATCH /commentator/:id`: Update a commentator.
+
+## Redis Caching Functionality
+
+### Overview
+
+Redis caching has been integrated into the project to improve the performance and efficiency of the application. By caching frequently accessed data, the application can reduce the load on the MongoDB database and provide faster response times to users.
+
+### Setup Instructions
+
+1. Install Redis on your system. You can follow the instructions for your operating system from the [official Redis documentation](https://redis.io/download).
+
+2. Start the Redis server:
+   ```bash
+   redis-server
+   ```
+
+3. The application will automatically connect to the Redis server and start caching data.
+
+### Cached Endpoints
+
+The following endpoints have caching enabled:
+
+- `GET /teams`
+- `GET /stadiums`
+- `GET /coaches`
+- `GET /matches`
+- `GET /players`
+- `GET /commentators`
+
+### Cache Expiration
+
+The cached data will expire after a certain period to ensure that the application always serves fresh data. The expiration time can be configured in the application settings.
+
+### Clearing the Cache
+
+If you need to clear the cache manually, you can use the following command:
+```bash
+redis-cli FLUSHALL
+```
+
+This command will clear all the cached data from the Redis server.
