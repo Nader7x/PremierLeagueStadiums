@@ -7,7 +7,8 @@ import {
     getAllTeams,
     getTeamWithPlayers,
     teamsWithPlayers,
-    getTeamsWithNoStadium
+    getTeamsWithNoStadium,
+    getLeagueStandings
 } from "../controllers/teamController.js";
 import {authenticateToken} from '../controllers/apiSecurityController.js';
 
@@ -164,5 +165,17 @@ router.delete('/team/:id', deleteTeam);
  *         description: Team updated
  */
 router.patch('/team/:id', updateTeam);
+
+/**
+ * @swagger
+ * /leagueStandings:
+ *   get:
+ *     summary: Retrieve the league standings by points
+ *     tags: [Teams]
+ *     responses:
+ *       200:
+ *         description: League standings by points
+ */
+router.get("/leagueStandings", getLeagueStandings);
 
 export default router;

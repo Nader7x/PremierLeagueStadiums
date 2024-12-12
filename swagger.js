@@ -20,6 +20,7 @@ const options = {
             {name: 'Players', description: 'Endpoints related to players'},
             {name: 'Admin Users', description: 'Endpoints related to admin users'},
             {name: 'Commentators', description: 'Endpoints related to commentators'},
+            {name: 'League Standings', description: 'Endpoints related to league standings'},
         ],
     },
     apis: ['./routers/*.js'], // Path to the API docs
