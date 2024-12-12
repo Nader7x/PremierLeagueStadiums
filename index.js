@@ -13,9 +13,9 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
-import {createYoga, createSchema} from "graphql-yoga";
+import {createSchema, createYoga} from "graphql-yoga";
 import {ruruHTML} from "ruru/server";
-import {typeDefs, resolvers} from "./graphql/schema.js";
+import {resolvers, typeDefs} from "./graphql/schema.js";
 import redis from "redis";
 
 const app = express();
@@ -75,8 +75,7 @@ const cacheData = async (key, data) => {
 
 const getCachedData = async (key) => {
     try {
-        const data = await redisClient.json.get(key);
-        return data;
+        return await redisClient.json.get(key);
     } catch (error) {
         console.error(`Error retrieving cached data for key: ${key}`, error);
         return null;
