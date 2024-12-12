@@ -34,7 +34,10 @@ const authenticateToken = (requiredRole) => (req, res, next) => {
         }
     } catch (err) {
         console.log(err)
-        res.status(401).json({message: 'Unauthorized: Invalid token'});
+        res.status(401).json({
+            message: 'Unauthorized: Invalid token',
+            error: err.message
+        });
     }
 };
 
