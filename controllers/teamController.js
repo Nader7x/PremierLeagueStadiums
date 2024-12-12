@@ -130,6 +130,19 @@ const getTeamWithPlayers = async function (req, res) {
     }
 };
 
+const getLeagueStandings = async (req, res) => {
+    try {
+        const teams = await Team.find({}).sort({ points: -1 });
+        res.send(teams);
+    } catch (err) {
+        console.log(err);
+        res.status(500).send({
+            message: "An error occurred while retrieving the league standings. Please try again later.",
+            error: err.message
+        });
+    }
+};
+
 export {
     teamsWithPlayers,
     getAllTeams,
@@ -138,5 +151,6 @@ export {
     deleteTeam,
     updateTeam,
     getTeam,
-    getTeamWithPlayers
+    getTeamWithPlayers,
+    getLeagueStandings
 };
