@@ -18,7 +18,8 @@ const cookieParser = require('cookie-parser');
 const app = express();
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
-const { createYoga, createSchema } = require('@graphql-yoga/node');
+const { createYoga, createSchema } = require('graphql-yoga');
+import {ruruHTML} from "ruru/server";
 const schema = require('./graphql/schema');
 app.use(cookieParser());
 mongoose.set('strictQuery', false);
@@ -168,6 +169,10 @@ app.use('/graphql', yoga);
 const specs = swaggerJsdoc(options);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+app.get("/", (_req, res) => {
+    res.type("html");
+    res.end(ruruHTML({ endpoint: "/graphql" }));
+});
 const port = process.env.PORT || 3000;
 app.listen(port,function () {
     console.log("Server started");

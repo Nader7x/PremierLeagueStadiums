@@ -9,6 +9,7 @@
   },
   "author": "",
   "license": "ISC",
+  "type": "module",
   "dependencies": {
     "@angular/google-maps": "^17.0.4",
     "@googlemaps/js-api-loader": "^1.16.2",
@@ -22,6 +23,8 @@
     "express": "^4.18.2",
     "firebase-admin": "^12.4.0",
     "google-auth-library": "^9.14.1",
+    "graphql-tag": "^2.12.6",
+    "graphql-yoga": "^5.10.4",
     "jsonwebtoken": "^9.0.2",
     "moment-timezone": "^0.5.43",
     "mongodb": "^6.8.0",
@@ -29,6 +32,7 @@
     "mqtt": "^5.3.3",
     "node-cron": "^3.0.3",
     "popper.js": "^1.16.1",
+    "ruru": "2.0.0-beta.13",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
   },
