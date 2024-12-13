@@ -1,5 +1,7 @@
 # Node modules
 node_modules
+/views/front/node_modules
+views/front/.angular
 
 # Environment variables
 .env
