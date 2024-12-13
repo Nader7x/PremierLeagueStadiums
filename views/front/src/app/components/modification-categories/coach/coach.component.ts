@@ -2,10 +2,18 @@ import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { UiService } from 'src/app/services/ui.service';
 import { CoachService } from 'src/app/services/objects/coach.service';
+import {FormsModule} from "@angular/forms";
+import {NgForOf, NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-coach',
   templateUrl: './coach.component.html',
+  standalone: true,
+  imports: [
+    FormsModule,
+    NgForOf,
+    NgIf
+  ],
   styleUrls: ['./coach.component.css']
 })
 export class CoachComponent {

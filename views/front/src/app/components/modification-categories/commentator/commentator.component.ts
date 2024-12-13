@@ -3,10 +3,18 @@ import { Subscription } from 'rxjs';
 import { UiService } from 'src/app/services/ui.service';
 import { CommentatorService } from 'src/app/services/objects/commentator.service';
 import { ObjectId } from 'mongoose';
+import {NgForOf, NgIf} from "@angular/common";
+import {FormsModule} from "@angular/forms";
 
 @Component({
   selector: 'app-commentator',
   templateUrl: './commentator.component.html',
+  standalone: true,
+  imports: [
+    NgIf,
+    FormsModule,
+    NgForOf
+  ],
   styleUrls: ['./commentator.component.css']
 })
 export class CommentatorComponent {
@@ -22,7 +30,7 @@ export class CommentatorComponent {
     id: ObjectId
   }[] = [];
   selectedCommentator: string = '';
-  
+
   constructor(private uiService: UiService, private commentatorService: CommentatorService){
   }
 
@@ -42,24 +50,24 @@ export class CommentatorComponent {
       });
 
     }
-      
+
   }
 
   static makeSound(event: string, commentatorName: string){
     let randomNum: number = Math.floor(Math.random() * (3 - 1) + 1);
     if(event === "win")
       event = `${event}${randomNum}`;
-    
+
     const src: string = `../../../assets/audio/${commentatorName} ${event}.mp3`;
     let audio = new Audio(src);
     try{
-      
+
       audio.play();
     }catch(err){
       console.log(err);
     }
   }
-  
+
 
   onSubmit(): void{
     // console.log(this.age,this.name,this.nationality);
@@ -69,7 +77,7 @@ export class CommentatorComponent {
         alert('Please Enter all fields!!!');
         return;
       }
-  
+
       const newCommentator = {
         name: this.name,
         nationality : this.nationality,

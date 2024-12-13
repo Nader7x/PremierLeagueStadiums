@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { TokenService } from '../token.service';
+
 
 const httpOptions = {
   headers: new HttpHeaders(
     {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${TokenService.PassingTOKEN}`,
     }
   )
 }
@@ -21,7 +24,7 @@ export class CoachService {
 
   getAllCoaches(): Observable<any[]>{
     const url = `${this.apiUrl}coaches`;
-    return this.http.get<any[]>(url);
+    return this.http.get<any[]>(url, httpOptions);
   }
 
   addCoach(coach: any): Observable<any>{
@@ -38,3 +41,6 @@ export class CoachService {
   }
   
 }
+
+
+export {httpOptions};

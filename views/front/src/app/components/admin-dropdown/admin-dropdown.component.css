@@ -1,5 +1,10 @@
 .form-and-button{
     display: flex;
     justify-content: space-evenly;
-    
 }
+
+.bigger-div{
+   margin-top: 200px;
+}
+
+

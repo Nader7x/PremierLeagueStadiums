@@ -5,10 +5,18 @@ import { PlayerService } from 'src/app/services/objects/player.service';
 import { CoachService } from 'src/app/services/objects/coach.service';
 import { Subscription } from 'rxjs';
 import { ObjectId } from 'mongoose';
+import {NgForOf, NgIf} from "@angular/common";
+import {FormsModule} from "@angular/forms";
 
 @Component({
   selector: 'app-team',
   templateUrl: './team.component.html',
+  standalone: true,
+  imports: [
+    NgIf,
+    FormsModule,
+    NgForOf
+  ],
   styleUrls: ['./team.component.css']
 })
 export class TeamComponent {
@@ -100,8 +108,8 @@ export class TeamComponent {
     const r = parseInt(hex.slice(1, 3), 16);
     const g = parseInt(hex.slice(3, 5), 16);
     const b = parseInt(hex.slice(5, 7), 16);
-    
-    // return {r, g, b} 
+
+    // return {r, g, b}
     return { r, g, b };
   }
 
@@ -161,7 +169,7 @@ export class TeamComponent {
       this.awayKit = '#ff0000';
       this.logo = '';
       this.selectedCoach = '';
-      
+
     }else if(this.text === "Update"){
       if(!this.selectedTeamAttributes.name || !this.selectedTeamAttributes.logo ){
         alert('Please Enter all fields!!!');
@@ -184,6 +192,6 @@ export class TeamComponent {
 
   }
 
-  
+
 
 }

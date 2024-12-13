@@ -8,10 +8,32 @@ import { TeamService } from 'src/app/services/objects/team.service';
 import { PlayerService } from 'src/app/services/objects/player.service';
 import { StadiumService } from 'src/app/services/objects/stadium.service';
 import { AnyExpression, ObjectId } from 'mongoose';
+import {ButtonComponent} from "../button/button.component";
+import {FormsModule} from "@angular/forms";
+import {NgForOf, NgIf} from "@angular/common";
+import {CommentatorComponent} from "../modification-categories/commentator/commentator.component";
+import {StadiumComponent} from "../modification-categories/stadium/stadium.component";
+import {CoachComponent} from "../modification-categories/coach/coach.component";
+import {PlayerComponent} from "../modification-categories/player/player.component";
+import {TeamComponent} from "../modification-categories/team/team.component";
+import {RefreeComponent} from "../modification-categories/refree/refree.component";
 
 @Component({
   selector: 'app-admin-dropdown',
   templateUrl: './admin-dropdown.component.html',
+  standalone: true,
+  imports: [
+    ButtonComponent,
+    FormsModule,
+    NgForOf,
+    CommentatorComponent,
+    StadiumComponent,
+    CoachComponent,
+    PlayerComponent,
+    TeamComponent,
+    RefreeComponent,
+    NgIf
+  ],
   styleUrls: ['./admin-dropdown.component.css']
 })
 export class AdminDropdownComponent {
@@ -44,7 +66,7 @@ export class AdminDropdownComponent {
     //like a promise
     if(this.text !== "Update"){
       this.categories.push("Commentator");
-      this.categories.push("Referee");
+      this.categories.push("Refree");
       this.categories.push("Coach");
     }
     switch(this.text){
@@ -61,7 +83,7 @@ export class AdminDropdownComponent {
   }
 
   submitCommentator(commentator: ObjectId | any){
-    
+
     if(this.text === 'Add')
       this.commentatorService.addCommentator(commentator).subscribe();
     else
@@ -102,7 +124,7 @@ export class AdminDropdownComponent {
       this.teamService.updateTeam(team._id, newMap).subscribe();
     }else
       this.teamService.deleteTeam(team).subscribe();
-    
+
   }
 
   submitPlayer(player: any){
@@ -112,12 +134,13 @@ export class AdminDropdownComponent {
       this.playerService.updatePlayer(player._id, player).subscribe();
     else
       this.playerService.deletePlayer(player).subscribe();
-    
+
   }
 
   submitStadium(stadium: any){
     if(this.text === 'Add')
       this.stadiumService.addStadium(stadium).subscribe();
-    
+    else if (this.text === 'Delete')
+      this.stadiumService.deleteStadium(stadium).subscribe();
   }
 }

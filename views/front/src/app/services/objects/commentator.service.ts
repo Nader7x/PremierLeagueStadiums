@@ -1,15 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ObjectId } from 'mongoose';
+import { httpOptions } from './coach.service';
 
-const httpOptions = {
-  headers: new HttpHeaders(
-    {
-      'Content-Type': 'application/json'
-    }
-  )
-}
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +13,7 @@ export class CommentatorService {
 
   getAllCommentators(): Observable<any[]>{
     const url = `${this.apiUrl}commentators`;
-    return this.http.get<any[]>(url);
+    return this.http.get<any[]>(url, httpOptions);
   }
 
   addCommentator(commentator: any): Observable<any>{
@@ -29,7 +22,7 @@ export class CommentatorService {
   }
 
 
-  deleteCommentator(commentatorId: ObjectId): Observable<any> {
+  deleteCommentator(commentatorId: any): Observable<any> {
     const url = `${this.apiUrl}commentator/${commentatorId}`;
     // Send DELETE request
     return this.http.delete<any>(url, httpOptions);

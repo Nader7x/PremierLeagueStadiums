@@ -1,21 +1,25 @@
-<!-- <form  class="add-form">
-    <div class="form-control">
-        <label for="text">Task</label>
-        <input type="text" name="text" id="text" placeholder="Add Task">
-    </div>
-    <div class="form-control">
-        <label for="day">Day & Time</label>
-        <input type="text" name="day" id="day" placeholder="Add Day & Time">
-    </div>
-    <div class="form-control form-control-check">
-        <label for="reminder">Set Reminder</label>
-        <input type="checkbox" name="reminder" id="reminder">
-    </div>
-    <input type="submit" value="Save Task" class="btn btn-block">
-</form> -->
 
-<div>
-    <div *ngFor="let operation of operations">
-      <app-admin-dropdown [text]="operation"></app-admin-dropdown>
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <a (click)="goToMap()" class="navbar-brand" >Google Map</a>
+      <div *ngIf="type === 'admin'">
+          <a (click)="goToAdminPage()" class="nav-link active" aria-current="page" >Database Operations</a>
+
+      </div>
+   
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            
+        </ul>
+      </div>
     </div>
+  </nav>
+<div class="overall">
+    
+
+        <div *ngFor="let operation of operations">
+          <app-admin-dropdown [text]="operation"></app-admin-dropdown>
+        </div>
+
+ 
   </div>

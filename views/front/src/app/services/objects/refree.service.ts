@@ -1,15 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { httpOptions } from './coach.service';
+import { ObjectId } from 'mongoose';
 
-
-const httpOptions = {
-  headers: new HttpHeaders(
-    {
-      'Content-Type': 'application/json'
-    }
-  )
-}
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +16,7 @@ export class RefreeService {
 
   getAllReferees(): Observable<any[]>{
     const url = `${this.apiUrl}referees`;
-    return this.http.get<any[]>(url);
+    return this.http.get<any[]>(url, httpOptions);
   }
 
   addReferee(referee: any): Observable<any>{
@@ -30,7 +24,7 @@ export class RefreeService {
     return this.http.post<any>(url, referee, httpOptions);
   }
 
-  deleteReferee(refereeId: string): Observable<any> {
+  deleteReferee(refereeId: ObjectId): Observable<any> {
     const url = `${this.apiUrl}referee/${refereeId}`;
     
     // Send DELETE request

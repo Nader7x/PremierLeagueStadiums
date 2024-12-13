@@ -1,20 +1,37 @@
 <form *ngIf="showModifyComponent" (ngSubmit)="onSubmit()">
-    <label for="name">Name:</label>
-    <input type="text" id="name" name="name" [(ngModel)]="name" required>
-    <br><br>
+    <div *ngIf="text === 'Delete'">
+        <div class="overall">
+
+            <label for="stadium">Stadium:</label>
+            <div class="form-control">
+                <!-- Use [(ngModel)] for two-way data binding -->
+                <select class="form-select" id="dropdown" name="dropdown" [(ngModel)]="selectedStadium">
+                    <option value="" disabled>Select a Stadium</option>
+                    <option *ngFor="let stadium of stadiums" [value]="stadium.name" id="stadium">{{ stadium.name }}</option>
+                </select>
+            </div>
+            <button class="btn btn-primary" type="submit">Submit</button>
+        </div>
+    </div>
     <div *ngIf="text!=='Delete'">
-        <label for="capacity">Capacity:</label>
-        <input type="number" id="capacity" name="capacity" [(ngModel)]="capacity" required>
-        <br><br>
-        <label for="homeTeam">homeTeam:</label>
-        <div class="form-control">
-            <!-- Use [(ngModel)] for two-way data binding -->
-            <select id="dropdown" name="dropdown" [(ngModel)]="selectedTeam">
-                <option value="" disabled>Select a Team</option>
-                <option *ngFor="let team of teams" [value]="team.name">{{ team.name }}</option>
-            </select>
+        <div class="overall">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" [(ngModel)]="name" required>
+            <br><br>
+            <label for="capacity">Capacity:</label>
+            <input type="number" id="capacity" name="capacity" [(ngModel)]="capacity" required>
+            <br><br>
+            <label for="homeTeam">homeTeam:</label>
+            <div class="form-control">
+                <!-- Use [(ngModel)] for two-way data binding -->
+                <select class="form-select" id="dropdown1" name="dropdown" [(ngModel)]="selectedTeam">
+                    <option value="" disabled>Select a Team</option>
+                    <option *ngFor="let team of teams" [value]="team.name" id="homeTeam">{{ team.name }}</option>
+                </select>
+            </div>
+            <button class="btn btn-primary" type="submit">Submit</button>
         </div>
     </div>
 
-    <button type="submit">Add Stadium</button>
+
 </form>

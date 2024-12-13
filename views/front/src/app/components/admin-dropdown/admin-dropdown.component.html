@@ -1,16 +1,20 @@
-<div class="form-and-button">
-    <form class="add-form">
-        <div class="form-control">
-            <label for="dropdown">{{text}}</label>
-            <!-- Use [(ngModel)] for two-way data binding -->
-            <select id="dropdown" name="dropdown" [(ngModel)]="selectedCategory">
-                <option value="" disabled>Select a category</option>
-                <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
-            </select>
-        </div>
-    </form>
-    <app-button color="{{showForm? 'red': 'green'}}" text="{{showForm ? 'Close': text}}" (btnClick)="toggleAddTask()"></app-button>
+<div class="bigger-div">
+
+    <div class="form-and-button">
+        <form class="add-form">
+            <div class="form-control">
+                <label for="dropdown">{{text}}</label>
+                <!-- Use [(ngModel)] for two-way data binding -->
+                <select class="form-select"  id="dropdown" name="dropdown" [(ngModel)]="selectedCategory">
+                    <option value="" disabled>Select a category</option>
+                    <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+                </select>
+            </div>
+        </form>
+        <app-button color="{{showForm? 'red': 'green'}}" text="{{showForm ? 'Close': text}}" (btnClick)="toggleAddTask()"></app-button>
+    </div>
 </div>
+
 
 
 <!-- Use *ngIf with the correct condition -->
@@ -34,7 +38,7 @@
     <app-team [text]="text" (onSubmitTeam)="submitTeam($event)"></app-team>
 </div>
 
-<div *ngIf="selectedCategory === 'Refree'">
+<div *ngIf="selectedCategory === 'Referee'">
     <app-refree [text]="text"  (onSubmitReferee)="submitReferee($event)"></app-refree>
 </div>
 

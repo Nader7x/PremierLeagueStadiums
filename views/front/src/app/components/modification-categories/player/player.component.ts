@@ -4,10 +4,18 @@ import { Subscription } from 'rxjs';
 import { ObjectId } from 'mongoose';
 import { PlayerService } from 'src/app/services/objects/player.service';
 import { TeamService } from 'src/app/services/objects/team.service';
+import {FormsModule} from "@angular/forms";
+import {NgForOf, NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-player',
   templateUrl: './player.component.html',
+  standalone: true,
+  imports: [
+    FormsModule,
+    NgForOf,
+    NgIf
+  ],
   styleUrls: ['./player.component.css']
 })
 export class PlayerComponent {
@@ -50,7 +58,7 @@ export class PlayerComponent {
     name: string,
     type: string,
     nationality: string,
-    kitNumber: number, 
+    kitNumber: number,
     position: string
   }[] = [];
   chosenATeam: boolean = false;
@@ -114,7 +122,7 @@ export class PlayerComponent {
         console.log(this.playersAllAttributes);
       });
     }
-      
+
 
   }
 
@@ -135,11 +143,11 @@ export class PlayerComponent {
         break;
       }
     }
-  
+
   }
 
   showSelectedPlayerAttributes(){
-  
+
     console.log('hi from showseledted attributes');
     this.chosenPlayerToUpdate = true;
 
@@ -149,7 +157,7 @@ export class PlayerComponent {
       console.log(this.selectedSquad[i].type);
       console.log(this.selectedSquad[i].position);
     }
-    
+
     for(let i=0; i< this.selectedSquad.length; i++)
       if(this.selectedSquad[i].name === this.selectedPlayer){
         this.selectedPlayerAttributes.name = this.selectedSquad[i].name;
@@ -159,7 +167,7 @@ export class PlayerComponent {
         this.selectedPlayerAttributes._id = this.selectedSquad[i]._id;
         break;
       }
-    
+
   }
 
 
