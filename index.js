@@ -48,10 +48,11 @@ async function connectToMongoDB() {
     }
 }
 
-connectToMongoDB().then();
+connectToMongoDB().then().catch((error) => console.error(error));
 
 // Redis client configuration
-const redisClient = redis.createClient({
+
+let redisClient = redis.createClient({
     username: 'default', password: process.env.REDIS_PASSWORD, socket: {
         host: 'redis-19658.c328.europe-west3-1.gce.redns.redis-cloud.com', port: 19658
     }
@@ -63,10 +64,25 @@ try {
     console.log('Connected to Redis successfully!');
 } catch (err) {
     console.error('Redis connection error:', err);
+    console.log('Attempting to connect to local Redis...');
+    redisClient = redis.createClient({
+        socket: {
+            host: '127.0.0.1',
+            port: 6379
+        }
+    });
+    try {
+        await redisClient.connect();
+        console.log('Connected to local Redis successfully!');
+    } catch (localErr) {
+        console.error('Local Redis connection error:', localErr);
+    }
 }
 const cacheData = async (key, data) => {
     try {
-        await redisClient.json.set(key, "$", data);
+        const expire = 3600;
+        await redisClient.json.set(key, "$", data,);
+        await redisClient.expire(key, expire);
         console.log(`Data cached successfully for key: ${key}`);
     } catch (error) {
         console.error(`Error caching data for key: ${key}`, error);
