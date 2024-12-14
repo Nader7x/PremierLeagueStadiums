@@ -1,25 +1,15 @@
-
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
-    <div class="container-fluid">
-      <a (click)="goToMap()" class="navbar-brand" >Google Map</a>
-      <div *ngIf="type === 'admin'">
-          <a (click)="goToAdminPage()" class="nav-link active" aria-current="page" >Database Operations</a>
-
-      </div>
-
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-
-        </ul>
-      </div>
-    </div>
-  </nav>
-<div class="overall">
-
-
-        <div *ngFor="let operation of operations">
-          <app-admin-dropdown [text]="operation"></app-admin-dropdown>
+<nav class="bg-gray-800 p-4">
+    <div class="container mx-auto flex justify-between items-center">
+        <a (click)="goToMap()" class="text-white text-lg font-semibold cursor-pointer">Google Map</a>
+        <div *ngIf="type === 'admin'">
+            <a (click)="goToAdminPage()" class="text-white text-lg font-semibold cursor-pointer">Database Operations</a>
         </div>
+    </div>
+</nav>
+<div class="container mx-auto mt-8">
+    <div *ngFor="let operation of operations" class="mb-14">
+        <app-admin-dropdown [text]="operation"></app-admin-dropdown>
+    </div>
 
-  <div class="mt-5">&nbsp;</div>
-  </div>
+  <div class="mb-5">&nbsp;</div>
+</div>
