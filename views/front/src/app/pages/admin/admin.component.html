@@ -1,12 +1,12 @@
-<nav class="navbar">
-    <div class="container mx-auto flex justify-between items-center">
+<nav class="navbar enhanced-navbar">
+    <div class="container mx-auto flex justify-between items-center enhanced-container">
         <a (click)="goToMap()" class="text-white text-lg font-semibold cursor-pointer">Google Map</a>
         <div *ngIf="type === 'admin'">
             <a (click)="goToAdminPage()" class="text-white text-lg font-semibold cursor-pointer">Database Operations</a>
         </div>
     </div>
 </nav>
-<div class="container mx-auto mt-8">
+<div class="container mx-auto mt-8 enhanced-container">
     <div *ngFor="let operation of operations" class="mb-14">
         <app-admin-dropdown [text]="operation"></app-admin-dropdown>
     </div>

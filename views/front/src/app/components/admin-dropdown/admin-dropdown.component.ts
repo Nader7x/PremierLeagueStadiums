@@ -10,7 +10,7 @@ import { StadiumService } from 'src/app/services/objects/stadium.service';
 import { AnyExpression, ObjectId } from 'mongoose';
 import {ButtonComponent} from "../button/button.component";
 import {FormsModule} from "@angular/forms";
-import {NgForOf, NgIf} from "@angular/common";
+import {NgForOf, NgIf, NgClass} from "@angular/common";
 import {CommentatorComponent} from "../modification-categories/commentator/commentator.component";
 import {StadiumComponent} from "../modification-categories/stadium/stadium.component";
 import {CoachComponent} from "../modification-categories/coach/coach.component";
@@ -32,7 +32,8 @@ import {RefreeComponent} from "../modification-categories/refree/refree.componen
     PlayerComponent,
     TeamComponent,
     RefreeComponent,
-    NgIf
+    NgIf,
+    NgClass
   ],
   styleUrls: ['./admin-dropdown.component.css']
 })
@@ -142,5 +143,24 @@ export class AdminDropdownComponent {
       this.stadiumService.addStadium(stadium).subscribe();
     else if (this.text === 'Delete')
       this.stadiumService.deleteStadium(stadium).subscribe();
+  }
+
+  getCategoryClass(category: string): string {
+    switch (category) {
+      case 'Commentator':
+        return 'commentator-class';
+      case 'Stadium':
+        return 'stadium-class';
+      case 'Coach':
+        return 'coach-class';
+      case 'Player':
+        return 'player-class';
+      case 'Team':
+        return 'team-class';
+      case 'Referee':
+        return 'referee-class';
+      default:
+        return '';
+    }
   }
 }
