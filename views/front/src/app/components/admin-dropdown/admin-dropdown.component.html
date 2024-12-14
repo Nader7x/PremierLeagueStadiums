@@ -5,7 +5,7 @@
             <div class="form-control">
                 <label for="dropdown">{{text}}</label>
                 <!-- Use [(ngModel)] for two-way data binding -->
-                <select class="form-select"  id="dropdown" name="dropdown" [(ngModel)]="selectedCategory">
+                <select class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"  id="dropdown" name="dropdown" [(ngModel)]="selectedCategory">
                     <option value="" disabled>Select a category</option>
                     <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
                 </select>
@@ -41,7 +41,3 @@
 <div *ngIf="selectedCategory === 'Referee'">
     <app-refree [text]="text"  (onSubmitReferee)="submitReferee($event)"></app-refree>
 </div>
-
-
-
-

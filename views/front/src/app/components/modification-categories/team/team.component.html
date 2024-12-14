@@ -5,26 +5,26 @@
         <div class="overall">
 
             <label for="name">Name:</label>
-            <input type="text" id="name" name="name" [(ngModel)]="name" required>
+            <input type="text" id="name" name="name" [(ngModel)]="name" required class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
             <br><br>
             <label for="homeKit">Home kit:</label>
-            <input type="color" id="homeKit" name="homeKit" value="#ff0000" [(ngModel)]="homeKit" required>
+            <input type="color" id="homeKit" name="homeKit" value="#ff0000" [(ngModel)]="homeKit" required class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
             <br><br>
             <label for="awayKit">Away kit:</label>
-            <input type="color" id="awayKit" name="awayKit" value="#ff0000" [(ngModel)]="awayKit"  required>
+            <input type="color" id="awayKit" name="awayKit" value="#ff0000" [(ngModel)]="awayKit"  required class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
             <br><br>
             <label for="logo">logo:</label>
-            <input type="text" id="logo" name="logo" [(ngModel)]="logo" required>
+            <input type="text" id="logo" name="logo" [(ngModel)]="logo" required class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
             <br><br>
             <label for="coach">Coach:</label>
             <div class="form-control">
                 <!-- Use [(ngModel)] for two-way data binding -->
-                <select class="form-select" id="dropdown" name="dropdown" [(ngModel)]="selectedCoach">
+                <select class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" id="dropdown" name="dropdown" [(ngModel)]="selectedCoach">
                     <option value="" disabled>Select a Coach</option>
                     <option *ngFor="let coach of coaches" [value]="coach.name" id="coach">{{ coach.name }}</option>
                 </select>
             </div>
-            <button class="btn btn-primary" type="submit">Submit</button>
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">Submit</button>
         </div>
 
     </div>
@@ -37,7 +37,7 @@
             <label for="team">Team:</label>
             <div class="form-control">
                 <!-- Use [(ngModel)] for two-way data binding -->
-                <select class="form-select" id="dropdown1" name="dropdown" [(ngModel)]="selectedTeam" (change)="showSelectedTeamAttributes()">
+                <select class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" id="dropdown1" name="dropdown" [(ngModel)]="selectedTeam" (change)="showSelectedTeamAttributes()">
                     <option value="" disabled>Select a Team</option>
                     <option *ngFor="let team of teamsAllAttributes" [value]="team.name">{{ team.name }}</option>
                 </select>
@@ -46,16 +46,16 @@
 
             <div *ngIf="chosenTeamToUpdate">
                 <label for="name">Name:</label>
-                <input type="text" id="name1" name="name"  [(ngModel)]="selectedTeamAttributes.name" required>
+                <input type="text" id="name1" name="name"  [(ngModel)]="selectedTeamAttributes.name" required class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                 <br><br>
                 <label for="homeKit">Home kit:</label>
-                <input type="color" id="homeKit1" name="homeKit"  [(ngModel)]="selectedTeamAttributes.homeKit" required>
+                <input type="color" id="homeKit1" name="homeKit"  [(ngModel)]="selectedTeamAttributes.homeKit" required class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                 <br><br>
                 <label for="awayKit">Away kit:</label>
-                <input type="color" id="awayKit1" name="awayKit"  [(ngModel)]="selectedTeamAttributes.awayKit"  required>
+                <input type="color" id="awayKit1" name="awayKit"  [(ngModel)]="selectedTeamAttributes.awayKit"  required class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                 <br><br>
                 <label for="logo">logo:</label>
-                <input type="text" id="logo1" name="logo" [(ngModel)]="selectedTeamAttributes.logo" required>
+                <input type="text" id="logo1" name="logo" [(ngModel)]="selectedTeamAttributes.logo" required class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                 <br><br>
                 <!-- <label for="coach">Coach:</label>
                 <div class="form-control">
@@ -66,7 +66,7 @@
                     </select>
                 </div> -->
             </div>
-            <button class="btn btn-primary" type="submit">Submit</button>
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">Submit</button>
         </div>
 
     </div>
@@ -78,12 +78,12 @@
             <label for="team">Team:</label>
             <div class="form-control">
                 <!-- Use [(ngModel)] for two-way data binding -->
-                <select class="form-select" id="dropdown2" name="dropdown" [(ngModel)]="selectedTeam">
+                <select class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" id="dropdown2" name="dropdown" [(ngModel)]="selectedTeam">
                     <option value="" disabled>Select a Team</option>
                     <option *ngFor="let team of teams" [value]="team.name" id="team">{{ team.name }}</option>
                 </select>
             </div>
-            <button class="btn btn-primary" type="submit">Submit</button>
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">Submit</button>
         </div>
     </div>
 
