@@ -6,20 +6,20 @@
           <a (click)="goToAdminPage()" class="nav-link active" aria-current="page" >Database Operations</a>
 
       </div>
-   
+
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
-            
+
         </ul>
       </div>
     </div>
   </nav>
 <div class="overall">
-    
+
 
         <div *ngFor="let operation of operations">
           <app-admin-dropdown [text]="operation"></app-admin-dropdown>
         </div>
 
- 
+  <div class="mt-5">&nbsp;</div>
   </div>
