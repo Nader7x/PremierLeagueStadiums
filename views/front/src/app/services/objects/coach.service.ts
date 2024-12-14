@@ -8,7 +8,7 @@ const httpOptions = {
   headers: new HttpHeaders(
     {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${TokenService.PassingTOKEN}`,
+      // Authorization: `Bearer ${TokenService.PassingTOKEN}`,
     }
   )
 }
@@ -35,11 +35,11 @@ export class CoachService {
 
   deleteCoach(coachId: string): Observable<any> {
     const url = `${this.apiUrl}coach/${coachId}`;
-    
+
     // Send DELETE request
     return this.http.delete<any>(url, httpOptions);
   }
-  
+
 }
 
 

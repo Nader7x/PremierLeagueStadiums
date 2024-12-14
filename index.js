@@ -19,6 +19,7 @@ import {createSchema, createYoga} from "graphql-yoga";
 import {ruruHTML} from "ruru/server";
 import {resolvers, typeDefs} from "./graphql/schema.js";
 import redis from "redis";
+import start from "./Services/StartEndMatchService.js"
 
 
 const app = express();
@@ -134,7 +135,7 @@ app.get("/", (_req, res) => {
     res.type("html");
     res.end(ruruHTML({endpoint: "/graphql"}));
 });
-
+start();
 // Start the server
 const port = 3000;
 app.listen(port, function () {
