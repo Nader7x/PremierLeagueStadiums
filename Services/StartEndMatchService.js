@@ -1,6 +1,6 @@
-const cron = require('node-cron');
-const axios = require('axios');
-const moment = require('moment-timezone');
+import cron from 'node-cron';
+import axios from "axios";
+import moment from "moment-timezone";
 
 const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTdjOGZiYWYyOTE4MTU3ZGM5NWNjYjAiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MDI2NjUzNDQsImV4cCI6MzE3Mjc4NjY1MzQ0fQ.KciTmNIVrYcfo0DaNu3Mi06DHf5ns0YiMgDVNXrxwVo"
 async function start() {
@@ -89,4 +89,4 @@ async function start() {
         }
     )
 }
-module.exports = { start };
+export {start};

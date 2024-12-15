@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
+
 mongoose.set('strictQuery', false);
 
 const baseOptions = {
@@ -7,9 +8,9 @@ const baseOptions = {
 };
 
 const personSchema = new mongoose.Schema({
-    name:{type:String,required:true},
-    age:{type:Number,required:true,max:100,min:1},
-},baseOptions);
-const Person = mongoose.model("Person",personSchema);
+    name: {type: String, required: true},
+    age: {type: Number, required: true, max: 100, min: 1},
+}, baseOptions);
+const Person = mongoose.model("Person", personSchema);
 
-module.exports = Person;
+export default Person;

@@ -1,7 +1,11 @@
+import jwt from 'jsonwebtoken';
+import {GoogleAuth} from 'google-auth-library';
 
-const jwt = require('jsonwebtoken');
-const { GoogleAuth } = require('google-auth-library');
-
+/**
+ * Middleware function to authenticate a JWT token and check the user's role.
+ * @param {string} requiredRole - The role required to access the route (e.g., 'admin', 'user').
+ * @returns {function} - Middleware function to authenticate the token and check the role.
+ */
 const authenticateToken = (requiredRole) => (req, res, next) => {
     let token;
     // Check if the token is in the Authorization header
@@ -15,23 +19,32 @@ const authenticateToken = (requiredRole) => (req, res, next) => {
         token = req.cookies.token;
     }
     if (!token) {
-        return res.status(401).json({ message: 'Unauthorized: Missing token' });
+        return res.status(401).json({message: 'Unauthorized: Missing token'});
     }
 
     try {
+        // Verify the token using the secret key
         const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+        // Check if the user's role matches the required role
         if (decoded.role === requiredRole) {
             req.user = decoded;
             next();
         } else {
-            res.status(403).json({ message: 'Forbidden: Insufficient role' });
+            res.status(403).json({message: 'Forbidden: Insufficient role'});
         }
     } catch (err) {
         console.log(err)
-        res.status(401).json({ message: 'Unauthorized: Invalid token' });
+        res.status(401).json({
+            message: 'Unauthorized: Invalid token',
+            error: err.message
+        });
     }
 };
 
+/**
+ * Function to get an access token for Firebase Cloud Messaging (FCM).
+ * @returns {Promise<string>} - The access token for FCM.
+ */
 async function getFcmAccessToken() {
     const auth = new GoogleAuth({
         keyFile: 'premier-noti-6028058f5902.json',
@@ -41,4 +54,5 @@ async function getFcmAccessToken() {
     const accessToken = await client.getAccessToken();
     return accessToken.token
 }
-module.exports = {authenticateToken, getFcmAccessToken};
+
+export {authenticateToken, getFcmAccessToken};

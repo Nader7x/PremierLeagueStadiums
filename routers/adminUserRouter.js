@@ -1,11 +1,67 @@
-const express = require('express');
-const {register,login} = require("../controllers/adminUserController");
+import express from 'express';
+import { register, login } from "../controllers/adminUserController.js";
 const router = express.Router();
 
-//username password
-router.post("/login",login);
+/**
+ * @swagger
+ * /login:
+ *   post:
+ *     summary: Admin user login
+ *     tags: [Admin Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *             required:
+ *               - username
+ *               - password
+ *     responses:
+ *       200:
+ *         description: Login successful
+ */
+router.post("/login", login);
 
-//name username password age and role which is Admin or User
-router.post("/register",register);
+/**
+ * @swagger
+ * /register:
+ *   post:
+ *     summary: Register a new admin user
+ *     tags: [Admin Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               age:
+ *                 type: integer
+ *               role:
+ *                 type: string
+ *                 enum: [Admin, User]
+ *             required:
+ *               - name
+ *               - username
+ *               - password
+ *               - age
+ *               - role
+ *     responses:
+ *       201:
+ *         description: Admin user registered
+ */
+router.post("/register", register);
 
-module.exports = router;
+export default router;
