@@ -10,7 +10,7 @@ import { StadiumService } from 'src/app/services/objects/stadium.service';
 import { AnyExpression, ObjectId } from 'mongoose';
 import {ButtonComponent} from "../button/button.component";
 import {FormsModule} from "@angular/forms";
-import {NgForOf, NgIf, NgClass} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 import {CommentatorComponent} from "../modification-categories/commentator/commentator.component";
 import {StadiumComponent} from "../modification-categories/stadium/stadium.component";
 import {CoachComponent} from "../modification-categories/coach/coach.component";
@@ -32,8 +32,7 @@ import {RefreeComponent} from "../modification-categories/refree/refree.componen
     PlayerComponent,
     TeamComponent,
     RefreeComponent,
-    NgIf,
-    NgClass
+    NgIf
   ],
   styleUrls: ['./admin-dropdown.component.css']
 })
@@ -67,7 +66,7 @@ export class AdminDropdownComponent {
     //like a promise
     if(this.text !== "Update"){
       this.categories.push("Commentator");
-      this.categories.push("Refree");
+      this.categories.push("Referee");
       this.categories.push("Coach");
     }
     switch(this.text){

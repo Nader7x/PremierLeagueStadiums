@@ -84,7 +84,7 @@ try {
 }
 const cacheData = async (key, data) => {
     try {
-        const expire = 3600;
+        const expire = 950;
         await redisClient.json.set(key, "$", data,);
         await redisClient.expire(key, expire);
         console.log(`Data cached successfully for key: ${key}`);
