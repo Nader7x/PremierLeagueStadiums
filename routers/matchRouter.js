@@ -1,4 +1,4 @@
-import { addMatch, getAllMatches, getAllMatchesWithNames, getMatchWithNames, deleteMatch, getMatch, getLiveMatches, getHistoryMatches, goal, endMatch, giveCard, matchWithAllData, startMatch, getUpcomingMatches, getSortedEvents, fixMatches } from '../controllers/matchController.js';
+import { addMatch, getAllMatches, getAllMatchesWithNames, getMatchWithNames, deleteMatch, getMatch, getLiveMatches, getHistoryMatches, goal, endMatch, giveCard, matchWithAllData, startMatch, getUpcomingMatches, getSortedEvents, fixMatches, updateMatch } from '../controllers/matchController.js';
 import express from 'express';
 import { authenticateToken } from '../controllers/apiSecurityController.js';
 
@@ -194,6 +194,24 @@ router.delete("/match/:id", deleteMatch);
 
 /**
  * @swagger
+ * /match/{id}:
+ *   patch:
+ *     summary: Update a match by ID
+ *     tags: [Matches]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Match updated
+ */
+router.patch("/match/:id", updateMatch);
+
+/**
+ * @swagger
  * /endMatch/{id}:
  *   get:
  *     summary: End a match by ID
@@ -275,5 +293,19 @@ router.get("/sortedEvents/:id", getSortedEvents);
  *         description: Matches fixed
  */
 router.get("/fixMatches", fixMatches);
+
+/**
+ * @swagger
+ * /addMatch:
+ *   get:
+ *     summary: Access the add match page
+ *     tags: [Matches]
+ *     responses:
+ *       200:
+ *         description: Add match page
+ */
+router.get("/addMatch", (req, res) => {
+    res.render("addMatch");
+});
 
 export default router;
