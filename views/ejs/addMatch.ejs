@@ -1,59 +1,69 @@
-<!-- views/addMatch.ejs -->
-
 <!DOCTYPE html>
 <html lang="en">
-    <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Match</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-<h1>Add Match</h1>
-
-<form method="POST" action="/match">
-    <!-- Home Team -->
-    <label for="homeTeam">Home Team:</label>
-    <select name="homeTeam" required>
-        <!-- Populate the options dynamically with team names and IDs -->
-        <% teams.forEach(team => { %>
-        <option value="<%= team._id %>"><%= team.name %></option>
-        <% }); %>
-    </select>
-    <br><br>
-    <!-- Away Team -->
-    <label for="awayTeam">Away Team:</label>
-    <select name="awayTeam" required>
-        <!-- Populate the options dynamically with team names and IDs -->
-        <% teams.forEach(team => { %>
-        <option value="<%= team._id %>"><%= team.name %></option>
-        <% }); %>
-    </select>
-    <br><br>
-    <!-- Referee -->
-    <label for="referee">Referee:</label>
-    <select name="referee" required>
-        <!-- Populate the options dynamically with referee names and IDs -->
-        <% referees.forEach(referee => { %>
-        <option value="<%= referee._id %>"><%= referee.name %></option>
-        <% }); %>
-    </select>
-    <br><br>
-    <!-- Commentator -->
-    <label for="commentator">Commentator:</label>
-    <select name="commentator" required>
-        <!-- Populate the options dynamically with commentator names and IDs -->
-        <% commentators.forEach(commentator => { %>
-        <option value="<%= commentator._id %>"><%= commentator.name %></option>
-        <% }); %>
-    </select>
-    <br><br>
-    <!-- Date -->
-    <label for="date">Date:</label>
-    <input type="datetime-local" name="date" required>
-    <br><br>
-        <!-- Other form fields (e.g., stadium, additional details) can be added here -->
-
-        <button type="submit">Add Match</button>
-</form>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
+        <h1 class="text-2xl font-bold mb-4">Add Match</h1>
+        <form method="POST" action="/match" class="space-y-4">
+            <!-- Home Team -->
+            <div>
+                <label for="homeTeam" class="block text-sm font-medium text-gray-700">Home Team:</label>
+                <select name="homeTeam" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <!-- Populate the options dynamically with team names and IDs -->
+                    <% teams.forEach(team => { %>
+                    <option value="<%= team._id %>"><%= team.name %></option>
+                    <% }); %>
+                </select>
+            </div>
+            <!-- Away Team -->
+            <div>
+                <label for="awayTeam" class="block text-sm font-medium text-gray-700">Away Team:</label>
+                <select name="awayTeam" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <!-- Populate the options dynamically with team names and IDs -->
+                    <% teams.forEach(team => { %>
+                    <option value="<%= team._id %>"><%= team.name %></option>
+                    <% }); %>
+                </select>
+            </div>
+            <!-- Referee -->
+            <div>
+                <label for="referee" class="block text-sm font-medium text-gray-700">Referee:</label>
+                <select name="referee" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <!-- Populate the options dynamically with referee names and IDs -->
+                    <% referees.forEach(referee => { %>
+                    <option value="<%= referee._id %>"><%= referee.name %></option>
+                    <% }); %>
+                </select>
+            </div>
+            <!-- Commentator -->
+            <div>
+                <label for="commentator" class="block text-sm font-medium text-gray-700">Commentator:</label>
+                <select name="commentator" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <!-- Populate the options dynamically with commentator names and IDs -->
+                    <% commentators.forEach(commentator => { %>
+                    <option value="<%= commentator._id %>"><%= commentator.name %></option>
+                    <% }); %>
+                </select>
+            </div>
+            <!-- Date -->
+            <div>
+                <label for="date" class="block text-sm font-medium text-gray-700">Date:</label>
+                <input type="datetime-local" name="date" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+            <!-- Other form fields (e.g., stadium, additional details) can be added here -->
+            <div>
+                <button type="submit" class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Add Match</button>
+            </div>
+        </form>
+        <div class="mt-6">
+            <h2 class="text-lg font-semibold">How to use this page:</h2>
+            <p class="text-sm text-gray-600">Fill in the form with the match details and click "Add Match" to add a new match to the system.</p>
+        </div>
+    </div>
 </body>
 </html>

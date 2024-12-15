@@ -463,6 +463,19 @@ const getSortedEvents = async (req, res) => {
     }
 };
 
+const updateMatch = async (req, res) => {
+    try {
+        const result = await Match.findByIdAndUpdate(req.params['id'], req.body, { new: true });
+        res.send(result);
+    } catch (err) {
+        console.log(err);
+        res.status(500).send({
+            message: "An error occurred while updating the match. Please try again later.",
+            error: err.message
+        });
+    }
+};
+
 export {
     addMatch,
     getAllMatches,
@@ -479,5 +492,6 @@ export {
     startMatch,
     getUpcomingMatches,
     getSortedEvents,
-    fixMatches
+    fixMatches,
+    updateMatch
 };
