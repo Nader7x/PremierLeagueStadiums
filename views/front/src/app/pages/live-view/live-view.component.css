@@ -1,0 +1,221 @@
+/*================================== HISTORY MATCHES ==============================*/
+
+
+
+.history{
+    height: 1000px;
+}
+
+
+
+.rounded-image {
+    border-radius: 20px; /* Adjust the value to control the level of rounding */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adjust the shadow properties */
+    overflow: hidden; /* Ensures the border-radius is applied to the image */
+}
+  
+
+
+.stadium-image{
+    height: 100%;
+    padding-top: 80px;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.no-matches{
+    color: white;
+    font-weight: bold;
+    padding-left: 30px;
+    position: absolute;
+    top: 50%; /* Center the container vertically */
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centering trick */
+    width: 500px;
+    opacity: 1 !important;
+}
+
+
+
+.bigger-div {
+    margin-top: 200px !important;
+    width: 599px;
+    height: 599px;
+    overflow: auto;
+    background-color: rgba(51, 51, 51, 0.69); /* rgba allows you to set opacity only for the background */
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    margin: auto; /* Center the container horizontally */
+    position: absolute;
+    top: 50%; /* Center the container vertically */
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centering trick */
+    color: white;
+    font-weight: 500;
+  }
+
+
+  .child{
+    display: flex;
+    justify-content: space-evenly;
+    
+  }
+
+
+/*================================== HISTORY MATCHES ==============================*/
+
+
+
+
+
+
+
+.dashboard{
+    padding: 50px 50px 0px 50px ;
+    height: 100%;
+    margin-top: 30px;
+}
+
+
+.result{
+    display: flex;
+    justify-content: space-evenly;
+}
+
+  
+
+
+.bigger-div-match {
+    width: 800px;
+    height: 535px;
+    overflow: auto;
+    background-color: rgba(51, 51, 51, 0.69); /* rgba allows you to set opacity only for the background */
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    margin: auto; /* Center the container horizontally */
+    position: absolute;
+    top: 50%; /* Center the container vertically */
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centering trick */
+    color: white;
+    font-weight: 500;
+    margin-top: 235px;
+}
+.events-container{
+    text-align: center;
+    margin-top: 50px;
+
+    max-height: 200px;
+    
+}
+
+.event{
+    left: 50%;
+    /* position: absolute;
+    transform: translate(-50%, -50%); Centering trick */
+}
+
+.player-name{
+    display: inline-block;
+    width: 220px;
+    text-align: right;
+    color: white;
+    margin-right: 5px;
+}
+
+.stadium-img{
+    background-size: cover;
+    height: 100%;
+    padding-top: 80px;
+    background-repeat: no-repeat;
+    border-radius: 20px; /* Adjust the value to control the level of rounding */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adjust the shadow properties */
+    overflow: hidden; /* Ensures the border-radius is applied to the image */
+}
+
+.logo{
+    margin-top: 10px;
+    width: 135px;
+    height: 150px;   
+}
+
+.stadium{
+    text-align: center;
+}
+
+.goal-result{
+    color: white;
+    font-size: 5.5rem;
+    font-weight: bold;
+    margin-top: 55;
+    margin-bottom: 50px;
+}
+
+.yellow-card{
+    width: 35px;
+    animation: flip 1.5s;
+}
+
+.red-card{
+    width: 35px;
+    animation: flip 1.5s;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-30px);
+    }
+    60% {
+        transform: translateY(-15px);
+    }
+}
+
+@keyframes flip {
+    0%, 100% {
+      transform: rotateY(0deg);
+    }
+    50% {
+      transform: rotateY(180deg);
+    }
+  }
+
+  @keyframes beatAndFade {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.2);
+      opacity: 0.5;
+    }
+  }
+  
+
+.fa-futbol {
+    animation: beatAndFade 2s;
+}
+
+.match-facts{
+    text-align: center;
+}
+
+.stadium-name{
+    color: white;
+}
+
+.referee-commentator-result{
+    display: flex;
+    flex-direction: column;
+}
+
+.referee-commentator{
+    width: 350px;
+    display: inline-block;
+    text-align: center;
+    color: white;
+}

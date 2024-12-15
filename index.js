@@ -6,6 +6,8 @@ import matchRoute from "./routers/matchRouter.js";
 import coachRoute from "./routers/coachRouter.js";
 import teamRoute from "./routers/teamRouter.js";
 import adminUserRoute from "./routers/adminUserRouter.js";
+
+
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import express from "express";
@@ -17,6 +19,8 @@ import {createSchema, createYoga} from "graphql-yoga";
 import {ruruHTML} from "ruru/server";
 import {resolvers, typeDefs} from "./graphql/schema.js";
 import redis from "redis";
+import start from "./Services/StartEndMatchService.js"
+
 
 const app = express();
 app.use(cookieParser());
@@ -80,7 +84,7 @@ try {
 }
 const cacheData = async (key, data) => {
     try {
-        const expire = 3600;
+        const expire = 950;
         await redisClient.json.set(key, "$", data,);
         await redisClient.expire(key, expire);
         console.log(`Data cached successfully for key: ${key}`);
@@ -131,7 +135,7 @@ app.get("/", (_req, res) => {
     res.type("html");
     res.end(ruruHTML({endpoint: "/graphql"}));
 });
-
+start();
 // Start the server
 const port = 3000;
 app.listen(port, function () {

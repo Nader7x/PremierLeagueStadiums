@@ -1,21 +1,15 @@
-<!-- <form  class="add-form">
-    <div class="form-control">
-        <label for="text">Task</label>
-        <input type="text" name="text" id="text" placeholder="Add Task">
+<nav class="navbar enhanced-navbar">
+    <div class="container mx-auto flex justify-between items-center enhanced-container">
+        <a (click)="goToMap()" class="text-white text-lg font-semibold cursor-pointer">Google Map</a>
+        <div *ngIf="type === 'admin'">
+            <a (click)="goToAdminPage()" class="text-white text-lg font-semibold cursor-pointer">Database Operations</a>
+        </div>
     </div>
-    <div class="form-control">
-        <label for="day">Day & Time</label>
-        <input type="text" name="day" id="day" placeholder="Add Day & Time">
+</nav>
+<div class="container mx-auto mt-8 enhanced-container">
+    <div *ngFor="let operation of operations" class="mb-14">
+        <app-admin-dropdown [text]="operation"></app-admin-dropdown>
     </div>
-    <div class="form-control form-control-check">
-        <label for="reminder">Set Reminder</label>
-        <input type="checkbox" name="reminder" id="reminder">
-    </div>
-    <input type="submit" value="Save Task" class="btn btn-block">
-</form> -->
 
-<div>
-    <div *ngFor="let operation of operations">
-      <app-admin-dropdown [text]="operation"></app-admin-dropdown>
-    </div>
-  </div>
+  <div class="mb-5">&nbsp;</div>
+</div>

@@ -2,10 +2,18 @@ import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { UiService } from 'src/app/services/ui.service';
 import { RefreeService } from 'src/app/services/objects/refree.service';
+import {FormsModule} from "@angular/forms";
+import {NgForOf, NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-refree',
   templateUrl: './refree.component.html',
+  standalone: true,
+  imports: [
+    FormsModule,
+    NgForOf,
+    NgIf
+  ],
   styleUrls: ['./refree.component.css']
 })
 export class RefreeComponent {
@@ -26,8 +34,10 @@ export class RefreeComponent {
 
   }
   ngOnInit(){
+    console.log('hiiii');
+    console.log(`the text is ${this.text}`);
     if(this.text === "Add")
-    this.subscription = this.uiService.onAddToggle().subscribe((value) => this.showModifyComponent = value);
+      this.subscription = this.uiService.onAddToggle().subscribe((value) => this.showModifyComponent = value);
     else if(this.text === "Delete"){
       this.subscription = this.uiService.onDeleteToggle().subscribe((value) => this.showModifyComponent = value);
       this.refereeService.getAllReferees().subscribe((data)=>{
@@ -39,7 +49,7 @@ export class RefreeComponent {
         }
       });
     }
-    
+
   }
 
 

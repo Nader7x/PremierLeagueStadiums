@@ -2,14 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ObjectId } from 'mongoose';
+import { httpOptions } from './coach.service';
 
-const httpOptions = {
-  headers: new HttpHeaders(
-    {
-      'Content-Type': 'application/json'
-    }
-  )
-}
 
 @Injectable({
   providedIn: 'root'
@@ -21,9 +15,11 @@ export class PlayerService {
 
   
 
+
   getAllPlayersOfSpecificTeam(teamId: ObjectId): Observable<any[]>{
-    const url = `${this.apiUrl}players`;
-    return this.http.get<any[]>(url);
+    console.log(`from the service the id is ${teamId}`);
+    const url = `${this.apiUrl}playersWithSameTeam/${teamId}`;
+    return this.http.get<any[]>(url, httpOptions);
   }
 
   addPlayer(player: any): Observable<any>{
