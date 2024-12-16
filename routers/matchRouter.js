@@ -16,7 +16,7 @@ const router = express.Router();
  *       200:
  *         description: A list of matches
  */
-router.get("/matches", getAllMatches);
+router.get("/matches", isUser, getAllMatches);
 
 /**
  * @swagger
@@ -28,7 +28,7 @@ router.get("/matches", getAllMatches);
  *       200:
  *         description: A list of live matches
  */
-router.get("/matchesLive", getLiveMatches);
+router.get("/matchesLive", isUser, getLiveMatches);
 
 /**
  * @swagger
@@ -40,7 +40,7 @@ router.get("/matchesLive", getLiveMatches);
  *       200:
  *         description: A list of historical matches
  */
-router.get("/matchesHistory", getHistoryMatches);
+router.get("/matchesHistory", isUser, getHistoryMatches);
 
 /**
  * @swagger
@@ -52,7 +52,7 @@ router.get("/matchesHistory", getHistoryMatches);
  *       200:
  *         description: A list of upcoming matches
  */
-router.get("/upcomingMatches", getUpcomingMatches);
+router.get("/upcomingMatches", isUser, getUpcomingMatches);
 
 /**
  * @swagger
@@ -64,7 +64,7 @@ router.get("/upcomingMatches", getUpcomingMatches);
  *       200:
  *         description: A list of matches with names
  */
-router.get("/matchesWithNames", getAllMatchesWithNames);
+router.get("/matchesWithNames", isUser, getAllMatchesWithNames);
 
 /**
  * @swagger
@@ -76,7 +76,7 @@ router.get("/matchesWithNames", getAllMatchesWithNames);
  *       200:
  *         description: A list of matches with names (admin)
  */
-router.get("/adminMatchesWithNames", getAllMatchesWithNames);
+router.get("/adminMatchesWithNames", isAdmin, getAllMatchesWithNames);
 
 /**
  * @swagger
@@ -112,7 +112,7 @@ router.get("/adminMatchesWithNames", getAllMatchesWithNames);
  *       201:
  *         description: Match added
  */
-router.post("/match", addMatch);
+router.post("/match", isAdmin, addMatch);
 
 /**
  * @swagger
@@ -137,7 +137,7 @@ router.post("/match", addMatch);
  *       201:
  *         description: Goal added
  */
-router.post("/goal", goal);
+router.post("/goal", isAdmin, goal);
 
 /**
  * @swagger
@@ -163,7 +163,7 @@ router.post("/goal", goal);
  *               - player
  *               - card
  */
-router.post("/card", giveCard);
+router.post("/card", isAdmin, giveCard);
 
 /**
  * @swagger
@@ -181,7 +181,7 @@ router.post("/card", giveCard);
  *       200:
  *         description: A match with names
  */
-router.get("/matchWithNames/:id", getMatchWithNames);
+router.get("/matchWithNames/:id", isUser, getMatchWithNames);
 
 /**
  * @swagger
@@ -199,7 +199,7 @@ router.get("/matchWithNames/:id", getMatchWithNames);
  *       200:
  *         description: A match
  */
-router.get("/match/:id", getMatch);
+router.get("/match/:id", isUser, getMatch);
 
 /**
  * @swagger
@@ -217,7 +217,7 @@ router.get("/match/:id", getMatch);
  *       200:
  *         description: Match deleted
  */
-router.delete("/match/:id", deleteMatch);
+router.delete("/match/:id", isAdmin, deleteMatch);
 
 /**
  * @swagger
@@ -235,7 +235,7 @@ router.delete("/match/:id", deleteMatch);
  *       200:
  *         description: Match updated
  */
-router.patch("/match/:id", updateMatch);
+router.patch("/match/:id", isAdmin, updateMatch);
 
 /**
  * @swagger
@@ -253,7 +253,7 @@ router.patch("/match/:id", updateMatch);
  *       200:
  *         description: Match ended
  */
-router.get("/endMatch/:id", endMatch);
+router.get("/endMatch/:id", isAdmin, endMatch);
 
 /**
  * @swagger
@@ -271,7 +271,7 @@ router.get("/endMatch/:id", endMatch);
  *       200:
  *         description: A match with all data
  */
-router.get("/matchWithAllData/:id", matchWithAllData);
+router.get("/matchWithAllData/:id", isUser, matchWithAllData);
 
 /**
  * @swagger
@@ -289,7 +289,7 @@ router.get("/matchWithAllData/:id", matchWithAllData);
  *       200:
  *         description: Match started
  */
-router.get("/matchStart/:id", startMatch);
+router.get("/matchStart/:id", isAdmin, startMatch);
 
 /**
  * @swagger
@@ -307,7 +307,7 @@ router.get("/matchStart/:id", startMatch);
  *       200:
  *         description: Sorted events
  */
-router.get("/sortedEvents/:id", getSortedEvents);
+router.get("/sortedEvents/:id", isUser, getSortedEvents);
 
 /**
  * @swagger
@@ -319,7 +319,7 @@ router.get("/sortedEvents/:id", getSortedEvents);
  *       200:
  *         description: Matches fixed
  */
-router.get("/fixMatches", fixMatches);
+router.get("/fixMatches", isAdmin, fixMatches);
 
 
 export default router;

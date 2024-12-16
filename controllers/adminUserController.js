@@ -68,7 +68,10 @@ const register = async (req, res) => {
         }
 
         const result = await human.save();
-        res.send(result);
+        const token = generateToken(result._id, req.body.role);
+        res.header('Authorization', `Bearer ${token}`);
+        res.cookie('token', token, {httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000}); // 1 week expiration
+        res.status(201).json({user: result, token});
     } catch (err) {
         console.log(err);
         res.status(500).send({

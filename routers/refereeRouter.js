@@ -16,7 +16,7 @@ const router = express.Router();
  *       200:
  *         description: A list of referees
  */
-router.get("/referees", getAllReferee);
+router.get("/referees", isUser, getAllReferee);
 
 /**
  * @swagger
@@ -45,7 +45,7 @@ router.get("/referees", getAllReferee);
  *       201:
  *         description: Referee added
  */
-router.post("/referee", addReferee);
+router.post("/referee", isAdmin, addReferee);
 
 /**
  * @swagger
@@ -63,7 +63,7 @@ router.post("/referee", addReferee);
  *       200:
  *         description: A referee
  */
-router.get("/referee/:id", getReferee);
+router.get("/referee/:id", isUser, getReferee);
 
 /**
  * @swagger
@@ -81,7 +81,7 @@ router.get("/referee/:id", getReferee);
  *       200:
  *         description: Referee deleted
  */
-router.delete("/referee/:id", deleteReferee);
+router.delete("/referee/:id", isAdmin, deleteReferee);
 
 /**
  * @swagger
@@ -99,6 +99,6 @@ router.delete("/referee/:id", deleteReferee);
  *       200:
  *         description: Referee updated
  */
-router.patch("/referee/:id", updateReferee);
+router.patch("/referee/:id", isAdmin, updateReferee);
 
 export default router;
