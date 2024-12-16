@@ -1,29 +1,23 @@
 /*================================== HISTORY MATCHES ==============================*/
 
-
-
-.history{
+.history {
     height: 1000px;
 }
-
-
 
 .rounded-image {
     border-radius: 20px; /* Adjust the value to control the level of rounding */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adjust the shadow properties */
     overflow: hidden; /* Ensures the border-radius is applied to the image */
 }
-  
 
-
-.stadium-image{
+.stadium-image {
     height: 100%;
     padding-top: 80px;
     background-repeat: no-repeat;
     background-size: cover;
 }
 
-.no-matches{
+.no-matches {
     color: white;
     font-weight: bold;
     padding-left: 30px;
@@ -34,8 +28,6 @@
     width: 500px;
     opacity: 1 !important;
 }
-
-
 
 .bigger-div {
     margin-top: 200px !important;
@@ -53,38 +45,49 @@
     transform: translate(-50%, -50%); /* Centering trick */
     color: white;
     font-weight: 500;
-  }
+}
 
-
-  .child{
+.child {
     display: flex;
     justify-content: space-evenly;
-    
-  }
+}
 
+.match-card {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.match-card img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.match-card h1, .match-card h2 {
+    margin: 0;
+    padding: 0;
+    font-size: 1.2rem;
+    color: #333;
+}
 
 /*================================== HISTORY MATCHES ==============================*/
 
-
-
-
-
-
-
-.dashboard{
-    padding: 50px 50px 0px 50px ;
+.dashboard {
+    padding: 50px 50px 0px 50px;
     height: 100%;
     margin-top: 30px;
 }
 
-
-.result{
+.result {
     display: flex;
     justify-content: space-evenly;
 }
-
-  
-
 
 .bigger-div-match {
     width: 800px;
@@ -103,21 +106,20 @@
     font-weight: 500;
     margin-top: 235px;
 }
-.events-container{
+
+.events-container {
     text-align: center;
     margin-top: 50px;
-
     max-height: 200px;
-    
 }
 
-.event{
+.event {
     left: 50%;
     /* position: absolute;
     transform: translate(-50%, -50%); Centering trick */
 }
 
-.player-name{
+.player-name {
     display: inline-block;
     width: 220px;
     text-align: right;
@@ -125,7 +127,7 @@
     margin-right: 5px;
 }
 
-.stadium-img{
+.stadium-img {
     background-size: cover;
     height: 100%;
     padding-top: 80px;
@@ -135,17 +137,17 @@
     overflow: hidden; /* Ensures the border-radius is applied to the image */
 }
 
-.logo{
+.logo {
     margin-top: 10px;
     width: 135px;
-    height: 150px;   
+    height: 150px;
 }
 
-.stadium{
+.stadium {
     text-align: center;
 }
 
-.goal-result{
+.goal-result {
     color: white;
     font-size: 5.5rem;
     font-weight: bold;
@@ -153,19 +155,19 @@
     margin-bottom: 50px;
 }
 
-.yellow-card{
+.yellow-card {
     width: 35px;
     animation: flip 1.5s;
 }
 
-.red-card{
+.red-card {
     width: 35px;
     animation: flip 1.5s;
 }
 
 @keyframes bounce {
     0%, 20%, 50%, 80%, 100% {
-    transform: translateY(0);
+        transform: translateY(0);
     }
     40% {
         transform: translateY(-30px);
@@ -177,43 +179,42 @@
 
 @keyframes flip {
     0%, 100% {
-      transform: rotateY(0deg);
+        transform: rotateY(0deg);
     }
     50% {
-      transform: rotateY(180deg);
+        transform: rotateY(180deg);
     }
-  }
+}
 
-  @keyframes beatAndFade {
+@keyframes beatAndFade {
     0%, 100% {
-      transform: scale(1);
-      opacity: 1;
+        transform: scale(1);
+        opacity: 1;
     }
     50% {
-      transform: scale(1.2);
-      opacity: 0.5;
+        transform: scale(1.2);
+        opacity: 0.5;
     }
-  }
-  
+}
 
 .fa-futbol {
     animation: beatAndFade 2s;
 }
 
-.match-facts{
+.match-facts {
     text-align: center;
 }
 
-.stadium-name{
+.stadium-name {
     color: white;
 }
 
-.referee-commentator-result{
+.referee-commentator-result {
     display: flex;
     flex-direction: column;
 }
 
-.referee-commentator{
+.referee-commentator {
     width: 350px;
     display: inline-block;
     text-align: center;

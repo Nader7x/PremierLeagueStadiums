@@ -28,11 +28,19 @@
                         <h1 class="text-center text-xl">No Matches Played on This Stadium</h1>
                     </div>
                     <div *ngFor="let match of historyMatches" class="flex justify-between items-center p-2 border-b border-gray-300">
-                        <h1 class="text-lg">{{match.homeTeam.name}}</h1>
-                        <h2 class="text-lg">{{match.homeGoals}}</h2>
-                        <h2 class="text-lg">-</h2>
-                        <h2 class="text-lg">{{match.awayGoals}}</h2>
-                        <h1 class="text-lg">{{match.awayTeam.name}}</h1>
+                        <div class="flex items-center">
+                            <img class="w-12 h-12 mr-4" [src]="match.homeTeam.logo" alt="Home Team Logo">
+                            <h1 class="text-lg">{{match.homeTeam.name}}</h1>
+                        </div>
+                        <div class="flex items-center">
+                            <h2 class="text-lg">{{match.homeGoals}}</h2>
+                            <h2 class="text-lg mx-2">-</h2>
+                            <h2 class="text-lg">{{match.awayGoals}}</h2>
+                        </div>
+                        <div class="flex items-center">
+                            <h1 class="text-lg">{{match.awayTeam.name}}</h1>
+                            <img class="w-12 h-12 ml-4" [src]="match.awayTeam.logo" alt="Away Team Logo">
+                        </div>
                     </div>
                 </div>
             </div>
