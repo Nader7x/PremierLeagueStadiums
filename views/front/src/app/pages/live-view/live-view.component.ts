@@ -57,7 +57,7 @@ export class LiveViewComponent {
 
       // Retrieve the data from the route parameters
       this.route.paramMap.subscribe((params) => {
-        this.receivedData = (params.get('data') || '').replaceAll('-', ' ');
+        this.receivedData = (params.get('data') || '');
         console.log(`received data is ${this.receivedData}`);
       });
       this.pathToImage = `../../assets/images/Stadiums/${this.receivedData}/${this.receivedData}.jpg`;
@@ -144,7 +144,7 @@ export class LiveViewComponent {
       }else{
         const res = await firstValueFrom(this.stadiumService.getAllStadiums()) as Stadium[];
         for(let i =0; i< res.length; i++){
-          if(res[i].name === this.receivedData){
+          if(res[i].name === this.receivedData.replaceAll('-', ' ')){
             console.log(`The stad name is ${res[i].name}`);
             console.log(`The stad id is ${res[i]._id}`);
             // const data = await this.stadiumService.getStadiumHistoryMatches(res[i]._id).toPromise();
