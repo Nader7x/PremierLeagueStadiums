@@ -1,4 +1,5 @@
 import {Component, Input} from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import {CommentatorComponent} from 'src/app/components/modification-categories/commentator/commentator.component';
 import {TeamComponent} from 'src/app/components/modification-categories/team/team.component';
 import {Match} from 'src/app/interfaces/match-interface';
@@ -10,7 +11,7 @@ import {StadiumService} from 'src/app/services/objects/stadium.service';
 import {Stadium} from 'src/app/interfaces/stadium-interface';
 import {TokenService} from 'src/app/services/token.service';
 import {isEmpty} from "lodash";
-import {NgForOf, NgIf, NgStyle} from "@angular/common";
+import {NgForOf, NgIf, NgOptimizedImage, NgStyle} from "@angular/common";
 
 @Component({
   selector: 'app-live-view',
@@ -19,7 +20,8 @@ import {NgForOf, NgIf, NgStyle} from "@angular/common";
   imports: [
     NgStyle,
     NgIf,
-    NgForOf
+    NgForOf,
+    NgOptimizedImage
   ],
   styleUrls: ['./live-view.component.css']
 })
@@ -53,49 +55,53 @@ export class LiveViewComponent {
 
     async ngOnInit() {
 
-      console.log('hi mah from ng on init');
       // Retrieve the data from the route parameters
       this.route.paramMap.subscribe((params) => {
-        this.receivedData = params.get('data') || '';
-        console.log(`recieved data is ${this.receivedData}`);
+        this.receivedData = (params.get('data') || '').replaceAll('-', ' ');
+        console.log(`received data is ${this.receivedData}`);
       });
       this.pathToImage = `../../assets/images/Stadiums/${this.receivedData}/${this.receivedData}.jpg`;
       console.log(`The path to image is ${this.pathToImage}`);
 
 
-      const data = await this.liveMatchService.getLiveMatches().toPromise();
+      const data = await firstValueFrom(this.liveMatchService.getLiveMatches());
+      console.log(data)
       this.liveMatches = data as [];
 
       console.log(`Size of the data is ${this.liveMatches.length}`);
-      for(let i = 0; i<this.liveMatches.length; i++) {
-        if (this.receivedData === this.liveMatches[i].stadium.name) {
-          this.showStadiumHistory = false;
-          this.homeTeamName = this.liveMatches[i].homeTeam.name;
-          this.awayTeamName = this.liveMatches[i].awayTeam.name;
-          console.log(`Home team name is ${this.homeTeamName}`);
-          console.log(`Away team name is ${this.awayTeamName}`);
-          //fill the events div
-          await this.fillEvents(this.liveMatches[i]._id);
-          // this.fillEvents(this.liveMatches[i]);
-          if (isEmpty(this.mqtt.receivedJson)) {
-          } else {
-            this.homeTeamGoals = this.liveMatches[i].homeGoals;
-            this.awayTeamGoals = this.liveMatches[i].awayGoals;
+      if(this.liveMatches.length === 0){
+        this.stadiumHasMatch=false;
+      }
+      else {
+        for(let i = 0; i<this.liveMatches.length; i++) {
+          if (this.receivedData === this.liveMatches[i].stadium.name) {
+            this.showStadiumHistory = false;
+            this.homeTeamName = this.liveMatches[i].homeTeam.name;
+            this.awayTeamName = this.liveMatches[i].awayTeam.name;
+            console.log(`Home team name is ${this.homeTeamName}`);
+            console.log(`Away team name is ${this.awayTeamName}`);
+            //fill the events div
+            await this.fillEvents(this.liveMatches[i]._id);
+            // this.fillEvents(this.liveMatches[i]);
+            if (!isEmpty(this.mqtt.receivedJson)) {
+              this.homeTeamGoals = this.liveMatches[i].homeGoals;
+              this.awayTeamGoals = this.liveMatches[i].awayGoals;
+            }
+            this.specificMatch = this.liveMatches[i];
+            this.homeTeamLogo = this.specificMatch.homeTeam.logo;
+            this.awayTeamLogo = this.specificMatch.awayTeam.logo;
+            this.stadiumHasMatch = true;
           }
-          this.specificMatch = this.liveMatches[i];
-          this.homeTeamLogo = this.specificMatch.homeTeam.logo;
-          this.awayTeamLogo = this.specificMatch.awayTeam.logo;
-          this.stadiumHasMatch = true;
         }
       }
 
 
-
-      if(this.stadiumHasMatch){
+      console.log(`The stadium has match is ${this.stadiumHasMatch}`);
+      if(this.stadiumHasMatch == true){
         console.log("I am entering hererererer");
         this.matchIntervalId = setInterval(async () => {
           if(this.mqtt.swich){
-            console.log(`Omar ${this.mqtt.receivedJson}`);
+            console.log(this.mqtt.receivedJson);
             this.mqtt.swich = false;
             await this.refreshData();
             console.log(`The match that refreshes is ${this.matchWithAllData.homeTeam.name}`);
@@ -132,13 +138,14 @@ export class LiveViewComponent {
             console.log(`The data of the history matches are going to be filled and it is ${this.historyMatches}`);
 
             this.showStadiumHistory = true;
-            this.ngOnInit();
+            await this.ngOnInit();
           }
         }, 3000);
       }else{
-        const res = await this.stadiumService.getAllStadiums().toPromise() as Stadium[];
+        const res = await firstValueFrom(this.stadiumService.getAllStadiums()) as Stadium[];
         for(let i =0; i< res.length; i++){
           if(res[i].name === this.receivedData){
+            console.log(`The stad name is ${res[i].name}`);
             console.log(`The stad id is ${res[i]._id}`);
             // const data = await this.stadiumService.getStadiumHistoryMatches(res[i]._id).toPromise();
             this.stadiumService.getStadiumHistoryMatches(res[i]._id).subscribe((data)=>{
@@ -242,7 +249,8 @@ export class LiveViewComponent {
     }
 
     async refreshData(){
-      const data = await this.liveMatchService.getMatchWithAllData(this.specificMatch._id).toPromise();
-      this.matchWithAllData = data as Match ;
+      this.liveMatchService.getMatchWithAllData(this.specificMatch._id).subscribe((data: Match) => {
+        this.matchWithAllData = data;
+      });
     }
 }

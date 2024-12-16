@@ -20,6 +20,10 @@ import {ruruHTML} from "ruru/server";
 import {resolvers, typeDefs} from "./graphql/schema.js";
 import redis from "redis";
 import start from "./Services/StartEndMatchService.js"
+import router from "./routers/matchRouter.js";
+import Team from "./models/teamModel.js";
+import {Commentator, Referee} from "./models/persons.js";
+import Match from "./models/matchModel.js";
 
 
 const app = express();
@@ -82,11 +86,10 @@ try {
         console.error('Local Redis connection error:', localErr);
     }
 }
-const cacheData = async (key, data) => {
+const cacheData = async (key, data,expiry) => {
     try {
-        const expire = 950;
         await redisClient.json.set(key, "$", data,);
-        await redisClient.expire(key, expire);
+        await redisClient.expire(key, expiry);
         console.log(`Data cached successfully for key: ${key}`);
     } catch (error) {
         console.error(`Error caching data for key: ${key}`, error);
@@ -106,6 +109,53 @@ const getCachedData = async (key) => {
 // Export the Redis client for reuse
 export {cacheData, getCachedData};
 
+app.get('/addMatch', async (req, res) => {
+    try {
+        // Fetch teams, referees, and commentators from your database
+        const teams = await Team.find({}); // Replace with your database query for teams
+        const referees = await Referee.find({}); // Replace with your database query for referees
+        const commentators = await Commentator.find({}); // Replace with your database query for commentators
+
+        // Render the template and pass the data
+        res.render('addMatch', {
+            teams: teams,
+            referees: referees,
+            commentators: commentators
+        });
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+app.get('/addReferee', async (req, res) => {
+    try {
+        // Fetch all referees from the database
+        const referees = await Referee.find();
+
+        // Render the page and pass the referees list
+        res.render('addReferee', { referees });
+    } catch (error) {
+        console.error('Error fetching referees:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+app.get('/viewMatches', async (req, res) => {
+    try {
+        // Fetch matches from the database
+        const matches = await Match.find({})
+            .populate('homeTeam', 'name') // Populate homeTeam with name
+            .populate('awayTeam', 'name') // Populate awayTeam with name
+            .populate('referee', 'name')  // Populate referee with name
+            .populate('commentator', 'name')
+            .populate('stadium','name'); // Populate commentator with name
+
+        // Render the view matches page and pass the matches
+        res.render('viewMatches', { matches });
+    } catch (error) {
+        console.error('Error fetching matches:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
 
 // Register routes
 app.use('/', commentatorRoute);

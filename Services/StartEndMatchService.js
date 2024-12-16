@@ -2,75 +2,55 @@ import cron from 'node-cron';
 import axios from "axios";
 import moment from "moment-timezone";
 
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTdjOGZiYWYyOTE4MTU3ZGM5NWNjYjAiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MDI2NjUzNDQsImV4cCI6MzE3Mjc4NjY1MzQ0fQ.KciTmNIVrYcfo0DaNu3Mi06DHf5ns0YiMgDVNXrxwVo"
-export  default async function start() {
+const token = "YOUR_TOKEN_HERE"; // Replace with actual token
 
-    const url = "http://localhost:3000/"
-    cron.schedule('*/19 * * * * * ', async () => {
-            console.log('running a task every 19 seconds');
-            const nDate = new Date().toLocaleString('en-US', {timeZone: 'Europe/Athens'});
-            // Split the formatted date string into separate variables
-            const [date, time] = nDate.split(' ');
+export default async function start() {
+    const url = "http://localhost:3000/";
 
-            const [month, day, year] = date.split('/');
-            const [hours, minutes, seconds] = time.split(':');
+    cron.schedule('*/19 * * * * *', async () => {
+        console.log('Running a task every 19 seconds');
 
-            const response = await axios.get(url +"upcomingMatches");
+        // Get the current time in UTC
+        const now = moment().utc();
+        // console.log("Current Time:", now.format());
 
+        // Fetch upcoming matches
+        const upcomingMatchesResponse = await axios.get(url + "upcomingMatches");
+        const upcomingMatches = upcomingMatchesResponse.data;
 
-            for (const match of (response.data)) {
-                const matchTime = moment(match['date']).tz('Etc/GMT+0');
+        for (const match of upcomingMatches) {
+            const matchTime = moment(match['date']).utc(); // Convert match time to UTC
+            // console.log("Match Time:", matchTime.format());
 
-                const matchYear = matchTime.year();
-                const matchMonth = matchTime.month() + 1; // Months are zero-based
-                const matchDay = matchTime.date();
-                const matchHours = matchTime.hour();
-                const matchMinutes = matchTime.minute();
-
-                if (
-                    String(matchYear) === year.substring(0,(year.length)-1)
-                    &&
-                    String(matchMonth) === String(month)
-                    &&
-                    String(matchDay) === String(day)
-                    &&
-                    String(matchHours) === String(hours)
-                    &&
-                    String(matchMinutes) === String(minutes)
-                ) {
-                    await axios.get(url + "matchStart/" + String(match['_id']));
-                    console.log("match started " + match['_id']);
-                }
-
-            }
-            //endmatch ===========================================================================
-            const liveResponse = await axios.get(url +"matchesLive");
-
-            for (const match of (liveResponse.data)) {
-                const matchTime = moment(match['date']).tz('Etc/GMT+0');
-
-                const matchYear = matchTime.year();
-                const matchMonth = matchTime.month() + 1; // Months are zero-based
-                const matchDay = matchTime.date();
-                const matchHours = matchTime.hour();
-                const matchMinutes = matchTime.minute();
-
-                if (
-                    String(matchYear) === year.substring(0,(year.length)-1)
-                    &&
-                    String(matchMonth) === String(month)
-                    &&
-                    String(matchDay) === String(day)
-                    &&
-                    String(matchHours) === String(hours)
-                    &&
-                    String(matchMinutes) <= String(minutes-2)
-                ) {
-                    await axios.get(url + "endMatch/" );
-                    console.log("match ended " + match['_id']);
-                }
-
+            if (
+                matchTime.year() === now.year() &&
+                matchTime.month() === now.month() && // Months are zero-based
+                matchTime.date() === now.date() &&
+                matchTime.hour() === now.hour() &&
+                matchTime.minute() === now.minute()
+            ) {
+                await axios.get(url + "matchStart/" + String(match['_id']));
+                console.log("Match started:", match['_id']);
             }
         }
-    )
+
+        // Fetch live matches
+        const liveMatchesResponse = await axios.get(url + "matchesLive");
+        const liveMatches = liveMatchesResponse.data;
+
+        for (const match of liveMatches) {
+            const matchTime = moment(match['date']).utc(); // Convert match time to UTC
+
+            if (
+                matchTime.year() === now.year() &&
+                matchTime.month() === now.month() &&
+                matchTime.date() === now.date() &&
+                matchTime.hour() === now.hour() &&
+                matchTime.minute() <= now.minute() - 10 // End match after 5 minutes
+            ) {
+                await axios.get(url + "endMatch/" + String(match['_id']));
+                console.log("Match ended:", match['_id']);
+            }
+        }
+    });
 }

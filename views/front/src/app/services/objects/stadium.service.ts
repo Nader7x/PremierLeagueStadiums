@@ -19,9 +19,10 @@ export class StadiumService {
   apiUrl: string = "http://localhost:3000/";
 
   constructor(private http: HttpClient) {}
-  
+
   getStadiumHistoryMatches(stadiumId: ObjectId): Observable<any[]>{
     const url = `${this.apiUrl}stadiumHistoryMatches/${stadiumId}`;
+    console.log(url);
     return this.http.get<any[]>(url, httpOptions);
   }
 

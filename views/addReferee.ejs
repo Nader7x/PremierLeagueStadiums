@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Referee</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 p-8">
+<div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
+    <h1 class="text-2xl font-bold mb-4">Add Referee</h1>
+    <!-- Referee Form -->
+    <form method="POST" action="/referee" class="space-y-4">
+        <!-- Name -->
+        <div>
+            <label for="name" class="block text-sm font-medium text-gray-700">Name:</label>
+            <label>
+                <input type="text" name="name" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </label>
+        </div>
+        <!-- Nationality -->
+        <div>
+            <label for="nationality" class="block text-sm font-medium text-gray-700">Nationality:</label>
+            <label>
+                <input type="text" name="nationality" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </label>
+        </div>
+        <!-- Age -->
+        <div>
+            <label for="age" class="block text-sm font-medium text-gray-700">Age:</label>
+            <label>
+                <input type="number" name="age" required min="18" max="65" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </label>
+        </div>
+        <!-- Submit Button -->
+        <div>
+            <button type="submit" class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Add Referee</button>
+        </div>
+    </form>
+    <!-- Referees List -->
+    <div class="mt-6">
+        <h2 class="text-lg font-semibold">Existing Referees:</h2>
+        <ul class="mt-2 space-y-2">
+            <% referees.forEach(referee => { %>
+                <li class="p-2 border border-gray-300 rounded-md bg-gray-50">
+                    <span class="font-semibold"><%= referee.name %></span> - <%= referee.nationality %>, Age: <%= referee.age %>
+                </li>
+            <% }); %>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

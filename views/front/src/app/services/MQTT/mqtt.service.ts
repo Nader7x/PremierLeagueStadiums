@@ -28,13 +28,14 @@ export class MqttService {
       //   this.first = false;
       //   return;
       // }
+      console.log("message: ", message);
       this.swich = true;
       const jsonString = `${message}`;
       const validJsonString = jsonString.replace(/'/g, '"');
 
       // Parse the string as JSON
       const jsonData = JSON.parse(validJsonString);
-      
+
       this.receivedJson = jsonData;
       this.handleMessage(jsonData);
     });

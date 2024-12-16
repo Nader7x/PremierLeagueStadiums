@@ -2,67 +2,68 @@ import json
 import paho.mqtt.client as mqtt
 import time
 import requests
-
-from Publisher import token
+from paho.mqtt.client import Client
+from pyexpat.errors import XML_ERROR_RESERVED_PREFIX_XML
 
 URL = "http://localhost:3000"
+token = ''
 headers = {
     'Authorization': f'Bearer {token}'
 }
 
 
-def on_subscribe(client, userdata, mid, reason_code_list, properties):
-    # Since we subscribed only for a single channel, reason_code_list contains
-    # a single entry
-    if reason_code_list[0].is_failure:
-        print(f"Broker rejected you subscription: {reason_code_list[0]}")
-    else:
-        print(f"Broker granted the following QoS: {reason_code_list[0].value}")
+
+def on_message(client, userdata, message):
+    try:
+        print(f"Received message: {message.payload.decode('utf-8')}")
+        message_json = json.loads(message.payload.decode("utf-8"))
+
+        if message_json.get('operation') == 'goal':
+            print(f"{message_json['operation']} => {message_json['player']['name']} {message_json['team']['name']}")
+            body = {
+                'match': message_json['match'],
+                'team': message_json['team']['_id'],
+                'player': message_json['player']['_id']
+            }
+            response = requests.post(f"{URL}/goal", json=body, headers=headers)
+            print(f"Goal response status: {response.status_code}")
+
+        elif message_json.get('operation') == 'card':
+            print(f"{message_json['operation']} => {message_json['player']['name']} {message_json['team']['name']}")
+            body = {
+                'match': message_json['match'],
+                'player': message_json['player']['_id'],
+                'card': message_json['card']
+            }
+            response = requests.post(f"{URL}/card", json=body, headers=headers)
+            print(f"Card response status: {response.status_code}")
+
+    except Exception as e:
+        print(f"Error processing message: {e}")
 
 
-def on_unsubscribe(client, userdata, mid, reason_code_list, properties):
-    # Be careful, the reason_code_list is only present in MQTTv5.
-    # In MQTTv3 it will always be empty
-    if len(reason_code_list) == 0 or not reason_code_list[0].is_failure:
-        print("unsubscribe succeeded (if SUBACK is received in MQTTv3 it success)")
-    else:
-        print(f"Broker replied with failure: {reason_code_list[0]}")
+
+
+client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
+
+client.on_message = on_message
+client.will_set("MATCH", payload=None, qos=0, retain=False)
+
+client.connect('mqtt.eclipseprojects.io')
+
+
+# client.connect("mqtt.eclipseprojects.io")
+client.subscribe("MATCH/#",qos=1)
+
+
+# Start the MQTT loop in a non-blocking mode
+client.loop_start()
+
+# Run for a long time to process incoming messages
+try:
+    while True:
+        time.sleep(1)  # Or adjust this to the required period for your use case
+except KeyboardInterrupt:
+    print("Shutting down MQTT client.")
+    client.loop_stop()
     client.disconnect()
-
-
-def on_connect(client, userdata, flags, reason_code, properties):
-    if reason_code.is_failure:
-        print(f"Failed to connect: {reason_code}. loop_forever() will retry connection")
-    else:
-        print(f"Connected: {reason_code}")
-        # we should always subscribe from on_connect callback to be sure
-        # our subscribed is persisted across reconnections.
-        # client.subscribe("$SYS/#")
-
-
-def on_message(clients, userdata, message):
-    print(message)
-    json_data = message.payload.decode("utf-8").replace("'", "\"")
-    message_json = json.loads(json_data)
-    #   print("Received message: ", str(message.payload.decode("utf-8")))
-    if message_json['operation'] == 'goal':
-        print(f"{message_json['operation']}=> {message_json['player']['name']} {message_json['team']['name']}")
-        body = {'match': message_json['match'], 'team': message_json['team']['_id'],
-                'player': message_json['player']['_id']}
-        requests.post(f"{URL}/goal", json=body)
-    if message_json['operation'] == 'card':
-        print(f"{message_json['operation']}=> {message_json['player']['name']} {message_json['team']['name']}")
-        body = {'match': message_json['match'], 'player': message_json['player']['_id'], 'card': message_json['card']}
-        requests.post(f"{URL}/card", json=body)
-
-
-mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
-mqttc.on_connect = on_connect
-mqttc.on_message = on_message
-mqttc.on_subscribe = on_subscribe
-mqttc.on_unsubscribe = on_unsubscribe
-
-mqttc.connect("mqtt.eclipseprojects.io")
-mqttc.loop_forever()
-mqttc.subscribe("EVENT")
-time.sleep(1200000)

@@ -120,6 +120,19 @@ router.post("/match", addMatch);
  *   post:
  *     summary: Add a goal
  *     tags: [Matches]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+*               match:
+ *                     type: string
+ *               team:
+ *                 type: string
+*               player:
+ *                 type: string
  *     responses:
  *       201:
  *         description: Goal added
@@ -132,9 +145,23 @@ router.post("/goal", goal);
  *   post:
  *     summary: Give a card
  *     tags: [Matches]
- *     responses:
- *       201:
- *         description: Card given
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               match:
+ *                 type: string
+ *               player:
+ *                 type: string
+ *               card:
+ *                 type: string
+ *             required:
+ *               - match
+ *               - player
+ *               - card
  */
 router.post("/card", giveCard);
 
@@ -294,18 +321,5 @@ router.get("/sortedEvents/:id", getSortedEvents);
  */
 router.get("/fixMatches", fixMatches);
 
-/**
- * @swagger
- * /addMatch:
- *   get:
- *     summary: Access the add match page
- *     tags: [Matches]
- *     responses:
- *       200:
- *         description: Add match page
- */
-router.get("/addMatch", (req, res) => {
-    res.render("addMatch");
-});
 
 export default router;

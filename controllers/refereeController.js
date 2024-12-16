@@ -34,7 +34,8 @@ const addReferee = async (req, res) => {
             nationality: req.body.nationality,
         });
         const result = await referee.save();
-        res.send(result);
+        // res.send(result);
+        res.redirect("http://localhost:3000/addReferee");
     } catch (err) {
         console.log(err);
         res.status(500).send({

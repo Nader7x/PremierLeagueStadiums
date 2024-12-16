@@ -23,37 +23,45 @@
             <!-- Away Team -->
             <div>
                 <label for="awayTeam" class="block text-sm font-medium text-gray-700">Away Team:</label>
-                <select name="awayTeam" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                    <!-- Populate the options dynamically with team names and IDs -->
-                    <% teams.forEach(team => { %>
-                    <option value="<%= team._id %>"><%= team.name %></option>
-                    <% }); %>
-                </select>
+                <label>
+                    <select name="awayTeam" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <!-- Populate the options dynamically with team names and IDs -->
+                        <% teams.forEach(team => { %>
+                        <option value="<%= team._id %>"><%= team.name %></option>
+                        <% }); %>
+                    </select>
+                </label>
             </div>
             <!-- Referee -->
             <div>
                 <label for="referee" class="block text-sm font-medium text-gray-700">Referee:</label>
-                <select name="referee" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                    <!-- Populate the options dynamically with referee names and IDs -->
-                    <% referees.forEach(referee => { %>
-                    <option value="<%= referee._id %>"><%= referee.name %></option>
-                    <% }); %>
-                </select>
+                <label>
+                    <select name="referee" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <!-- Populate the options dynamically with referee names and IDs -->
+                        <% referees.forEach(referee => { %>
+                        <option value="<%= referee._id %>"><%= referee.name %></option>
+                        <% }); %>
+                    </select>
+                </label>
             </div>
             <!-- Commentator -->
             <div>
                 <label for="commentator" class="block text-sm font-medium text-gray-700">Commentator:</label>
-                <select name="commentator" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                    <!-- Populate the options dynamically with commentator names and IDs -->
-                    <% commentators.forEach(commentator => { %>
-                    <option value="<%= commentator._id %>"><%= commentator.name %></option>
-                    <% }); %>
-                </select>
+                <label>
+                    <select name="commentator" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <!-- Populate the options dynamically with commentator names and IDs -->
+                        <% commentators.forEach(commentator => { %>
+                        <option value="<%= commentator._id %>"><%= commentator.name %></option>
+                        <% }); %>
+                    </select>
+                </label>
             </div>
             <!-- Date -->
             <div>
                 <label for="date" class="block text-sm font-medium text-gray-700">Date:</label>
-                <input type="datetime-local" name="date" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <label>
+                    <input type="datetime-local" name="date" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                </label>
             </div>
             <!-- Other form fields (e.g., stadium, additional details) can be added here -->
             <div>

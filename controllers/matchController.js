@@ -3,6 +3,9 @@ import Team from "../models/teamModel.js";
 import Stadium from "../models/stadiumModel.js";
 import {Player} from "../models/persons.js";
 import {cacheData, getCachedData} from "../index.js";
+import _ from 'firebase-admin';
+import axios from "axios";
+import {getFcmAccessToken} from "./apiSecurityController.js";
 
 
 
@@ -19,7 +22,8 @@ const addMatch = async (req, res) => {
             date: req.body.date
         });
         const result = await match.save();
-        res.send(result);
+        // res.send(result);
+        res.redirect("http://localhost:3000/addMatch")
     } catch (err) {
         console.log(err);
         res.status(500).send({
@@ -113,11 +117,11 @@ const getMatch = async (req, res) => {
 };
 const getLiveMatches = async (req, res) => {
     try {
-        const cacheKey = 'liveMatches';
-        const cachedData = await getCachedData(cacheKey);
-        if (cachedData) {
-            return res.send(cachedData);
-        }
+        // const cacheKey = 'liveMatches';
+        // const cachedData = await getCachedData(cacheKey);
+        // if (cachedData) {
+        //     return res.send(cachedData);
+        // }
         const result = await Match.find({status: true, endState: false}).populate({
             path: 'homeTeam', populate: {
                 path: 'squad', model: 'Player', select: 'name'
@@ -129,7 +133,7 @@ const getLiveMatches = async (req, res) => {
                 }
             }).populate('referee', 'name')
             .populate('commentator', 'name').populate('stadium', 'name');
-        await cacheData(cacheKey, result, 3600);
+        // await cacheData(cacheKey, result, 10);
         res.send(result);
     } catch (err) {
         console.log(err);
@@ -157,7 +161,7 @@ const getHistoryMatches = async (req, res) => {
                     path: 'squad', model: 'Player', select: 'name'
                 }
             }).populate('referee', 'name').populate('commentator', 'name');
-        await cacheData(cacheKey, result, 3600);
+        await cacheData(cacheKey, result, 100);
         res.send(result);
     } catch (err) {
         console.log(err);
@@ -174,7 +178,9 @@ const goal = async (req, res) => {
         const match = await Match.findById(req.body.match);
         const homeTeam = await Team.findById(match['homeTeam']);
         const awayTeam = await Team.findById(match['awayTeam']);
+        console.log(match,homeTeam,awayTeam)
         const isHome = req.body.team === String(match['homeTeam']);
+        console.log(isHome)
         if (!(homeTeam['squad'].includes(req.body.player)) && !(awayTeam['squad'].includes(req.body.player))) {
             console.log("no player with this name in the match");
             res.status(400).send({
@@ -196,48 +202,50 @@ const goal = async (req, res) => {
         }
         let result;
         const matchofGoals = JSON.parse(JSON.stringify(match['goals']));
-        const playerName = await Player.findById(req.body.player);
         if (match['goals'].get(req.body.player)) {
-            const playername = await Player.findById(req.body.player);
             matchofGoals[req.body.player]++;
             result = await Match.findByIdAndUpdate(match['_id'], {
                 'goals': matchofGoals, $push: {events: [req.body.player, 'goal']}
             }, {new: true});
-            message['notification']['title'] = 'Goal';
-            message['notification']['body'] = playername['name'];
-            console.log(playername['name']);
-            messaging.send(message);
+            // let message;
+            // message['notification']['title'] = 'Goal';
+            // message['notification']['body'] = playername['name'];
+            // // _.messaging.send(message)
+            // console.log(playername['name']);
+
         } else {
             matchofGoals[req.body.player] = 1;
             result = await Match.findByIdAndUpdate(match['_id'], {
                 'goals': matchofGoals, $push: {events: [req.body.player, 'goal']}
             }, {new: true});
-            const playername = await Player.findById(req.body.player);
-            message['notification']['title'] = 'Goal';
-            message['notification']['body'] = playername['name'];
-            console.log(playername['name']);
-            messaging.send(message);
+            // const playername = await Player.findById(req.body.player);
+            // let message;
+            // message['notification']['title'] = 'Goal';
+            // message['notification']['body'] = playername['name'];
+            // console.log(playername['name']);
+            // _.messaging.send(message);
         }
+        console.log(result);
         res.send(result);
-        const score = isHome ? `[${result["homeGoals"]}] : ${result["awayGoals"]}` : `${result["homeGoals"]} : [${result["awayGoals"]}]`;
-        const payload = {
-            message: {
-                topic: "all", notification: {
-                    title: "Goal!", body: `${homeTeam['name']} ${score} ${awayTeam['name']}\n${playerName['name']}`
-                }, android: {
-                    notification: {
-                        channel_id: "noti2"
-                    }
-                }
-            }
-        };
+        // const score = isHome ? `[${result["homeGoals"]}] : ${result["awayGoals"]}` : `${result["homeGoals"]} : [${result["awayGoals"]}]`;
+        // const payload = {
+        //     message: {
+        //         topic: "all", notification: {
+        //             title: "Goal!", body: `${homeTeam['name']} ${score} ${awayTeam['name']}\n${playerName['name']}`
+        //         }, android: {
+        //             notification: {
+        //                 channel_id: "noti2"
+        //             }
+        //         }
+        //     }
+        // };
 
         try {
-            await axios.post("https://fcm.googleapis.com/v1/projects/premier-noti/messages:send", payload, {
-                headers: {
-                    'Content-Type': 'application/json', 'Authorization': `Bearer ${await getFcmAccessToken()}`
-                }
-            });
+            // await axios.post("https://fcm.googleapis.com/v1/projects/premier-noti/messages:send", payload, {
+            //     headers: {
+            //         'Content-Type': 'application/json', 'Authorization': `Bearer ${await getFcmAccessToken()}`
+            //     }
+            // });
         } catch (e) {
             console.log(e);
         }
@@ -251,7 +259,7 @@ const goal = async (req, res) => {
 
 const endMatch = async (req, res) => {
     try {
-        const result = await Match.findByIdAndUpdate(req.params['id'], {endState: true, status: false}, {new: true});
+        const result = await Match.findByIdAndUpdate(req.params['id'], {endState: true, status: true}, {new: true});
         await Stadium.findByIdAndUpdate(result['stadium'], {state: false});
         const hometeamId = result['homeTeam'];
         const awayteamId = result['awayTeam'];
@@ -287,11 +295,11 @@ const endMatch = async (req, res) => {
                     }
                 }
             };
-            await axios.post("https://fcm.googleapis.com/v1/projects/premier-noti/messages:send", payload, {
-                headers: {
-                    'Content-Type': 'application/json', 'Authorization': `Bearer ${await getFcmAccessToken()}`
-                }
-            });
+            // await axios.post("https://fcm.googleapis.com/v1/projects/premier-noti/messages:send", payload, {
+            //     headers: {
+            //         'Content-Type': 'application/json', 'Authorization': `Bearer ${await getFcmAccessToken()}`
+            //     }
+            // });
         } catch (e) {
             console.log(e);
         }
@@ -316,10 +324,9 @@ const giveCard = async (req, res) => {
             });
             return;
         }
-        const playerName = await Player.findById(req.body.player);
+        // const playerName = await Player.findById(req.body.player);
         if (match['cards'].get(req.body.player) && match['cards'].get(req.body.player) === 'yellow') {
             const update = {};
-            cardType = "red";
             update['cards.' + req.body.player] = 'red';
             const result = await Match.findByIdAndUpdate(req.body.match, {
                 $set: update, $push: {events: [req.body.player, 'red']}
@@ -338,23 +345,23 @@ const giveCard = async (req, res) => {
             }, {new: true});
             res.send(result);
         }
-        const payload = {
-            message: {
-                topic: "all", notification: {
-                    title: "Card!",
-                    body: `${homeTeam['name']} VS ${awayTeam['name']}\n${playerName['name']} ${cardType} card`
-                }, android: {
-                    notification: {
-                        channel_id: "noti3"
-                    }
-                }
-            }
-        };
-        await axios.post("https://fcm.googleapis.com/v1/projects/premier-noti/messages:send", payload, {
-            headers: {
-                'Content-Type': 'application/json', 'Authorization': `Bearer ${await getFcmAccessToken()}`
-            }
-        });
+        // const payload = {
+        //     message: {
+        //         topic: "all", notification: {
+        //             title: "Card!",
+        //             body: `${homeTeam['name']} VS ${awayTeam['name']}\n${playerName['name']} ${cardType} card`
+        //         }, android: {
+        //             notification: {
+        //                 channel_id: "noti3"
+        //             }
+        //         }
+        //     }
+        // };
+        // await axios.post("https://fcm.googleapis.com/v1/projects/premier-noti/messages:send", payload, {
+        //     headers: {
+        //         'Content-Type': 'application/json', 'Authorization': `Bearer ${await getFcmAccessToken()}`
+        //     }
+        // });
     } catch (err) {
         console.log(err);
         res.status(500).send({
@@ -395,11 +402,11 @@ const startMatch = async (req, res) => {
                     }
                 }
             };
-            await axios.post("https://fcm.googleapis.com/v1/projects/premier-noti/messages:send", payload, {
-                headers: {
-                    'Content-Type': 'application/json', 'Authorization': `Bearer ${getFcmAccessToken()}`
-                }
-            });
+            // await axios.post("https://fcm.googleapis.com/v1/projects/premier-noti/messages:send", payload, {
+            //     headers: {
+            //         'Content-Type': 'application/json', 'Authorization': `Bearer ${await getFcmAccessToken()}`
+            //     }
+            // });
         } catch (e) {
             console.log(e);
         }

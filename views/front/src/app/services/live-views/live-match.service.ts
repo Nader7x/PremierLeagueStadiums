@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import { ObjectId } from 'mongoose';
 import { Match } from 'src/app/interfaces/match-interface';
 import { httpOptions } from '../objects/coach.service';
-import { TokenService } from '../token.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +19,6 @@ export class LiveMatchService {
   }
 
   getLiveMatches(): Observable<Match[]>{
-    console.log(`before getting the live matches, the token is ${TokenService.TOKEN}`);
     const url = `${this.apiUrl}matchesLive`;
     return this.http.get<Match[]>(url, httpOptions);
   }
