@@ -1,0 +1,75 @@
+.history {
+    height: 1000px;
+}
+
+.rounded-image {
+    border-radius: 20px; /* Adjust the value to control the level of rounding */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adjust the shadow properties */
+    overflow: hidden; /* Ensures the border-radius is applied to the image */
+}
+
+.stadium-image {
+    height: 100%;
+    padding-top: 80px;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.no-matches {
+    color: white;
+    font-weight: bold;
+    padding-left: 30px;
+    position: absolute;
+    top: 50%; /* Center the container vertically */
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centering trick */
+    width: 500px;
+    opacity: 1 !important;
+}
+
+.bigger-div {
+    margin-top: 200px !important;
+    width: 599px;
+    height: 599px;
+    overflow: auto;
+    background-color: rgba(51, 51, 51, 0.69); /* rgba allows you to set opacity only for the background */
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    margin: auto; /* Center the container horizontally */
+    position: absolute;
+    top: 50%; /* Center the container vertically */
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centering trick */
+    color: white;
+    font-weight: 500;
+}
+
+.child {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.match-card {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.match-card img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.match-card h1, .match-card h2 {
+    margin: 0;
+    padding: 0;
+    font-size: 1.2rem;
+    color: #333;
+}
