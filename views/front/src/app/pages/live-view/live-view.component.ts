@@ -12,6 +12,7 @@ import {Stadium} from 'src/app/interfaces/stadium-interface';
 import {TokenService} from 'src/app/services/token.service';
 import {isEmpty} from "lodash";
 import {NgForOf, NgIf, NgOptimizedImage, NgStyle} from "@angular/common";
+import { GraphQLService } from 'src/app/services/graphql.service';
 
 @Component({
   selector: 'app-live-view',
@@ -51,7 +52,7 @@ export class LiveViewComponent {
     pathToImage: string = '';
     showStadiumHistory: boolean = true;
     historyMatches: Match[] = [];
-    constructor(private liveMatchService: LiveMatchService, private mqtt: MqttService, protected route: ActivatedRoute, private router: Router, private stadiumService: StadiumService){}
+    constructor(private liveMatchService: LiveMatchService, private mqtt: MqttService, protected route: ActivatedRoute, private router: Router, private stadiumService: StadiumService, private graphQLService: GraphQLService){}
 
     async ngOnInit() {
 

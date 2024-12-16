@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { TokenService } from 'src/app/services/token.service';
 import {AdminDropdownComponent} from "../../components/admin-dropdown/admin-dropdown.component";
 import {NgForOf, NgIf} from "@angular/common";
+import { GraphQLService } from 'src/app/services/graphql.service';
 
 @Component({
   selector: 'app-admin',
@@ -19,7 +20,7 @@ import {NgForOf, NgIf} from "@angular/common";
 export class AdminComponent {
   type: string = TokenService.type;
 
-  constructor(private router: Router){}
+  constructor(private router: Router, private graphQLService: GraphQLService){}
 
   operations: string[] = [
     "Add", "Update", "Delete"
@@ -35,4 +36,35 @@ export class AdminComponent {
     this.router.navigate(['/map']).then();
   }
 
+  fetchData() {
+    const query = `
+      query {
+        players {
+          id
+          name
+          age
+          nationality
+        }
+      }
+    `;
+
+    this.graphQLService.fetchData(query).subscribe((result) => {
+      console.log(result);
+    });
+  }
+
+  addPlayer() {
+    const mutation = `
+      mutation {
+        addPlayer(name: "John Doe", age: 25, nationality: "American", kitNumber: 10, position: "Forward", team: "teamId") {
+          id
+          name
+        }
+      }
+    `;
+
+    this.graphQLService.mutateData(mutation).subscribe((result) => {
+      console.log(result);
+    });
+  }
 }
