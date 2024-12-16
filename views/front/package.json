@@ -19,6 +19,7 @@
     "@angular/platform-browser-dynamic": "^19.0.4",
     "@angular/router": "^19.0.4",
     "@types/lodash": "^4.17.13",
+    "apollo-angular": "^8.0.0",
     "firebase": "^11.1.0",
     "lodash": "^4.17.21",
     "rxjs": "~7.8.1",
