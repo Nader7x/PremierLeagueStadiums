@@ -3,14 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { httpOptions } from './coach.service';
 import { ObjectId } from 'mongoose';
-
-// const httpOptions = {
-//   headers: new HttpHeaders(
-//     {
-//       'Content-Type': 'application/json'
-//     }
-//   )
-// }
+import { TokenService } from '../token.service';
 
 @Injectable({
   providedIn: 'root'
@@ -23,17 +16,35 @@ export class StadiumService {
   getStadiumHistoryMatches(stadiumId: ObjectId): Observable<any[]>{
     const url = `${this.apiUrl}stadiumHistoryMatches/${stadiumId}`;
     console.log(url);
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${TokenService.TOKEN}`
+      })
+    };
     return this.http.get<any[]>(url, httpOptions);
   }
 
   getAllStadiums(): Observable<any[]>{
     const url = `${this.apiUrl}stadiumsWithTeam`;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${TokenService.TOKEN}`
+      })
+    };
     return this.http.get<any[]>(url, httpOptions);
   }
 
   addStadium(stadium: any): Observable<any>{
     // console.log(player);
     const url = `${this.apiUrl}stadium`;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${TokenService.TOKEN}`
+      })
+    };
     // console.log(`Trying to post now to ${url}`);
     // console.log(typeof(player));
     return this.http.post<any>(url, stadium, httpOptions);
@@ -41,6 +52,12 @@ export class StadiumService {
 
   deleteStadium(stadiumId: ObjectId): Observable<any> {
     const url = `${this.apiUrl}stadium/${stadiumId}`;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${TokenService.TOKEN}`
+      })
+    };
     // Send DELETE request
     return this.http.delete<any>(url, httpOptions);
   }

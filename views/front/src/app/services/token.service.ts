@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root'
@@ -8,5 +9,8 @@ export class TokenService {
   static TOKEN = '';
   static type = 'user';
   static code = 200;
-  constructor() { }
+
+  constructor(private cookieService: CookieService) {
+    TokenService.TOKEN = this.cookieService.get('token');
+  }
 }

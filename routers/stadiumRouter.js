@@ -26,7 +26,7 @@ const router = express.Router();
  *       200:
  *         description: A list of stadiums
  */
-router.get("/stadiums", getAllStadiums);
+router.get("/stadiums", isUser, getAllStadiums);
 
 /**
  * @swagger
@@ -58,7 +58,7 @@ router.get("/stadiums", getAllStadiums);
  *       201:
  *         description: Stadium added
  */
-router.post("/stadium", addStadium);
+router.post("/stadium", isAdmin, addStadium);
 
 /**
  * @swagger
@@ -70,7 +70,7 @@ router.post("/stadium", addStadium);
  *       200:
  *         description: A list of stadiums with teams
  */
-router.get("/stadiumsWithTeam", getAllStadiumsWithTeam);
+router.get("/stadiumsWithTeam", isUser, getAllStadiumsWithTeam);
 
 /**
  * @swagger
@@ -88,7 +88,7 @@ router.get("/stadiumsWithTeam", getAllStadiumsWithTeam);
  *       200:
  *         description: A stadium with team
  */
-router.get("/stadiumWithTeam/:id", getStadiumWithTeam);
+router.get("/stadiumWithTeam/:id", isUser, getStadiumWithTeam);
 
 /**
  * @swagger
@@ -106,7 +106,7 @@ router.get("/stadiumWithTeam/:id", getStadiumWithTeam);
  *       200:
  *         description: A stadium
  */
-router.get("/stadium/:id", getStadium);
+router.get("/stadium/:id", isUser, getStadium);
 
 /**
  * @swagger
@@ -124,7 +124,7 @@ router.get("/stadium/:id", getStadium);
  *       200:
  *         description: Stadium updated
  */
-router.patch("/stadium/:id", updateStadium);
+router.patch("/stadium/:id", isAdmin, updateStadium);
 
 /**
  * @swagger
@@ -142,7 +142,7 @@ router.patch("/stadium/:id", updateStadium);
  *       200:
  *         description: Stadium deleted
  */
-router.delete("/stadium/:id", deleteStadium);
+router.delete("/stadium/:id", isAdmin, deleteStadium);
 
 /**
  * @swagger
@@ -160,7 +160,7 @@ router.delete("/stadium/:id", deleteStadium);
  *       200:
  *         description: Matches in a stadium
  */
-router.get("/stadiumMatches/:id", stadiumMatches);
+router.get("/stadiumMatches/:id", isUser, stadiumMatches);
 
 /**
  * @swagger
@@ -178,6 +178,6 @@ router.get("/stadiumMatches/:id", stadiumMatches);
  *       200:
  *         description: Historical matches in a stadium
  */
-router.get("/stadiumHistoryMatches/:id", stadiumHistoryMatches);
+router.get("/stadiumHistoryMatches/:id", isUser, stadiumHistoryMatches);
 
 export default router;

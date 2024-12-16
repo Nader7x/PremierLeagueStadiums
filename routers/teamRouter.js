@@ -26,7 +26,7 @@ const isUser = authenticateToken('user');
  *       200:
  *         description: A list of teams with players
  */
-router.get("/teamsWithPlayers", teamsWithPlayers);
+router.get("/teamsWithPlayers", isUser, teamsWithPlayers);
 
 /**
  * @swagger
@@ -38,7 +38,7 @@ router.get("/teamsWithPlayers", teamsWithPlayers);
  *       200:
  *         description: A list of teams
  */
-router.get("/teams", getAllTeams);
+router.get("/teams", isUser, getAllTeams);
 
 /**
  * @swagger
@@ -50,7 +50,7 @@ router.get("/teams", getAllTeams);
  *       200:
  *         description: A list of teams with no stadium
  */
-router.get("/teamsWithNoStadium", getTeamsWithNoStadium);
+router.get("/teamsWithNoStadium", isUser, getTeamsWithNoStadium);
 
 /**
  * @swagger
@@ -92,7 +92,7 @@ router.get("/teamsWithNoStadium", getTeamsWithNoStadium);
  *       201:
  *         description: Team added
  */
-router.post("/team", addTeam);
+router.post("/team", isAdmin, addTeam);
 
 /**
  * @swagger
@@ -110,7 +110,7 @@ router.post("/team", addTeam);
  *       200:
  *         description: A team
  */
-router.get("/team/:id", getTeam);
+router.get("/team/:id", isUser, getTeam);
 
 /**
  * @swagger
@@ -128,7 +128,7 @@ router.get("/team/:id", getTeam);
  *       200:
  *         description: A team with players
  */
-router.get("/teamWithPlayers/:id", getTeamWithPlayers);
+router.get("/teamWithPlayers/:id", isUser, getTeamWithPlayers);
 
 /**
  * @swagger
@@ -146,7 +146,7 @@ router.get("/teamWithPlayers/:id", getTeamWithPlayers);
  *       200:
  *         description: Team deleted
  */
-router.delete('/team/:id', deleteTeam);
+router.delete('/team/:id', isAdmin, deleteTeam);
 
 /**
  * @swagger
@@ -164,7 +164,7 @@ router.delete('/team/:id', deleteTeam);
  *       200:
  *         description: Team updated
  */
-router.patch('/team/:id', updateTeam);
+router.patch('/team/:id', isAdmin, updateTeam);
 
 /**
  * @swagger
@@ -176,6 +176,6 @@ router.patch('/team/:id', updateTeam);
  *       200:
  *         description: League standings by points
  */
-router.get("/leagueStandings", getLeagueStandings);
+router.get("/leagueStandings", isUser, getLeagueStandings);
 
 export default router;

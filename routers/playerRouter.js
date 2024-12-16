@@ -43,7 +43,7 @@ const router = express.Router();
  *       201:
  *         description: Player added
  */
-router.post("/player", addPlayer);
+router.post("/player", isAdmin, addPlayer);
 
 /**
  * @swagger
@@ -52,10 +52,10 @@ router.post("/player", addPlayer);
  *     summary: Retrieve a list of players
  *     tags: [Players]
  *     responses:
- *       200:
+ *        200:
  *         description: A list of players
  */
-router.get("/players", getAllPlayers);
+router.get("/players", isUser, getAllPlayers);
 
 /**
  * @swagger
@@ -67,7 +67,7 @@ router.get("/players", getAllPlayers);
  *       201:
  *         description: Players added
  */
-router.post("/addPlayers", addPlayers);
+router.post("/addPlayers", isAdmin, addPlayers);
 
 /**
  * @swagger
@@ -85,7 +85,7 @@ router.post("/addPlayers", addPlayers);
  *       200:
  *         description: Player updated
  */
-router.patch("/player/:id", updatePlayer);
+router.patch("/player/:id", isAdmin, updatePlayer);
 
 /**
  * @swagger
@@ -103,7 +103,7 @@ router.patch("/player/:id", updatePlayer);
  *       200:
  *         description: Player deleted
  */
-router.delete("/player/:id", deletePlayer);
+router.delete("/player/:id", isAdmin, deletePlayer);
 
 /**
  * @swagger
@@ -121,7 +121,7 @@ router.delete("/player/:id", deletePlayer);
  *       200:
  *         description: A player
  */
-router.get("/player/:playerId", getPlayer);
+router.get("/player/:playerId", isUser, getPlayer);
 
 /**
  * @swagger
@@ -139,6 +139,6 @@ router.get("/player/:playerId", getPlayer);
  *       200:
  *         description: Players with the same team
  */
-router.get("/playersWithSameTeam/:teamId", playersWithSameTeam);
+router.get("/playersWithSameTeam/:teamId", isUser, playersWithSameTeam);
 
 export default router;

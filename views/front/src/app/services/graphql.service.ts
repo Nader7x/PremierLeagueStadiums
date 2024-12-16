@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
 import { Observable } from 'rxjs';
+import { TokenService } from './token.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,12 @@ export class GraphQLService {
   fetchData(query: string, variables?: any): Observable<any> {
     return this.apollo.query({
       query: gql`${query}`,
-      variables: variables
+      variables: variables,
+      context: {
+        headers: {
+          Authorization: `Bearer ${TokenService.TOKEN}`
+        }
+      }
     });
   }
 
@@ -21,7 +27,12 @@ export class GraphQLService {
   mutateData(mutation: string, variables?: any): Observable<any> {
     return this.apollo.mutate({
       mutation: gql`${mutation}`,
-      variables: variables
+      variables: variables,
+      context: {
+        headers: {
+          Authorization: `Bearer ${TokenService.TOKEN}`
+        }
+      }
     });
   }
 }

@@ -16,7 +16,7 @@ const isUser = authenticateToken('user');
  *       200:
  *         description: A list of coaches
  */
-router.get("/coaches", getAllCoaches);
+router.get("/coaches", isUser, getAllCoaches);
 
 /**
  * @swagger
@@ -45,7 +45,7 @@ router.get("/coaches", getAllCoaches);
  *       201:
  *         description: Coach added
  */
-router.post("/coach", addCoach);
+router.post("/coach", isAdmin, addCoach);
 
 /**
  * @swagger
@@ -63,7 +63,7 @@ router.post("/coach", addCoach);
  *       200:
  *         description: A coach
  */
-router.get("/coach/:id", getCoach);
+router.get("/coach/:id", isUser, getCoach);
 
 /**
  * @swagger
@@ -81,7 +81,7 @@ router.get("/coach/:id", getCoach);
  *       200:
  *         description: Coach deleted
  */
-router.delete("/coach/:id", deleteCoach);
+router.delete("/coach/:id", isAdmin, deleteCoach);
 
 /**
  * @swagger
@@ -112,6 +112,6 @@ router.delete("/coach/:id", deleteCoach);
  *       200:
  *         description: Coach updated
  */
-router.patch("/coach/:id", updateCoach);
+router.patch("/coach/:id", isAdmin, updateCoach);
 
 export default router;

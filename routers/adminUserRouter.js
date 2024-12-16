@@ -1,6 +1,10 @@
 import express from 'express';
 import { register, login } from "../controllers/adminUserController.js";
+import { authenticateToken } from '../controllers/apiSecurityController.js';
+
 const router = express.Router();
+const isAdmin = authenticateToken('admin');
+const isUser = authenticateToken('user');
 
 /**
  * @swagger

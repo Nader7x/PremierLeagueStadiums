@@ -16,7 +16,7 @@ const router = express.Router();
  *       200:
  *         description: A list of commentators
  */
-router.get("/commentators", getAllCommentators);
+router.get("/commentators", isUser, getAllCommentators);
 
 /**
  * @swagger
@@ -45,7 +45,7 @@ router.get("/commentators", getAllCommentators);
  *       201:
  *         description: Commentator added
  */
-router.post("/commentator", addCommentator);
+router.post("/commentator", isAdmin, addCommentator);
 
 /**
  * @swagger
@@ -63,7 +63,7 @@ router.post("/commentator", addCommentator);
  *       200:
  *         description: A commentator
  */
-router.get("/commentator/:id", getCommentator);
+router.get("/commentator/:id", isUser, getCommentator);
 
 /**
  * @swagger
@@ -81,7 +81,7 @@ router.get("/commentator/:id", getCommentator);
  *       200:
  *         description: Commentator deleted
  */
-router.delete("/commentator/:id", deleteCommentator);
+router.delete("/commentator/:id", isAdmin, deleteCommentator);
 
 /**
  * @swagger
@@ -112,6 +112,6 @@ router.delete("/commentator/:id", deleteCommentator);
  *       200:
  *         description: Commentator updated
  */
-router.patch("/commentator/:id", updateCommentator);
+router.patch("/commentator/:id", isAdmin, updateCommentator);
 
 export default router;
