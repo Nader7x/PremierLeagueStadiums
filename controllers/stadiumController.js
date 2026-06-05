@@ -1,3 +1,4 @@
+import { getPagination } from './pagination.js';
 import Stadium from "../models/stadiumModel.js";
 import Team from "../models/teamModel.js";
 import Match from "../models/matchModel.js";
@@ -25,7 +26,7 @@ const addStadium = async (req, res) => {
 
 const getAllStadiums = async (req, res) => {
     try {
-        const result = await Stadium.find({});
+        const result = await Stadium.find().lean();
         res.send(result);
     } catch (err) {
         console.log(err);
@@ -38,7 +39,7 @@ const getAllStadiums = async (req, res) => {
 
 const getAllStadiumsWithTeam = async (req, res) => {
     try {
-        const result = await Stadium.find({}).populate('homeTeam', 'name');
+        const result = await Stadium.find().lean();
         res.send(result);
     } catch (err) {
         console.log(err);
@@ -110,7 +111,7 @@ const updateStadium = async (req, res) => {
 
 const stadiumMatches = async (req, res) => {
     try {
-        const result = await Match.find({stadium: req.params['id']}).populate('homeTeam', 'name').populate('awayTeam', 'name');
+        const result = await Match.find().lean();
         res.send(result);
     } catch (err) {
         console.log(err);

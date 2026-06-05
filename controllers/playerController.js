@@ -1,6 +1,7 @@
+import { getPagination } from './pagination.js';
 import {Player} from "../models/persons.js";
 import Team from "../models/teamModel.js";
-import {cacheData, getCachedData} from "../index.js";
+import {cacheData, getCachedData} from "./caching.js";
 
 
 const getPlayer = async (req, res) => {
@@ -35,7 +36,7 @@ const playersWithSameTeam = async (req, res) => {
             return res.status(200).json(cachedData);
         }
 
-        const result = await Player.find({ team: teamId });
+        const result = await Player.find().lean();
         if (!result || result.length === 0) {
             return res.status(404).json({ message: "No players found for this team." });
         }
@@ -114,7 +115,7 @@ const getAllPlayers = async (req, res) => {
             console.log(`Cache hit for ${cacheKey}`);
             return res.status(200).json(cachedData);
         }
-        const result = await Player.find({});
+        const result = await Player.find().lean();
         await cacheData(cacheKey, result, 3600); // Cache the data with expiry
         res.status(200).json(result);
     } catch (err) {

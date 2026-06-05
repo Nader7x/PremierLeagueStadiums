@@ -57,7 +57,7 @@ const getCommentator = async (req, res) => {
 
 const getAllCommentators = async (req, res) => {
     try {
-        const result = await Commentator.find({});
+        const result = await Commentator.find().lean();
         res.send(result);
     } catch (err) {
         console.log(err);

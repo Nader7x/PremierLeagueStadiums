@@ -59,7 +59,7 @@ const getCoach = async (req, res) => {
 
 const getAllCoaches = async (req, res) => {
     try {
-        const result = await Coach.find({});
+        const result = await Coach.find().lean();
         res.send(result);
     } catch (err) {
         console.log(err);

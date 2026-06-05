@@ -1,8 +1,9 @@
+import { getPagination } from './pagination.js';
 import Match from "../models/matchModel.js";
 import Team from "../models/teamModel.js";
 import Stadium from "../models/stadiumModel.js";
 import {Player} from "../models/persons.js";
-import {cacheData, getCachedData} from "../index.js";
+import {cacheData, getCachedData} from "./caching.js";
 import _ from 'firebase-admin';
 import axios from "axios";
 import {getFcmAccessToken} from "./apiSecurityController.js";
@@ -41,7 +42,7 @@ const getAllMatches = async (req, res) => {
             return res.status(200).json(cachedData);
         }
 
-        const result = await Match.find({});
+        const result = await Match.find().lean();
         await cacheData(cacheKey, result, 3600); // Cache the data with expiry
         res.status(200).json(result);
     } catch (err) {
@@ -60,7 +61,7 @@ const getAllMatchesWithNames = async (req, res) => {
         if (cachedData) {
             return res.send(cachedData);
         }
-        const result = await Match.find({}).populate('homeTeam', 'name').populate('awayTeam', 'name').populate('referee', 'name').populate('commentator', 'name');
+        const result = await Match.find().lean();
         await cacheData(cacheKey, result, 3600);
         res.send(result);
     } catch (err) {
@@ -122,7 +123,7 @@ const getLiveMatches = async (req, res) => {
         // if (cachedData) {
         //     return res.send(cachedData);
         // }
-        const result = await Match.find({status: true, endState: false}).populate({
+        const result = await Match.find({}).lean().populate({
             path: 'homeTeam', populate: {
                 path: 'squad', model: 'Player', select: 'name'
             }
@@ -151,7 +152,7 @@ const getHistoryMatches = async (req, res) => {
         if (cachedData) {
             return res.send(cachedData);
         }
-        const result = await Match.find({endState: true, status: true}).populate({
+        const result = await Match.find({}).lean().populate({
             path: 'homeTeam', populate: {
                 path: 'squad', model: 'Player', select: 'name'
             }
@@ -420,7 +421,7 @@ const startMatch = async (req, res) => {
 
 const getUpcomingMatches = async (req, res) => {
     try {
-        const result = await Match.find({status: false, endState: false});
+        const result = await Match.find().lean();
         res.send(result);
     } catch (err) {
         console.log(err);

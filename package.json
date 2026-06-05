@@ -2,42 +2,45 @@
   "name": "premierleaguestadiums",
   "version": "1.0.0",
   "description": "Tracking Premier League Stadiums matches and statistics",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node --watch index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node --watch server.js"
   },
   "author": "",
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "@angular/google-maps": "^17.0.4",
-    "@googlemaps/js-api-loader": "^1.16.2",
     "axios": "^1.6.2",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
+    "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "ejs": "^3.1.9",
     "express": "^4.18.2",
+    "express-mongo-sanitize": "^2.2.0",
+    "express-rate-limit": "^7.3.1",
     "firebase-admin": "^12.4.0",
     "google-auth-library": "^9.14.1",
     "graphql-tag": "^2.12.6",
     "graphql-yoga": "^5.10.4",
+    "helmet": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
     "moment-timezone": "^0.5.43",
     "mongodb": "^6.8.0",
     "mongoose": "^8.0.1",
+    "morgan": "^1.11.0",
     "mqtt": "^5.3.3",
     "node-cron": "^3.0.3",
-    "popper.js": "^1.16.1",
     "redis": "^4.7.0",
     "ruru": "2.0.0-beta.13",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
   },
-  "devDependencies": {
-    "@types/google.maps": "^3.54.10"
+  "engines": {
+    "node": ">=20.0.0"
   }
 }

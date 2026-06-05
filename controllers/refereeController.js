@@ -60,7 +60,7 @@ const getReferee = async (req, res) => {
 
 const getAllReferee = async (req, res) => {
     try {
-        const result = await Referee.find({});
+        const result = await Referee.find().lean();
         res.send(result);
     } catch (err) {
         console.log(err);

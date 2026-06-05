@@ -1,10 +1,11 @@
+import { getPagination } from './pagination.js';
 import Team from "../models/teamModel.js";
 import {Player} from "../models/persons.js";
 import Stadium from "../models/stadiumModel.js";
 
 const teamsWithPlayers = async function (req, res) {
     try {
-        const result = await Team.find({}).populate('coach', 'name').populate('squad', 'name kitNumber position');
+        const result = await Team.find().lean();
         res.send(result);
     } catch (err) {
         console.log(err);
@@ -17,7 +18,7 @@ const teamsWithPlayers = async function (req, res) {
 
 const getAllTeams = async (req, res) => {
     try {
-        const result = await Team.find({});
+        const result = await Team.find().lean();
         res.send(result);
     } catch (err) {
         console.log(err);
@@ -30,7 +31,7 @@ const getAllTeams = async (req, res) => {
 
 const getTeamsWithNoStadium = async (req, res) => {
     try {
-        const teamsWithoutStadium = await Team.find({stadium: {$exists: false}});
+        const teamsWithoutStadium = await Team.find().lean();
         res.send(teamsWithoutStadium);
     } catch (err) {
         console.log(err);
@@ -132,7 +133,7 @@ const getTeamWithPlayers = async function (req, res) {
 
 const getLeagueStandings = async (req, res) => {
     try {
-        const teams = await Team.find({}).sort({ points: -1 });
+        const teams = await Team.find().lean();
         res.send(teams);
     } catch (err) {
         console.log(err);
