@@ -1,14 +1,21 @@
 // @ts-check
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-mongoose.set('strictQuery', false);
+mongoose.set("strictQuery", false);
 
-const stadiumSchema = new mongoose.Schema({
-    homeTeam: {type: mongoose.Schema.Types.ObjectId, ref: 'Team', required: false},//Team
-    name: {type: String, allowNull: false},
-    capacity: {type: Number, allowNull: false},
-    state: {type: Boolean, required: false, default: false}
-}, {collection: 'stadium'});
+const stadiumSchema = new mongoose.Schema(
+  {
+    homeTeam: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Team",
+      required: false,
+    }, //Team
+    name: { type: String, required: true },
+    capacity: { type: Number, required: true },
+    state: { type: Boolean, required: false, default: false },
+  },
+  { collection: "stadium" },
+);
 
 const Stadium = mongoose.model("Stadium", stadiumSchema);
 

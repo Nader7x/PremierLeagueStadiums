@@ -1,34 +1,37 @@
 // @ts-check
-import {Coach} from "../models/persons.js";
+import { Coach } from "../models/persons.js";
 
 const updateCoach = async (req, res) => {
-    const result = await Coach.findByIdAndUpdate(req.params['id'], req.body);
-    res.send(result);
+  const result = await Coach.findByIdAndUpdate(req.params["id"], req.body, {
+    runValidators: true,
+    new: true,
+  });
+  res.send(result);
 };
 
 const deleteCoach = async (req, res) => {
-    const result = await Coach.findByIdAndDelete(req.params['id']);
-    res.send(result);
+  const result = await Coach.findByIdAndDelete(req.params["id"]);
+  res.send(result);
 };
 
 const addCoach = async (req, res) => {
-    const coach = new Coach({
-        name: req.body.name,
-        age: req.body.age,
-        nationality: req.body.nationality,
-    });
-    const result = await coach.save();
-    res.send(result);
+  const coach = new Coach({
+    name: req.body.name,
+    age: req.body.age,
+    nationality: req.body.nationality,
+  });
+  const result = await coach.save();
+  res.send(result);
 };
 
 const getCoach = async (req, res) => {
-    const result = await Coach.findOne({'_id': req.params['id']});
-    res.send(result);
+  const result = await Coach.findOne({ _id: req.params["id"] });
+  res.send(result);
 };
 
 const getAllCoaches = async (req, res) => {
-    const result = await Coach.find().lean();
-    res.send(result);
+  const result = await Coach.find().lean();
+  res.send(result);
 };
 
-export {updateCoach, deleteCoach, addCoach, getCoach, getAllCoaches};
+export { updateCoach, deleteCoach, addCoach, getCoach, getAllCoaches };
