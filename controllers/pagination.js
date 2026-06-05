@@ -1,3 +1,4 @@
+// @ts-check
 
 export const getPagination = (req) => {
     const page = parseInt(req.query.page, 10) || 1;

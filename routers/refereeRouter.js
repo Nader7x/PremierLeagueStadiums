@@ -1,3 +1,4 @@
+// @ts-check
 import express from 'express';
 import {updateReferee, deleteReferee, addReferee, getReferee, getAllReferee} from "../controllers/refereeController.js";
 import {authenticateToken} from '../controllers/apiSecurityController.js';

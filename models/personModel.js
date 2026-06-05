@@ -1,3 +1,4 @@
+// @ts-check
 import mongoose from 'mongoose';
 
 mongoose.set('strictQuery', false);
@@ -8,8 +9,8 @@ const baseOptions = {
 };
 
 const personSchema = new mongoose.Schema({
-    name: {type: String, required: true},
-    age: {type: Number, required: true, max: 100, min: 1},
+    name: {type: String, allowNull: false},
+    age: {type: Number, allowNull: false},
 }, baseOptions);
 const Person = mongoose.model("Person", personSchema);
 

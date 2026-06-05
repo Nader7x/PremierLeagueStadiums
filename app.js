@@ -1,3 +1,4 @@
+// @ts-check
 import morgan from "morgan";
 import helmet from "helmet";
 import compression from "compression";
@@ -15,7 +16,6 @@ import adminUserRoute from "./routers/adminUserRouter.js";
 
 
 import mongoose from "mongoose";
-import bodyParser from "body-parser";
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -40,11 +40,11 @@ app.use(compression());
 app.use(mongoSanitize());
 const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
 app.use("/", limiter);
-mongoose.set('strictQuery', false);
-app.use(bodyParser.urlencoded({extended: false}));
+mongoose.set("strictQuery", true);
+app.use(express.urlencoded({extended: true}));
 app.use(express.static("public"));
 app.set('view engine', 'ejs');
-app.use(bodyParser.json());
+app.use(express.json());
 app.use(cors());
 
 

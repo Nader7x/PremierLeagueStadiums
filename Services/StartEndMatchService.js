@@ -1,3 +1,4 @@
+// @ts-check
 import cron from 'node-cron';
 import axios from "axios";
 import moment from "moment-timezone";

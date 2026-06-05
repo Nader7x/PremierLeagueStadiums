@@ -1,3 +1,4 @@
+// @ts-check
 import { addMatch, getAllMatches, getAllMatchesWithNames, getMatchWithNames, deleteMatch, getMatch, getLiveMatches, getHistoryMatches, goal, endMatch, giveCard, matchWithAllData, startMatch, getUpcomingMatches, getSortedEvents, fixMatches, updateMatch } from '../controllers/matchController.js';
 import express from 'express';
 import { authenticateToken } from '../controllers/apiSecurityController.js';

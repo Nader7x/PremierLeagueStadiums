@@ -1,3 +1,4 @@
+// @ts-check
 import {getPlayer, addPlayer, updatePlayer, deletePlayer, getAllPlayers, addPlayers, playersWithSameTeam}
     from '../controllers/playerController.js';
 import express from 'express';

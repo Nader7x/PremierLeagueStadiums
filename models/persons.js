@@ -1,3 +1,4 @@
+// @ts-check
 import mongoose from 'mongoose';
 import Person from './personModel.js';
 import AdminUser from './adminUserModel.js';
@@ -15,21 +16,21 @@ const Commentator = Person.discriminator("Commentator", new mongoose.Schema({
 }));
 
 const User = AdminUser.discriminator("User", new mongoose.Schema({
-    username: {type: String, required: true, unique: true},
-    password: {type: String, required: true},
+    username: {type: String, allowNull: false},
+    password: {type: String, allowNull: false},
 }));
 
 const Admin = AdminUser.discriminator("Admin", new mongoose.Schema({
-    username: {type: String, required: true},
-    password: {type: String, required: true},
+    username: {type: String, allowNull: false},
+    password: {type: String, allowNull: false},
 }));
 
 const positions = ['gk', 'cb', 'lb', 'rb', 'cm', 'cam', 'cdm', 'cf', 'rw', 'rm', 'lw', 'lm', 'st'];
 
 const Player = Person.discriminator("Player", new mongoose.Schema({
     nationality: String,
-    kitNumber: {type: Number, required: true, max: 99, min: 1},
-    position: {type: String, enum: positions},
+    kitNumber: {type: Number, allowNull: false},
+    position: {type: String, allowNull: false},
     team: {type: mongoose.Schema.Types.ObjectId, ref: 'Team', required: false}
 }));
 

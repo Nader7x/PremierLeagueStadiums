@@ -1,3 +1,4 @@
+// @ts-check
 import admin from 'firebase-admin';
 import serviceAccount from '../premier-league-grounds-firebase-adminsdk-ifnfe-dbfafed85f.json';
 
