@@ -28,7 +28,8 @@ const addMatch = async (req, res) => {
 };
 
 const getAllMatches = async (req, res) => {
-    const cacheKey = 'allMatches';
+    const { skip, limit, page } = getPagination(req);
+        const cacheKey = `allMatches:page=${page}:limit=${limit}`;
     const cachedData = await getCachedData(cacheKey);
 
     if (cachedData) {
@@ -77,7 +78,7 @@ const getLiveMatches = async (req, res) => {
     // if (cachedData) {
     //     return res.send(cachedData);
     // }
-    const result = await Match.find({}).lean().populate({
+    const result = await Match.find({ endState: true }).lean().populate({
         path: 'homeTeam', populate: {
             path: 'squad', model: 'Player', select: 'name'
         }
@@ -98,7 +99,7 @@ const getHistoryMatches = async (req, res) => {
     if (cachedData) {
         return res.send(cachedData);
     }
-    const result = await Match.find({}).lean().populate({
+    const result = await Match.find({ endState: true }).lean().populate({
         path: 'homeTeam', populate: {
             path: 'squad', model: 'Player', select: 'name'
         }
@@ -323,7 +324,16 @@ const startMatch = async (req, res) => {
 };
 
 const getUpcomingMatches = async (req, res) => {
-    const result = await Match.find().lean();
+    const cacheKey = 'upcomingMatches';
+    const cachedData = await getCachedData(cacheKey);
+
+    if (cachedData) {
+        console.log(`Cache hit for ${cacheKey}`);
+        return res.status(200).json(cachedData);
+    }
+
+    const result = await Match.find({ status: false, endState: false }).lean();
+    await cacheData(cacheKey, result, 3600);
     res.send(result);
 };
 

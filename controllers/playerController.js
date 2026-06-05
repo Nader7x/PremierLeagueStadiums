@@ -28,7 +28,7 @@ const playersWithSameTeam = async (req, res) => {
         return res.status(200).json(cachedData);
     }
 
-    const result = await Player.find().lean();
+    const result = await Player.find({ team: teamId }).lean();
     if (!result || result.length === 0) {
         return res.status(404).json({ message: "No players found for this team." });
     }

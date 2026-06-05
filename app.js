@@ -25,8 +25,6 @@ import {createSchema, createYoga} from "graphql-yoga";
 import {ruruHTML} from "ruru/server";
 import {resolvers, typeDefs} from "./graphql/schema.js";
 
-import start from "./Services/StartEndMatchService.js"
-import router from "./routers/matchRouter.js";
 import Team from "./models/teamModel.js";
 import {Commentator, Referee} from "./models/persons.js";
 import Match from "./models/matchModel.js";
@@ -35,17 +33,43 @@ import Match from "./models/matchModel.js";
 const app = express();
 app.use(cookieParser());
 app.use(morgan("dev")); // Log HTTP requests
-app.use(helmet({ contentSecurityPolicy: false }));
+
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'", "'unsafe-inline'", "https://unpkg.com"],
+            styleSrc: ["'self'", "'unsafe-inline'", "https://unpkg.com"],
+            connectSrc: ["'self'"],
+            imgSrc: ["'self'", "data:", "https:"],
+            frameAncestors: ["'none'"]
+        }
+    }
+}));
+
 app.use(compression());
 app.use(mongoSanitize());
-const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
-app.use("/", limiter);
 mongoose.set("strictQuery", true);
 app.use(express.urlencoded({extended: true}));
+
 app.use(express.static("public"));
+const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
+app.use("/api", limiter);
+
 app.set('view engine', 'ejs');
 app.use(express.json());
-app.use(cors());
+
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || '').split(',').map(o => o.trim());
+app.use(cors({
+    origin: function(origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    }
+}));
+
 
 
 const options = {
@@ -58,19 +82,19 @@ const options = {
     }, apis: ['./routers/*.js'],
 };
 
-// Function to connect to MongoDB
 
 
-// Redis client configuration
+
+
 
 
 
 app.get('/addMatch', async (req, res) => {
     try {
         // Fetch teams, referees, and commentators from your database
-        const teams = await Team.find({}); // Replace with your database query for teams
-        const referees = await Referee.find({}); // Replace with your database query for referees
-        const commentators = await Commentator.find({}); // Replace with your database query for commentators
+        const teams = await Team.find({}).lean(); // Replace with your database query for teams
+        const referees = await Referee.find({}).lean(); // Replace with your database query for referees
+        const commentators = await Commentator.find({}).lean(); // Replace with your database query for commentators
 
         // Render the template and pass the data
         res.render('addMatch', {
@@ -86,7 +110,7 @@ app.get('/addMatch', async (req, res) => {
 app.get('/addReferee', async (req, res) => {
     try {
         // Fetch all referees from the database
-        const referees = await Referee.find();
+        const referees = await Referee.find().lean();
 
         // Render the page and pass the referees list
         res.render('addReferee', { referees });
@@ -103,7 +127,8 @@ app.get('/viewMatches', async (req, res) => {
             .populate('awayTeam', 'name') // Populate awayTeam with name
             .populate('referee', 'name')  // Populate referee with name
             .populate('commentator', 'name')
-            .populate('stadium','name'); // Populate commentator with name
+            .populate('stadium','name') // Populate commentator with name
+            .lean();
 
         // Render the view matches page and pass the matches
         res.render('viewMatches', { matches });

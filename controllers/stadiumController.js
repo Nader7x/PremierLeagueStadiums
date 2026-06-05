@@ -55,7 +55,7 @@ const updateStadium = async (req, res) => {
 };
 
 const stadiumMatches = async (req, res) => {
-    const result = await Match.find().lean();
+    const result = await Match.find({stadium: req.params['id']}).populate('homeTeam', 'name').populate('awayTeam', 'name').lean();
     res.send(result);
 };
 

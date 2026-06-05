@@ -15,7 +15,7 @@ const getAllTeams = async (req, res) => {
 };
 
 const getTeamsWithNoStadium = async (req, res) => {
-    const teamsWithoutStadium = await Team.find().lean();
+    const teamsWithoutStadium = await Team.find({ stadium: { $exists: false } }).lean();
     res.send(teamsWithoutStadium);
 };
 
@@ -69,7 +69,7 @@ const getTeamWithPlayers = async function (req, res) {
 };
 
 const getLeagueStandings = async (req, res) => {
-    const teams = await Team.find().lean();
+    const teams = await Team.find().sort({ points: -1 }).lean();
     res.send(teams);
 };
 
