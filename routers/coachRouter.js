@@ -1,3 +1,4 @@
+// @ts-check
 import express from 'express';
 import { updateCoach, deleteCoach, addCoach, getCoach, getAllCoaches } from "../controllers/coachController.js";
 import { authenticateToken } from '../controllers/apiSecurityController.js';

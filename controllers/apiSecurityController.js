@@ -1,3 +1,4 @@
+// @ts-check
 import jwt from 'jsonwebtoken';
 import {GoogleAuth} from 'google-auth-library';
 

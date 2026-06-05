@@ -1,154 +1,196 @@
-# PL GROUNDS
+# PL Grounds
 
-Tracking Premier League Stadiums matches and statistics
+Tracking Premier League stadiums, matches, teams, players, and statistics.
 
 ## Project Description
 
-PL Grounds is a project aimed at tracking Premier League stadiums, matches, and statistics. It provides detailed information about the stadiums, teams, players, and matches in the Premier League. The project includes features such as match scheduling, live match updates, player statistics, and more.
+PL Grounds is an Express/MongoDB application for managing Premier League data. It includes REST endpoints, EJS views, Swagger documentation, GraphQL via GraphQL Yoga, Redis-backed caching, JWT authentication, and match lifecycle features such as upcoming, live, and history matches.
+
+## Prerequisites
+
+- Node.js `>=20.0.0`
+- npm
+- MongoDB
+- Redis or Redis Stack for caching
 
 ## Setup Instructions
 
-### Prerequisites
+### 1. Clone the repository
 
-- Node.js (v14 or higher)
-- MongoDB (v4.4 or higher)
-- npm (v6 or higher)
+```bash
+git clone https://github.com/Nader7x/PremierLeagueStadiums.git
+cd PremierLeagueStadiums
+```
 
-### Installation Steps
+### 2. Install dependencies
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/Nader7x/PremierLeagueStadiums.git
-   cd PremierLeagueStadiums
-   ```
+```bash
+npm install
+```
 
-2. Install the dependencies:
-   ```bash
-   npm install
-   ```
+### 3. Configure environment variables
 
-3. Create a `.env` file in the root directory and add the following environment variables:
-   ```plaintext
-   JWT_SECRET_KEY=your_jwt_secret_key
-   MONGO_USERNAME=your_mongo_username
-   MONGO_PASSWORD=your_mongo_password
-   ```
+Create a `.env` file in the project root. At minimum, configure:
 
-4. Start the MongoDB server:
-   ```bash
-   mongod
-   ```
+```env
+# Use a strong random secret. Do not commit real secrets.
+JWT_SECRET_KEY=replace_with_a_strong_random_secret
 
-5. Start the application:
-   ```bash
-   npm start
-   ```
+# Either provide a full URI...
+MONGO_URI=mongodb://127.0.0.1:27017/premierLeagueDB
 
-## Usage Guidelines
+# ...or omit MONGO_URI and let server.js use this DB name locally.
+MONGO_DB_NAME=premierLeagueDB
 
-### Running the Project
+# Comma-separated list of allowed browser origins.
+ALLOWED_ORIGINS=http://localhost:3000
 
-To run the project, use the following command:
+# Redis configuration. Local development defaults are usually 127.0.0.1:6379.
+REDIS_HOST=127.0.0.1
+REDIS_PORT=6379
+REDIS_USERNAME=default
+REDIS_PASSWORD=
+
+# Optional: Firebase service account JSON as a single-line JSON string.
+# Required only if push notifications are enabled.
+FIREBASE_SERVICE_ACCOUNT=
+```
+
+Notes:
+
+- `server.js` starts Redis first, then MongoDB, then the HTTP server.
+- If `MONGO_URI` is not set, the app falls back to `mongodb://127.0.0.1:27017/${MONGO_DB_NAME}`.
+- Redis initialization tries configured Redis first and then local Redis. Startup fails if both connections fail.
+- Firebase credentials are no longer loaded from a committed JSON file. Provide `FIREBASE_SERVICE_ACCOUNT` through your environment or secret manager.
+
+### 4. Start MongoDB and Redis
+
+MongoDB:
+
+```bash
+mongod
+```
+
+Redis:
+
+```bash
+redis-server
+```
+
+### 5. Run the application
+
+Production-style start:
+
 ```bash
 npm start
 ```
 
-The application will start on `http://localhost:3000`.
+Development mode with Node watch:
 
-### Using the Features
+```bash
+npm run dev
+```
 
-- Access the API documentation at `http://localhost:3000/api-docs`.
-- Use the provided endpoints to interact with the application.
-- Refer to the API documentation for detailed information on each endpoint.
+The app starts on `http://localhost:3000` by default.
 
-## API Documentation
+## Available Interfaces
 
-### Endpoints
+- REST API: `http://localhost:3000`
+- Swagger API docs: `http://localhost:3000/api-docs`
+- GraphQL endpoint: `http://localhost:3000/graphql`
+- Ruru GraphQL UI: `http://localhost:3000/`
 
-#### Teams
+## API Overview
 
-- `GET /teams`: Retrieve all teams.
-- `POST /team`: Add a new team.
-- `DELETE /team/:id`: Delete a team.
-- `PATCH /team/:id`: Update a team.
+### Teams
 
-#### Stadiums
+- `GET /teams` — retrieve teams. Supports pagination with `?page=1&limit=10`.
+- `GET /teamsWithPlayers` — retrieve teams with populated squad and coach data.
+- `GET /teamsWithNoStadium` — retrieve teams without a stadium.
+- `GET /leagueStandings` — retrieve teams sorted by points descending.
+- `POST /team` — add a new team.
+- `DELETE /team/:id` — delete a team.
+- `PATCH /team/:id` — update a team.
 
-- `GET /stadiums`: Retrieve all stadiums.
-- `POST /stadium`: Add a new stadium.
-- `DELETE /stadium/:id`: Delete a stadium.
-- `PATCH /stadium/:id`: Update a stadium.
+### Stadiums
 
-#### Coaches
+- `GET /stadiums` — retrieve all stadiums.
+- `GET /stadiumsWithTeam` — retrieve stadiums with populated home team names.
+- `GET /stadiumMatches/:id` — retrieve matches for a stadium with populated team names.
+- `GET /stadiumHistoryMatches/:id` — retrieve ended matches for a stadium.
+- `POST /stadium` — add a new stadium.
+- `DELETE /stadium/:id` — delete a stadium.
+- `PATCH /stadium/:id` — update a stadium.
 
-- `GET /coaches`: Retrieve all coaches.
-- `POST /coach`: Add a new coach.
-- `DELETE /coach/:id`: Delete a coach.
-- `PATCH /coach/:id`: Update a coach.
+### Matches
 
-#### Matches
+- `GET /matches` — retrieve matches. Supports pagination with `?page=1&limit=10`.
+- `GET /matchesWithNames` — retrieve matches with populated team, referee, and commentator names.
+- `GET /matchesLive` — retrieve currently live matches (`status: true`, `endState: false`).
+- `GET /matchesHistory` — retrieve ended matches (`endState: true`).
+- `GET /upcomingMatches` — retrieve not-started, not-ended matches.
+- `POST /match` — add a new match.
+- `PATCH /match/:id` — update a match.
+- `DELETE /match/:id` — delete a match.
 
-- `GET /matches`: Retrieve all matches.
-- `POST /match`: Add a new match.
-- `DELETE /match/:id`: Delete a match.
-- `PATCH /match/:id`: Update a match.
+### Players
 
-#### Players
+- `GET /players` — retrieve all players.
+- `GET /playersWithSameTeam/:teamId` — retrieve players for one team.
+- `POST /player` — add a new player and update the team squad atomically with `$addToSet`.
+- `POST /players` — add multiple players.
+- `DELETE /player/:id` — delete a player.
+- `PATCH /player/:id` — update a player.
 
-- `GET /players`: Retrieve all players.
-- `POST /player`: Add a new player.
-- `DELETE /player/:id`: Delete a player.
-- `PATCH /player/:id`: Update a player.
+### Coaches, Referees, and Commentators
 
-#### Admin Users
+- `GET /coaches`, `GET /referees`, `GET /commentators`
+- `POST /coach`, `POST /referee`, `POST /commentator`
+- `PATCH /coach/:id`, `PATCH /referee/:id`, `PATCH /commentator/:id`
+- `DELETE /coach/:id`, `DELETE /referee/:id`, `DELETE /commentator/:id`
 
-- `POST /register`: Register a new admin user.
-- `POST /login`: Login as an admin user.
+Update routes run Mongoose validators.
 
-#### Commentators
+### Authentication
 
-- `GET /commentators`: Retrieve all commentators.
-- `POST /commentator`: Add a new commentator.
-- `DELETE /commentator/:id`: Delete a commentator.
-- `PATCH /commentator/:id`: Update a commentator.
+- `POST /register` — register a user or admin.
+- `POST /login` — login and receive a JWT.
 
-## Redis Caching Functionality
+JWT notes:
 
-### Overview
+- Admin and user tokens are bounded to one week.
+- Registration checks duplicate usernames across both `User` and `Admin` account types.
 
-Redis caching has been integrated into the project to improve the performance and efficiency of the application. By caching frequently accessed data, the application can reduce the load on the MongoDB database and provide faster response times to users.
+## Redis Caching
 
-### Setup Instructions
+Redis is used to cache frequently requested data and reduce MongoDB load.
 
-1. Install Redis on your system. You can follow the instructions for your operating system from the [official Redis documentation](https://redis.io/download).
+The cache layer stores JSON using standard Redis string commands:
 
-2. Start the Redis server:
-   ```bash
-   redis-server
-   ```
+- Writes: `SET key JSON.stringify(data) EX <seconds>`
+- Reads: `GET key` followed by `JSON.parse(...)`
 
-3. The application will automatically connect to the Redis server and start caching data.
+Examples of cached data include matches, players, history matches, upcoming matches, and other read-heavy endpoints.
 
-### Cached Endpoints
+To clear all local Redis data during development:
 
-The following endpoints have caching enabled:
-
-- `GET /teams`
-- `GET /stadiums`
-- `GET /coaches`
-- `GET /matches`
-- `GET /players`
-- `GET /commentators`
-
-### Cache Expiration
-
-The cached data will expire after a certain period to ensure that the application always serves fresh data. The expiration time can be configured in the application settings.
-
-### Clearing the Cache
-
-If you need to clear the cache manually, you can use the following command:
 ```bash
 redis-cli FLUSHALL
 ```
 
-This command will clear all the cached data from the Redis server.
+## Validation and Data Integrity
+
+Mongoose schemas use `required: true` for required fields instead of `allowNull: false`. Numeric statistics and match scores now have safe defaults such as `0`.
+
+Examples:
+
+- Match goals default to `0`.
+- Team `wins`, `loss`, `draw`, and `points` default to `0`.
+- Player `position` is required and validated against the allowed position enum.
+
+## Security Notes
+
+- CORS uses the `ALLOWED_ORIGINS` environment variable instead of allowing all origins.
+- Production 5xx errors return a generic message instead of leaking internal error details.
+- Firebase credentials should be supplied through environment variables or a secret manager, not committed files.
+- Use a cryptographically strong `JWT_SECRET_KEY` and never commit real secrets.

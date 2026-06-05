@@ -1,3 +1,4 @@
+// @ts-check
 import express from 'express';
 import { register, login } from "../controllers/adminUserController.js";
 import { authenticateToken } from '../controllers/apiSecurityController.js';

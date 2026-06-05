@@ -1,3 +1,4 @@
+// @ts-check
 import express from 'express';
 import { updateCommentator, deleteCommentator, addCommentator, getCommentator, getAllCommentators } from "../controllers/commentatorController.js";
 import { authenticateToken } from '../controllers/apiSecurityController.js';
